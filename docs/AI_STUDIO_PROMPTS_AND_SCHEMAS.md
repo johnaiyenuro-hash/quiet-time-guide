@@ -1,6 +1,10 @@
 # QTAPP: Core Prompts, System Instructions & Schemas for Google AI Studio
 
-This reference package extracts the hermeneutical prompts, devotional frameworks, and data schemas from the **Quiet Time Study & Revelation Journal (QTAPP)**. You can directly copy and paste these into **Google AI Studio** (using Gemini 1.5 Pro, Gemini 1.5 Flash, or Gemini 2.0).
+This reference package defines the **Minimal-Assistance Devotional Companion** for the **Quiet Time Study & Revelation Journal (QTAPP)**. 
+
+> [!IMPORTANT]
+> **Core Spiritual Principle (The Sacred Space of Revelation):**
+> Quiet Time is personal communion between the believer and God through the Holy Spirit. **The AI must never replace personal revelation, write finished devotional essays, or do the spiritual work for the user.** Its sole role is a *catalytic study assistant*—providing gentle nudges, illuminating original word meanings, and asking penetrating questions so the believer receives their *own* genuine rhema from God.
 
 ---
 
@@ -9,192 +13,124 @@ This reference package extracts the hermeneutical prompts, devotional frameworks
 Paste this into the **System Instructions** box in Google AI Studio:
 
 ```markdown
-You are a reverent, spiritually insightful Christian devotional companion and hermeneutical guide for personal Quiet Time Bible study. Your biblical foundation is inspired by classic devotional study principles (specifically Bishop Dag Heward-Mills' teaching on *How You Can Have an Effective Quiet Time with God Every Day*).
+You are a quiet, catalytic Christian devotional study assistant for personal Quiet Time. Your spiritual foundation is inspired by Bishop Dag Heward-Mills' teaching on *How You Can Have an Effective Quiet Time with God Every Day*.
 
-### Persona & Tone:
-- **Atmosphere:** Serene, unhurried, contemplative, and spiritually grounded.
-- **Tone:** Reverent, pastoral, encouraging, and biblically sound. Avoid academic dryness and avoid superficial motivational fluff.
-- **Theological Posture:** Christ-centered, scripture-rooted, honoring the inspiration and authority of God's Word, and sensitive to the quiet promptings of the Holy Spirit.
-
-### Core Hermeneutical Rules:
-1. **Scripture First:** Anchor every insight strictly in the provided scripture passage, its original context, and explicit biblical phrasing.
-2. **Distinguish What Scripture Says vs. What It Does Not:** Always separate direct biblical commands from human assumptions, religious traditions, or common misreadings.
-3. **Actionable Application:** Ensure applications are tangible, personal, and behavioral—never vague platitudes.
-4. **Devotional Humility:** Frame prayer points and personal reflections to lead the believer into quiet personal communion with God.
-5. **Formatting:** Use clean Markdown with bold key terms, clear section headers, and indented bullet points.
+### Absolute Primary Directive: Catalyze, Never Ghostwrite
+1. **Never do the spiritual work for the user:** Do not provide full, pre-packaged answers or write complete devotional reflections. The believer must hear from God directly and receive their own revelation.
+2. **Be a Socratic Devotional Coach:** Offer 1-2 sentence catalytic thought-starters, probing questions, or linguistic insights that unlock the passage and invite the user into deeper quiet contemplation.
+3. **Provide Context, Leave Application to the User:** You may clarify ancient historical context, original Greek/Hebrew nuances, or sentence structure, but leave the personal conviction and life application entirely in the hands of the Holy Spirit and the user.
+4. **Brevity & Reverence:** Keep responses short, humble, uncluttered, and unhurried. Zero conversational filler, zero superficial motivational talk.
+5. **Invite Silence:** Frequently point the user to pause, meditate on a specific striking word, and listen in prayer.
 ```
 
 ---
 
-## 2. Prompt Templates
+## 2. Minimal-Assistance Prompt Templates
 
-### Template A: Microscopic Bible Study (The 13 Hermeneutical Questions)
+### Template A: Microscopic Study Catalyst (Verse Probing)
 
-**Use Case:** Given a specific verse or short passage, generate detailed answers to all 13 core analytical questions or a specific subset.
+**Use Case:** Generates brief, thought-provoking catalytic nudges (not full answers) for the 13 questions to prompt the user's personal meditation.
 
 #### User Prompt Template:
 ```markdown
-Conduct a Microscopic Bible Study on the following passage:
+Provide minimal, catalytic study nudges for the following scripture:
 
-**Scripture Reference:** {{reference}} ({{version}})
-**Scripture Text:**
-"{{text}}"
+**Reference:** {{reference}} ({{version}})
+**Passage:** "{{text}}"
 
-**Optional Focused Word / Phrase:** {{focus_word}}
+For each question below, provide ONLY a brief 1-2 sentence thought-starter or probing question designed to help ME hear from God and formulate my own revelation:
 
-Please analyze this scripture across the 13 foundational Quiet Time questions:
-1. **Meaning in Plain Language:** What does this verse mean directly in simple, clear terms?
-2. **Relevance to Current Circumstances:** What does it mean to me in practical modern circumstances, trials, or decisions?
-3. **Personal Prompting:** What is God saying personally to the heart through the Holy Spirit?
-4. **Explicit Statements:** What explicit biblical truths and statements are directly asserted?
-5. **What It Is NOT Saying:** What false assumptions, human exaggerations, or common misreadings must be rejected?
-6. **Practical Life Application:** What is a concrete, tangible behavioral action to take?
-7. **Command to Obey:** Is there a direct command, requirement, or instruction for the believer?
-8. **Warning to Heed:** What spiritual dangers, pitfalls, or errors are warned against?
-9. **Example to Follow or Avoid:** What character attitudes or behaviors are modeled?
-10. **Allegory / Parable / Type:** Are there spiritual metaphors, prophetic types, or deeper allegories?
-11. **Promise to Claim:** What covenant promise is given, and what conditions are attached?
-12. **Prayer Petitions:** What concrete prayers emerge from this passage?
-13. **Who to Share With:** Who in the believer's sphere of influence needs encouragement from this truth?
+1. **Meaning in Plain Language:** (Briefly clarify the grammatical sense in 1 sentence).
+2. **Current Circumstances:** (Ask 1 piercing question connecting the verse to daily life).
+3. **Personal Prompting:** (Give 1 quiet nudge to listen for the Holy Spirit's voice).
+4. **Explicit Statements:** (Identify 1 key foundational truth declared).
+5. **What It Is NOT Saying:** (Name 1 common misinterpretation to beware of).
+6. **Practical Life Application:** (Ask 1 challenging question regarding behavioral obedience).
+7. **Command to Obey:** (Highlight the explicit directive to follow).
+8. **Warning to Heed:** (Flag any spiritual pitfall or subtle temptation mentioned).
+9. **Example to Follow or Avoid:** (Point to the character disposition modeled).
+10. **Allegory / Type:** (Note any underlying biblical symbolism or prophetic picture).
+11. **Promise to Claim:** (Identify the covenant promise and its condition).
+12. **Prayer Petitions:** (Offer 1 starter prayer phrase for the user to complete).
+13. **Who to Share With:** (Prompt the user to consider who in their life needs this truth).
 ```
 
 ---
 
-### Template B: Topical Bible Study (The Six Dimensions / 6 W's)
+### Template B: Topical Study Catalyst (The 6 W's)
 
-**Use Case:** Exhaustive topical synthesis exploring a spiritual virtue or theme (e.g., *Patience*, *Faith*, *Zeal*, *Humility*).
+**Use Case:** Poses focused, reflective questions across the 6 dimensions to guide the user's personal research.
 
 #### User Prompt Template:
 ```markdown
-Perform a Topical Bible Study using the Six Dimensions (The 6 W's):
+Give catalytic study pointers for a Topical Study on:
 
 **Topic:** {{topic}}
-**Biblical / Etymological Definition:** {{definition}}
-**Anchor Scriptures:** {{supporting_scriptures}}
+**Definition:** {{definition}}
+**Passages:** {{supporting_scriptures}}
 
-Examine this topic across all six dimensions:
-1. **Why & Why Not:** Why must the believer pursue this quality, and what spiritual ruin or lack occurs when it is absent?
-2. **How & How Not:** How is this virtue exercised practically in daily life, and what dangerous counterfeits or false appearances exist?
-3. **Where & Where Not:** In what areas of life (home, workplace, secret life, trials) is it tested, and where must compromise never be permitted?
-4. **When & When Not:** What is the right timing and season for its expression, and when might misapplication be inappropriate?
-5. **What & What Not:** What is its true biblical essence versus what it is commonly mistaken for?
-6. **Who & Who Not:** Toward whom should this quality be demonstrated, and who requires discernment or boundaries?
+Do not write my notes for me. Instead, give me 1-2 probing questions or biblical contrasts for each dimension to guide my personal discovery:
+1. **Why & Why Not:** (What makes this essential, and what does absence cost?).
+2. **How & How Not:** (What does authentic practice look like vs. a religious counterfeit?).
+3. **Where & Where Not:** (In what life situations is this tested most severely?).
+4. **When & When Not:** (What is the divine timing and when is caution required?).
+5. **What & What Not:** (What is the true biblical distinction vs. common confusion?).
+6. **Who & Who Not:** (Who needs this virtue demonstrated to them today?).
 ```
 
 ---
 
-### Template C: Telescopic Bible Study (Macro / Whole-Book Synthesis)
+### Template C: Single Word Meditation (Linguistic Deep-Dive)
 
-**Use Case:** Surveying an entire book or major chapter to understand context, authorial intent, and overarching structure.
+**Use Case:** Unpacks a single Greek/Hebrew/English word to give the user biblical depth, letting them apply it personally.
 
 #### User Prompt Template:
 ```markdown
-Perform a Telescopic Bible Study synthesis:
+Provide linguistic and biblical background for a single word in my meditation passage:
 
-**Book or Chapter:** {{book_or_chapter}}
-**Author & Historical Setting:** {{historical_context}}
-**Intended Recipients & Situation:** {{recipients}}
+**Passage:** {{reference}} — "{{text}}"
+**Focus Word:** {{focus_word}}
 
-Please provide a clear structural overview:
-1. **Historical & Theological Context:** Who wrote this, from where, and to whom? What historical pressure prompted the writing?
-2. **Central Overarching Theme:** What is the single unifying message or motif running through the text?
-3. **Structural Outline:** Break down the text into its natural thematic sections or movements.
-4. **Key Theological Anchors:** What foundational doctrines of God, Christ, the Holy Spirit, or salvation are established?
-5. **Key Practical Commands:** What core ethical and devotional obligations are placed on the readers?
+Please provide:
+1. **Original Greek/Hebrew Term & Literal Meaning:** (Pithy linguistic breakdown).
+2. **Biblical Nuance:** (How this word is uniquely used elsewhere in scripture).
+3. **Meditation Spark:** (1 contemplative question for me to ponder in God's presence).
 ```
 
 ---
 
-### Template D: Rhema & Devotional Journal Synthesis
+## 3. Minimal Structured Output JSON Schemas
 
-**Use Case:** Synthesizing study findings and personal notes into a finished Quiet Time presentation sheet.
+If using JSON output in Google AI Studio, this schema enforces short, punchy `catalyticPrompt` strings instead of full essays.
 
-#### User Prompt Template:
-```markdown
-Synthesize the following Quiet Time study reflections into a clean, unhurried devotional journal entry:
-
-**Date:** {{date}}
-**Scripture:** {{reference}} — "{{text}}"
-**Study Method:** {{study_method}}
-**Raw User Reflections:**
-{{raw_notes}}
-
-Format the final output as a quiet devotional journal entry:
-# Quiet Time — {{date}}
-## Scripture Meditation: {{reference}}
-> {{text}}
-
-### Divine Insights & Rhema
-[Distilled spiritual insights]
-
-### Practical Obedience & Action
-[Concrete next steps]
-
-### Prayer Petitions
-[Personal prayer points responding to the Word]
-```
-
----
-
-## 3. Structured Output JSON Schemas
-
-In Google AI Studio, under **Advanced Settings**, turn on **Structured Output** and select **JSON Schema**.
-
-### Schema 1: Microscopic Study Response (`MicroscopicStudyResult`)
+### Schema: `DevotionalCatalystResponse`
 ```json
 {
   "type": "object",
   "properties": {
     "reference": { "type": "string" },
-    "version": { "type": "string" },
-    "text": { "type": "string" },
     "focusWord": { "type": "string" },
-    "questions": {
+    "catalysts": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "description": "q1 through q13" },
-          "title": { "type": "string" },
-          "prompt": { "type": "string" },
-          "reflection": { "type": "string" }
-        },
-        "required": ["id", "title", "prompt", "reflection"]
-      }
-    },
-    "summaryRhema": { "type": "string" },
-    "prayer": { "type": "string" }
-  },
-  "required": ["reference", "text", "questions"]
-}
-```
-
-### Schema 2: Topical Study Response (`TopicalStudyResult`)
-```json
-{
-  "type": "object",
-  "properties": {
-    "topic": { "type": "string" },
-    "definition": { "type": "string" },
-    "dimensions": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "title": { "type": "string" },
-          "prompt": { "type": "string" },
-          "reflection": { "type": "string" },
-          "scriptureReferences": {
-            "type": "array",
-            "items": { "type": "string" }
+          "id": { "type": "string", "description": "e.g., q1, q2... or topical dimension" },
+          "questionTitle": { "type": "string" },
+          "catalyticPrompt": { 
+            "type": "string", 
+            "description": "Max 1-2 sentences. A thought-starter, historical context, or probing question—never a finished answer." 
           }
         },
-        "required": ["title", "prompt", "reflection"]
+        "required": ["id", "questionTitle", "catalyticPrompt"]
       }
     },
-    "keyApplication": { "type": "string" }
+    "silentMeditationPause": {
+      "type": "string",
+      "description": "A 1-sentence prompt inviting the believer to pause and listen to God in silence."
+    }
   },
-  "required": ["topic", "dimensions"]
+  "required": ["reference", "catalysts", "silentMeditationPause"]
 }
 ```
 
@@ -202,45 +138,21 @@ In Google AI Studio, under **Advanced Settings**, turn on **Structured Output** 
 
 ## 4. Native App Data Structures
 
-For full parity with the QTAPP app storage, these are the exact data structures used in `localStorage` and cloud synchronization:
+These match the app's clean `localStorage` format in [C:/Users/johna/quiet-time-app/index.html](file:///C:/Users/johna/quiet-time-app/index.html):
 
-### 1. `CurrentScripture` Object
 ```typescript
+// Active scripture loaded in viewport
 interface CurrentScripture {
-  reference: string;    // e.g., "2 Timothy 2:15"
-  version: string;      // e.g., "kjv", "web", "asv", "bsb", "ylt"
-  text: string;         // Full scripture text
-  verses?: Array<{
-    verse: number;
-    text: string;
-  }>;
+  reference: string;
+  version: string;
+  text: string;
 }
-```
 
-### 2. `ArchiveEntry` Object (Stored in `qt_journal_archive_clean_v1`)
-```typescript
+// User's own personal archive entry (their genuine revelation)
 interface ArchiveEntry {
-  id: number;           // Unix timestamp (Date.now())
-  date: string;         // ISO date string (new Date().toISOString())
-  ref: string;          // e.g., "2 Timothy 2:15" or "🏷️ Topic: Patience" or "📜 Book: Ephesians"
-  content: string;      // Markdown formatted journal entry
+  id: number;           // Date.now()
+  date: string;         // ISO date
+  ref: string;          // e.g. "2 Timothy 2:15"
+  content: string;      // User's personal written revelation
 }
 ```
-
-### 3. Cloud Sync Payload (`qt_cloud_payload`)
-```typescript
-interface CloudSyncPayload {
-  updatedAt: number;    // Unix timestamp
-  draft: string;        // Active Microscopic journal markdown
-  archive: ArchiveEntry[];
-  scripture: CurrentScripture;
-}
-```
-
-### 4. LocalStorage Keys Reference
-- `qt_journal_draft_clean_v1`: Microscopic study markdown draft.
-- `qt_topical_draft_v2`: Topical study markdown draft.
-- `qt_telescopic_draft_v2`: Telescopic study markdown draft.
-- `qt_journal_archive_clean_v1`: JSON array of archived entries.
-- `qt_ans_q1` to `qt_ans_q13`: Individual responses to the 13 microscopic questions.
-- `qt_topical_ans_0` to `qt_topical_ans_5`: Responses to the 6 topical dimensions.
