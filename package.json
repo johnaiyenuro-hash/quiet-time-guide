@@ -1,0 +1,8 @@
+{
+  "name": "qtapp",
+  "version": "1.0.0",
+  "description": "QTAPP — Quiet Time Study & Revelation Journal",
+  "scripts": {
+    "start": "npx serve ."
+  }
+}
