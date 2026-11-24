@@ -313,12 +313,14 @@
     }
 
     .word-tool-bar {
-      margin-top: 0.85rem;
-      padding-top: 0.85rem;
-      border-top: 1px solid var(--border);
+      margin-top: 0.75rem;
+      padding: 0.9rem 1.05rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
       display: none;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.65rem;
     }
     .word-tool-header {
       display: flex;
@@ -327,11 +329,57 @@
       flex-wrap: wrap;
       gap: 0.5rem;
     }
-    .live-dict-wrap {
-      padding: 0.65rem 0.25rem;
-      border-top: 1px solid var(--border);
-      margin-top: 0.5rem;
+    .word-label-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 0.55rem;
     }
+    .word-label-tag {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .word-label-value {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      color: var(--gold);
+      font-weight: 600;
+    }
+    .word-action-group {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .dict-cache-badge {
+      font-size: 0.72rem;
+      background: rgba(212, 175, 55, 0.16);
+      color: var(--gold);
+      padding: 0.1rem 0.45rem;
+      border-radius: 4px;
+      font-weight: 600;
+      margin-left: auto;
+    }
+    .live-dict-wrap {
+      padding-top: 0.65rem;
+      border-top: 1px solid var(--border);
+    }
+    .passage-quick-row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-top: 0.6rem;
+    }
+    .passage-status {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.45rem;
+      min-height: 1.1em;
+    }
+    .passage-status.is-error { color: var(--warning); }
+    .passage-status.is-ok { color: var(--success); }
     .verse-chip {
       display: inline-flex;
       align-items: center;
@@ -949,7 +997,9 @@
       gap: 0.3rem;
       border-bottom: 1px dotted rgba(212, 175, 55, 0.5);
     }
-    .has-tooltip:hover::after {
+    .has-tooltip:hover::after,
+    .has-tooltip:focus-visible::after,
+    .has-tooltip.tooltip-open::after {
       content: attr(data-tooltip);
       position: absolute;
       top: 100%;
@@ -1672,13 +1722,11 @@
 
       <div id="passageShelf" class="passage-shelf" style="display:none;">
         <div class="scripture-input-row" style="margin-bottom:0; position:relative;">
-          <div style="flex:1; position:relative; min-width:240px;">
+          <div style="flex:1; position:relative; min-width:200px;">
             <input type="text" id="verseInput" class="text-input" placeholder="Type a reference (e.g. John 3:16, Romans 8:28, Psalm 23)..." value="2 Timothy 2:15" spellcheck="true" lang="en" style="width:100%;">
           </div>
-          <select id="bibleVersion" class="text-input" onchange="onVersionChange()" title="Select Bible Translation or Parallel View">
-                        <option value="kjv" selected>KJV — King James Version (1769)</option>
-            <option value="biblehub">🌐 BibleHub Parallel (30+ Translations)...</option>
-            <option value="custom">✏️ Custom Translation (Paste / Assign)...</option>
+          <select id="bibleVersion" class="text-input" onchange="onVersionChange()" title="Select Bible Translation">
+            <option value="kjv" selected>KJV — King James Version (1769)</option>
             <option value="bsb">BSB — Berean Standard Bible (Open / CC0)</option>
             <option value="web">WEB — World English Bible (Modern)</option>
             <option value="asv">ASV — American Standard Version (1901)</option>
@@ -1689,14 +1737,19 @@
             <option value="oeb-us">OEB-US — Open English Bible (US Edition)</option>
             <option value="oeb-cw">OEB-CW — Open English Bible (Commonwealth)</option>
             <option value="clementine">VULGATE — Clementine Latin Vulgate (1592)</option>
+            <option value="custom">✏️ Custom Translation (Paste / Assign)...</option>
           </select>
-          <button class="btn btn-sm" onclick="pasteScripture()">Paste</button>
-          <a id="shelfBibleHubLinkBtn" href="https://biblehub.com/2_timothy/2-15.htm" target="_blank" rel="noopener noreferrer" class="btn btn-sm" onclick="handleBibleHubClick(event)" title="Open currently entered verse in BibleHub Parallel" style="text-decoration:none;">
-            🌐 BibleHub
-          </a>
+          <button type="button" class="btn btn-sm" onclick="pasteScripture()" title="Paste any passage from clipboard">📋 Paste</button>
         </div>
-
-        
+        <div class="passage-quick-row">
+          <span class="meta-label">Quick Passages:</span>
+          <button type="button" class="verse-chip" onclick="loadQuickPassage('2 Timothy 2:15')">2 Tim 2:15</button>
+          <button type="button" class="verse-chip" onclick="loadQuickPassage('Psalm 23:1-3')">Psalm 23:1-3</button>
+          <button type="button" class="verse-chip" onclick="loadQuickPassage('Romans 8:28')">Romans 8:28</button>
+          <button type="button" class="verse-chip" onclick="loadQuickPassage('Proverbs 3:5-6')">Prov 3:5-6</button>
+          <button type="button" class="verse-chip" onclick="loadQuickPassage('Philippians 4:6-7')">Phil 4:6-7</button>
+        </div>
+        <div id="verseLookupStatus" class="passage-status" aria-live="polite"></div>
       </div>
 
       <div class="verse-box">
@@ -1706,15 +1759,15 @@
       <!-- WORD TOOLBAR & LIVE DICTIONARY: ALWAYS DIRECTLY UNDER VERSE BOX -->
       <div id="wordToolbar" class="word-tool-bar" style="display:none;">
         <div class="word-tool-header">
-          <div style="display:flex; align-items:center; gap:0.6rem;">
-            <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;">Selected Word:</span>
-            <span id="selectedWordLabel" style="font-family:var(--font-serif); font-size:1.15rem; color:var(--gold); font-weight:600;"></span>
+          <div class="word-label-wrap">
+            <span class="word-label-tag">Selected Word</span>
+            <span id="selectedWordLabel" class="word-label-value"></span>
           </div>
-          <div style="display:flex; gap:0.4rem; align-items:center; flex-wrap:wrap;">
-            <button class="btn btn-sm" onclick="insertWordNote()" title="Insert word into study notes">Insert Word Note</button>
-            <button class="btn btn-sm" onclick="openConcordanceForWord()" title="Look up Strong's Biblical Concordance">📖 Concordance</button>
-            <button class="btn btn-sm" onclick="requestWordCatalyst()" title="Get a short biblical meaning and reflection prompt for this word">✨ Word Meaning</button>
-            <button class="btn btn-sm" onclick="deselectWord()" title="Deselect highlighted word" style="color:var(--text-muted);">✕ Deselect</button>
+          <div class="word-action-group">
+            <button type="button" class="btn btn-sm" onclick="insertWordNote()" title="Insert word study template into notes">+ Word Note</button>
+            <button type="button" class="btn btn-sm" onclick="openConcordanceForWord()" title="Look up Strong's Biblical Concordance">📖 Concordance</button>
+            <button type="button" class="btn btn-sm btn-gold-outline" onclick="requestWordCatalyst()" title="Get a short biblical meaning and reflection prompt for this word">✨ Word Meaning</button>
+            <button type="button" class="btn btn-sm btn-subtle" onclick="deselectWord()" aria-label="Close word study panel" title="Close word study">✕ Close</button>
           </div>
         </div>
 
@@ -2337,8 +2390,24 @@
     let lookupDebounce = null;
     let currentActiveTabId = "microTab";
 
+    function initAccessibleTooltips() {
+      document.querySelectorAll('.has-tooltip').forEach(el => {
+        if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const wasOpen = el.classList.contains('tooltip-open');
+          document.querySelectorAll('.has-tooltip.tooltip-open').forEach(t => t.classList.remove('tooltip-open'));
+          if (!wasOpen) el.classList.add('tooltip-open');
+        });
+      });
+      document.addEventListener('click', () => {
+        document.querySelectorAll('.has-tooltip.tooltip-open').forEach(t => t.classList.remove('tooltip-open'));
+      });
+    }
+
     function init() {
       initSavedTheme();
+      initAccessibleTooltips();
       renderFormatToolbars();
       renderSevenStepsDrawer();
       initKeyboardFormatShortcuts();
@@ -2816,7 +2885,7 @@
         html += '<span class="dict-phonetic">' + entry.phonetic + '</span>';
       }
       if (isLocal) {
-        html += '<span style="font-size:0.65rem; background:rgba(212,175,55,0.18); color:var(--gold); padding:1px 5px; border-radius:3px; font-weight:600; margin-left:auto;">Biblical Cache</span>';
+        html += '<span class="dict-cache-badge">Biblical Cache</span>';
       }
       html += '</div>';
 
@@ -3305,17 +3374,37 @@
 
         onVerseInput(val);
       });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          onVerseInput(input.value, true);
+        }
+      });
     }
 
-    function onVerseInput(val) {
+    function setVerseLookupStatus(msg, state = '') {
+      const el = document.getElementById('verseLookupStatus');
+      if (!el) return;
+      el.textContent = msg || '';
+      el.className = 'passage-status' + (state ? ' ' + state : '');
+    }
+
+    function loadQuickPassage(ref) {
+      const vInput = document.getElementById('verseInput');
+      if (vInput) vInput.value = ref;
+      onVerseInput(ref, true);
+    }
+
+    function onVerseInput(val, immediate = false) {
       clearTimeout(lookupDebounce);
       if (!val) {
-        
+        setVerseLookupStatus('');
         return;
       }
       let trimmed = val.trim();
       if (trimmed.length < 2) {
-        
+        setVerseLookupStatus('');
         return;
       }
 
@@ -3330,12 +3419,19 @@
         }
       }
 
-      
+      const ver = document.getElementById('bibleVersion').value || 'kjv';
+      if (ver === 'custom' || ver.startsWith('custom_')) return;
+
+      const looksLikeRef = /\d/.test(trimmed);
+      if (looksLikeRef) {
+        setVerseLookupStatus('Looking up ' + trimmed + ' (' + ver.toUpperCase() + ')...');
+      } else {
+        setVerseLookupStatus('Type a chapter & verse (e.g. ' + trimmed + ' 1:1) and press Enter.');
+      }
 
       lookupDebounce = setTimeout(async () => {
+        if (!looksLikeRef) return;
         try {
-          const ver = document.getElementById('bibleVersion').value || 'kjv';
-
           // YLT exact chapter/verse lookup via bolls.life (with search fallback)
           if (ver === 'ylt') {
             const cleanBollsText = (t) => String(t || '')
@@ -3363,6 +3459,7 @@
                       currentScripture.verses = cleanVerses;
                       activeTargetVerse = currentScripture.reference;
                       renderVerseDisplay();
+                      setVerseLookupStatus('✓ Loaded ' + currentScripture.reference + ' (YLT)', 'is-ok');
                       showToast("Verse loaded: " + currentScripture.reference + " (YLT)");
                       return;
                     }
@@ -3385,10 +3482,13 @@
                 currentScripture.verses = cleanVerses;
                 activeTargetVerse = currentScripture.reference;
                 renderVerseDisplay();
+                setVerseLookupStatus('✓ Loaded ' + currentScripture.reference + ' (YLT)', 'is-ok');
                 showToast("Verse loaded: " + currentScripture.reference + " (YLT)");
                 return;
               }
             }
+            setVerseLookupStatus('Could not find "' + trimmed + '" in YLT. Try another translation or click Paste.', 'is-error');
+            return;
           }
 
           // Bible-api.com standard for KJV, BSB, WEB, ASV, BBE, DARBY, DRA, OEB-US, OEB-CW, CLEMENTINE
@@ -3402,13 +3502,19 @@
               currentScripture.verses = data.verses || [];
               activeTargetVerse = currentScripture.reference;
               renderVerseDisplay();
+              setVerseLookupStatus('✓ Loaded ' + currentScripture.reference + ' (' + currentScripture.version + ')', 'is-ok');
               showToast("Verse loaded: " + currentScripture.reference + " (" + currentScripture.version + ")");
+              return;
             }
           }
+          setVerseLookupStatus('Could not find "' + trimmed + '". Check the book & chapter, or click Paste.', 'is-error');
         } catch (e) {
           console.error(e);
+          setVerseLookupStatus(!navigator.onLine
+            ? 'You appear to be offline. Click Paste to study any passage locally.'
+            : 'Lookup temporarily unavailable. Try again or click Paste.', 'is-error');
         }
-      }, 450);
+      }, immediate ? 0 : 450);
     }
 
     
@@ -3565,9 +3671,6 @@
       const mainBtn = document.getElementById('bibleHubLinkBtn');
       if (mainBtn) mainBtn.href = url;
 
-      const shelfBtn = document.getElementById('shelfBibleHubLinkBtn');
-      if (shelfBtn) shelfBtn.href = url;
-
       return { ref, url };
     }
 
@@ -3576,29 +3679,6 @@
       if (e && e.currentTarget) {
         e.currentTarget.href = url;
       }
-      showToast("Opening BibleHub Parallel for " + ref);
-    }
-
-    function openBibleHubParallel() {
-      const { ref, url } = updateBibleHubLinks();
-
-      // Trigger native click on the link element for 100% bypass of popup blockers
-      const link = document.getElementById('bibleHubLinkBtn');
-      if (link) {
-        link.href = url;
-        link.click();
-      } else {
-        const a = document.createElement('a');
-        a.href = url;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(() => {
-          try { document.body.removeChild(a); } catch (err) {}
-        }, 300);
-      }
-
       showToast("Opening BibleHub Parallel for " + ref);
     }
 
@@ -3645,13 +3725,6 @@
 
     function onVersionChange() {
       const verSelect = document.getElementById('bibleVersion');
-      if (verSelect && verSelect.value === 'biblehub') {
-        openBibleHubParallel();
-        verSelect.value = (currentScripture && currentScripture.version) 
-          ? currentScripture.version.toLowerCase() 
-          : 'kjv';
-        return;
-      }
       if (verSelect && verSelect.value === 'custom') {
         assignCustomTranslation();
         return;
@@ -3664,7 +3737,7 @@
         return;
       }
       const ref = document.getElementById('verseInput').value.trim();
-      if (ref) onVerseInput(ref);
+      if (ref) onVerseInput(ref, true);
     }
 
     async function pasteScripture() {
