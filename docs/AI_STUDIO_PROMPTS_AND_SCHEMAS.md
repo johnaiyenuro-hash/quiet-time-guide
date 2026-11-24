@@ -146,6 +146,7 @@ interface CurrentScripture {
   reference: string;
   version: string;
   text: string;
+  verses?: Array<{ verse: number; text: string }>;
 }
 
 // User's own personal archive entry (their genuine revelation)

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Quiet Time Study & Revelation Journal">
+  <rect width="512" height="512" rx="96" fill="#0d1117"/>
+  <rect x="36" y="36" width="440" height="440" rx="72" fill="#151b23" stroke="#d4af37" stroke-width="8"/>
+  <path d="M128 164c42-18 86-18 128 6 42-24 86-24 128-6v192c-42-18-86-18-128 6-42-24-86-24-128-6V164z" fill="none" stroke="#d4af37" stroke-width="16" stroke-linejoin="round"/>
+  <line x1="256" y1="170" x2="256" y2="362" stroke="#d4af37" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="256" cy="116" r="14" fill="#d4af37"/>
+</svg>

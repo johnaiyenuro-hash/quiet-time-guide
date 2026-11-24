@@ -1,0 +1,36 @@
+{
+  "appName": "QTAPP — Quiet Time Study & Revelation Journal",
+  "version": "1.0.0",
+  "productionUrl": "https://quiet-time-guide.vercel.app",
+  "endpoints": {
+    "bibleApiBase": "https://bible-api.com/",
+    "bollsChapterBase": "https://bolls.life/get-chapter/YLT/",
+    "bollsSearchBase": "https://bolls.life/search/YLT/?search=",
+    "dictionaryApiBase": "https://api.dictionaryapi.dev/api/v2/entries/en/",
+    "cloudSyncBase": "https://extendsclass.com/api/json-storage/bin",
+    "bibleHubBase": "https://biblehub.com/",
+    "blueLetterBibleSearchBase": "https://www.blueletterbible.org/search/search.cfm?Criteria=",
+    "websters1828Base": "https://webstersdictionary1828.com/Dictionary/",
+    "catalystApi": "/api/catalyst"
+  },
+  "defaults": {
+    "scripture": {
+      "reference": "2 Timothy 2:15",
+      "version": "kjv",
+      "text": "Study to shew thyself approved unto God, a workman that needeth not to be ashamed, rightly dividing the word of truth.",
+      "verses": []
+    },
+    "topicalTopic": "Patience",
+    "telescopicBook": "Ephesians",
+    "embeddedSyncId": ""
+  },
+  "storageKeys": {
+    "syncKey": "qt_private_sync_key_v2",
+    "syncTime": "qt_last_sync_time_v2",
+    "draft": "qt_user_draft_v2",
+    "topicalDraft": "qt_topical_draft_v2",
+    "teleDraft": "qt_telescopic_draft_v2",
+    "archive": "qt_user_archive_v2",
+    "snapshots": "qt_user_snapshots_v2"
+  }
+}

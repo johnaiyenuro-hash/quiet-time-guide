@@ -2,7 +2,16 @@
   "name": "qtapp",
   "version": "1.0.0",
   "description": "QTAPP — Quiet Time Study & Revelation Journal",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
-    "start": "npx serve ."
+    "start": "npx serve .",
+    "sync": "node scripts/sync-copies.js",
+    "deploy": "node scripts/deploy.js"
+  },
+  "dependencies": {
+    "@google/genai": "^3.2.0",
+    "@vercel/functions": "^3.9.0"
   }
 }

@@ -1,0 +1,75 @@
+{
+  "questions": [
+    { "id": "q1", "title": "What does this verse mean?", "prompt": "Explain the direct biblical meaning in plain language." },
+    { "id": "q2", "title": "What does it mean to me in my specific circumstances?", "prompt": "Connect this scripture to your current decisions, trials, or environment." },
+    { "id": "q3", "title": "What is God telling me personally?", "prompt": "Listen for the quiet, personal promptings of the Holy Spirit." },
+    { "id": "q4", "title": "What is the verse saying?", "prompt": "List explicit statements and biblical truths asserted here." },
+    { "id": "q5", "title": "What is the verse not saying?", "prompt": "Address false assumptions, human exaggerations, or common misreadings." },
+    { "id": "q6", "title": "How can I apply it to my life?", "prompt": "Define a tangible practical action or behavioral change." },
+    { "id": "q7", "title": "Is there a command for me to obey?", "prompt": "Identify direct instructions given to the believer." },
+    { "id": "q8", "title": "Is there a warning for me to heed?", "prompt": "Identify dangers, spiritual pitfalls, or errors warned against." },
+    { "id": "q9", "title": "Is there an example to follow or avoid?", "prompt": "Character attitudes or conduct modeled in the passage." },
+    { "id": "q10", "title": "Is there an allegory or parable to interpret?", "prompt": "Spiritual metaphors, types, and prophetic pictures." },
+    { "id": "q11", "title": "Is there a promise to believe?", "prompt": "Covenant promises to claim, noting any conditions attached." },
+    { "id": "q12", "title": "Is there anything for me to pray about?", "prompt": "Turn the passage into concrete prayer petitions." },
+    { "id": "q13", "title": "Who can I share this with?", "prompt": "People in your circle who need encouragement from this truth." }
+  ],
+  "topicalDimensions": [
+    { "id": "w1", "title": "Why & Why Not", "desc": "Why pursue this quality, and what happens when absent?" },
+    { "id": "w2", "title": "How & How Not", "desc": "How is it practiced practically, and what counterfeits exist?" },
+    { "id": "w3", "title": "Where & Where Not", "desc": "In what areas of life is it tested and demonstrated?" },
+    { "id": "w4", "title": "When & When Not", "desc": "What is the right timing and season for its expression?" },
+    { "id": "w5", "title": "What & What Not", "desc": "What is the true definition versus what it is not?" },
+    { "id": "w6", "title": "Who & Who Not", "desc": "Toward whom should this virtue be exercised?" }
+  ],
+  "sevenSteps": [
+    {
+      "step": "Step 1",
+      "ref": "Psalm 119:18",
+      "title": "Pray to Begin",
+      "verse": "Open thou mine eyes, that I may behold wondrous things out of thy law.",
+      "desc": "Quiet your thoughts. Give thanks to God for His presence and ask the Holy Spirit to grant you spiritual illumination.",
+      "action": "openingPrayer"
+    },
+    {
+      "step": "Step 2",
+      "ref": "Exodus 34:6-7",
+      "title": "Read the Passage",
+      "desc": "Read systematically through your chosen portion. Read without rushing to take in the full context of God's message."
+    },
+    {
+      "step": "Step 3",
+      "ref": "2 Timothy 2:7",
+      "title": "Meditate & Reflect",
+      "verse": "Consider what I say; and the Lord give thee understanding in all things.",
+      "desc": "Reread key verses slowly. Click any word in the Scripture Box to view its original Greek/Hebrew definition and lexicon notes."
+    },
+    {
+      "step": "Step 4",
+      "ref": "Acts 17:11",
+      "title": "Deeper Study",
+      "desc": "Examine the verse through the 13 analytical questions (Microscopic) or the 6 W's (Topical) to identify commands, promises, warnings, and applications."
+    },
+    {
+      "step": "Step 5",
+      "ref": "2 Timothy 2:15",
+      "title": "Use Study Tools",
+      "desc": "Consult Strong's Concordance, cross-references, and reliable biblical guides to rightly divide the word of truth.",
+      "action": "concordance"
+    },
+    {
+      "step": "Step 6",
+      "ref": "Exodus 34:1",
+      "title": "Write Down Revelations",
+      "desc": "Revelations written down are remembered and practiced. Record what God spoke to you in the Journal Studio on the right."
+    },
+    {
+      "step": "Step 7",
+      "ref": "1 Thessalonians 5:17",
+      "title": "Conclude in Prayer",
+      "desc": "Convert your written revelations into real prayer petitions. Pray over the commands to obey, claim the promises, and spend time listening in silence.",
+      "action": "saveArchive"
+    }
+  ],
+  "openingPrayerTemplate": "\n\n### 🙏 Opening Prayer\n> \"Lord, open thou mine eyes, that I may behold wondrous things out of thy law (Ps 119:18). Speak to my heart today; grant me spiritual wisdom and revelation in Christ.\"\n"
+}

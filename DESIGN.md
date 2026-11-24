@@ -99,7 +99,7 @@ The design system for the **Quiet Time Study & Revelation Journal** is conceived
 The visual language balances three deliberate typographic voices:
 - **Cinzel:** Majestic classical Roman inscriptional serif for titles and landmarks.
 - **Lora:** Warm, highly legible literary serif for prolonged scripture reading and personal reflection writing.
-- **Inter:** Crisp, neutral functional sans-serif for UI labels, navigation tabs, and system controls.
+- **Outfit:** Crisp, neutral humanist sans-serif for UI labels, navigation tabs, and system controls.
 
 ---
 
@@ -149,8 +149,8 @@ Typographic scale and hierarchy prioritize sustained reading comfort and contemp
 
 - **Section Headings (`h2`, `h3`):** `Cinzel`, `1.15rem–1.25rem`, weight `600`, tracking `0.03em–0.04em`.
 - **Scripture Verse (`.verse-text`):** `Lora`, `1.22rem`, `line-height: 1.85`, upright Roman (`font-style: normal;`). Traditional Bibles reserve italics for emphasis or translator notes; body scripture is presented upright and grounded.
-- **Reflection Editor (`.editor-box`):** `Lora`, `1.0rem`, `line-height: 1.75`. Provides a natural journal cadence.
-- **UI & Controls:** `Inter`, `0.85rem–0.88rem`, normal letter-spacing. Clean, invisible utility.
+- **Reflection Editor (`.unified-editor`):** `Lora`, `1.05rem`, `line-height: 1.85`. Provides a natural journal cadence.
+- **UI & Controls:** `Outfit`, `0.85rem–0.88rem`, normal letter-spacing. Clean, invisible utility.
 - **Uppercase Meta Labels:** Reserved for tiny category tags (`0.72rem–0.75rem`) with `0.04em` letter-spacing.
 
 ---
@@ -159,7 +159,7 @@ Typographic scale and hierarchy prioritize sustained reading comfort and contemp
 
 - **Study Grid:** Desktop employs a balanced two-column study desk:
   - **Left (1.12fr):** Hermeneutical tools (Scripture verse box, Word token toolbar, 13 analytical questions, topical/telescopic frameworks).
-  - **Right (0.88fr):** Journal Studio (Dual-mode Markdown editor, tag pills, autosave status, and document export).
+  - **Right (0.88fr):** Journal Studio (Unified `contenteditable` Markdown editor with 5-color highlights, autosave snapshots, and document export).
 - **Responsive Stacking:** On tablets and mobile (`< 1024px`), the layout stacks gracefully into a single natural reading column.
 - **Zero Scroll Lock on Mobile:** The sticky panel on desktop unpins on mobile (`position: static;`) to guarantee fluid, unencumbered thumb scrolling.
 - **Full Sheet Mode:** A dedicated clean presentation view (`#pageModal`) displays reflections formatted for quiet reflection, study sharing, or printing.
@@ -186,20 +186,23 @@ Typographic scale and hierarchy prioritize sustained reading comfort and contemp
 
 ## Components
 
-### 1. Unified Storage & Sync Pill
-- Compact status indicator in the top header (`Saved to Device` / `🟢 Synced`).
-- Replaces noisy multi-button save bars with a quiet, reassurance-first indicator.
+### 1. Storage, Sync & Snapshot Menu
+- Status indicator (`Private Mode` / `Sync: Active`) and `Restore Snapshots` live calmly inside the `⋯` header menu alongside a primary `Save` button.
+- Replaces noisy multi-button save bars with a quiet, reassurance-first layout.
 
 ### 2. Scripture Tokenizer & Verse Display
 - Parses verses into individual clickable word tokens.
-- Clicking a word triggers inline lexical definitions without jarring page transitions.
+- Clicking a word triggers inline lexical definitions and an optional `✨ Word Spark` catalytic deep-dive without jarring page transitions.
 
 ### 3. Journal Studio
-- Seamless dual-mode: `Edit Notes` (raw Markdown typing) and `Rendered View` (formatted reading).
-- Quick tag buttons (`#PROMISE`, `#COMMAND`, `#WARNING`, `#PRAYER`, `#ACTION`) for structured reflection stamps.
+- Unified live-formatted `contenteditable` editor backed by lossless Markdown serialization.
+- Formatting bar with Undo/Redo, Bold, Italic, Underline, 5 semantic highlight colors (Gold, Green, Blue, Rose, Amber), Section Heading (`H3`), and Bullet Lists.
 
 ### 4. Consolidated Share & Export Menu
-- Secondary export actions (`Copy Notes`, `Download Markdown`, `Print / PDF`, `Clean Guide for Friend`) are housed in a calm `Share ▾` dropdown menu.
+- Secondary actions (`Storage & Sync`, `Full Document Sheet`, `Restore Snapshots`, `Copy Notes Text`, `Clean Guide for Friend`, `Download Markdown`, `Print / Save PDF`) are housed in the calm `⋯` dropdown menu.
+
+### 5. Catalytic Nudge Callout (`.catalyst-box`)
+- Optional, user-triggered 1px-bordered `--surface` callout presenting brief 1–2 sentence Socratic thought-starters and a silent meditation pause via `/api/catalyst` (`store: false`). Never auto-runs or writes notes on the user's behalf.
 
 ---
 

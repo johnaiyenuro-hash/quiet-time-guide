@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "properties": {
+    "reference": { "type": "string" },
+    "focusWord": { "type": "string" },
+    "catalysts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "e.g., q1..q13, w1..w6, or origin/nuance/spark"
+          },
+          "questionTitle": { "type": "string" },
+          "catalyticPrompt": {
+            "type": "string",
+            "description": "Max 1-2 sentences. A thought-starter, historical context, or probing question—never a finished answer."
+          }
+        },
+        "required": ["id", "questionTitle", "catalyticPrompt"]
+      }
+    },
+    "silentMeditationPause": {
+      "type": "string",
+      "description": "A 1-sentence prompt inviting the believer to pause and listen to God in silence."
+    }
+  },
+  "required": ["reference", "catalysts", "silentMeditationPause"]
+}

@@ -37,12 +37,13 @@ Unlike generic note-taking apps (Notion, Apple Notes) or busy online reference p
   2. *Topical Study:* Six W's framework (Why, How, Where, When, What, Who).
   3. *Telescopic Study:* Book-level setting, background context, and central theme.
   4. *Daily 7 Steps:* Systematic spiritual rhythm from opening prayer to quiet listening.
-- **Journal Studio:** Dual-mode editor (Live Markdown editing + Rendered presentation view), tag stamps (`#PROMISE`, `#COMMAND`, `#WARNING`, `#PRAYER`, `#ACTION`), autosave history, export/import JSON backup, full-sheet document reader, and print/PDF generation.
+- **Journal Studio:** Unified live-formatted `contenteditable` Markdown editor with 5 semantic highlight colors, autosave snapshots with Restore modal, full-state export/import JSON backup, full-sheet document reader, and print/PDF generation.
+- **Optional Catalytic Study Companion:** On the hosted Vercel deployment, users may optionally invoke brief 1–2 sentence Socratic thought-starters and word nuances via `/api/catalyst` (`store: false`, transmitting only the active scripture/topic/word—never personal journal notes).
 
 ## Brand Commitments
 
 - **Voice & Atmosphere:** Sacred, contemplative, reverent, dignified, and peaceful.
-- **Visual Identity:** Epigraphic classical Roman headers (`Cinzel`), warm literary editorial serif for scripture and reflections (`Lora`), balanced with neutral UI clarity (`Inter`).
+- **Visual Identity:** Epigraphic classical Roman headers (`Cinzel`), warm literary editorial serif for scripture and reflections (`Lora`), balanced with neutral UI clarity (`Outfit`).
 - **Color Identity:** Warm celestial gold (`#d4af37`), deep midnight slate (`#0d1117`), warm papyrus sepia (`#f5f0e6`), and clean parchment white (`#f8fafc`).
 - **Restraint:** No noisy badges, no gamification streaks, no social feeds, no unsolicited popups.
 

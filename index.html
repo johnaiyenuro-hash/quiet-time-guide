@@ -4,6 +4,9 @@
   <!-- impeccable-disable low-contrast -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d1117">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/icon.svg">
   <title>Quiet Time Study & Revelation Journal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -353,6 +356,46 @@
       line-height: 1.55;
       color: var(--text);
       margin-bottom: 0.2rem;
+    }
+    .catalyst-box {
+      margin-top: 0.65rem;
+      margin-bottom: 0.65rem;
+      padding: 0.75rem 0.9rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.84rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+    .catalyst-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.35rem;
+    }
+    .catalyst-label {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--gold);
+    }
+    .catalyst-text {
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+    .catalyst-pause {
+      font-family: var(--font-serif);
+      font-size: 0.82rem;
+      font-style: italic;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      padding-top: 0.4rem;
+      margin-top: 0.35rem;
     }
 
     /* Grid Layout: Study Tools (Left) & Revelation Studio (Right) */
@@ -1128,12 +1171,15 @@
             <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;">Selected Word:</span>
             <span id="selectedWordLabel" style="font-family:var(--font-serif); font-size:1.15rem; color:var(--gold); font-weight:600;"></span>
           </div>
-          <div style="display:flex; gap:0.4rem; align-items:center;">
+          <div style="display:flex; gap:0.4rem; align-items:center; flex-wrap:wrap;">
             <button class="btn btn-sm" onclick="insertWordNote()" title="Insert word into study notes">Insert Word Note</button>
             <button class="btn btn-sm" onclick="openConcordanceForWord()" title="Look up Strong's Biblical Concordance">📖 Concordance</button>
+            <button class="btn btn-sm" onclick="requestWordCatalyst()" title="Request brief Greek/Hebrew nuance and meditation spark">✨ Word Spark</button>
             <button class="btn btn-sm" onclick="deselectWord()" title="Deselect highlighted word" style="color:var(--text-muted);">✕ Deselect</button>
           </div>
         </div>
+
+        <div id="wordCatalystBox" class="catalyst-box" style="display:none;"></div>
 
         <div class="live-dict-wrap">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
@@ -1199,11 +1245,13 @@
                   <div id="activeQuestionTitle" style="font-family:var(--font-head); font-weight:700; font-size:1.05rem; color:var(--text);"></div>
                   <span id="activeQuestionBadge" style="font-size:0.72rem; padding:0.15rem 0.45rem; border-radius:9999px; background:rgba(52,211,153,0.15); color:#34d399; font-weight:600; display:none;">✓ Answered</span>
                 </div>
-                <div id="activeQuestionPrompt" style="font-size:0.83rem; color:var(--text-muted); font-style:italic; line-height:1.5; margin-bottom:0.75rem;"></div>
+                <div id="activeQuestionPrompt" style="font-size:0.83rem; color:var(--text-muted); font-style:italic; line-height:1.5; margin-bottom:0.6rem;"></div>
+                <div id="microCatalystBox" class="catalyst-box" style="display:none;"></div>
                 <textarea class="input-textarea" id="activeQuestionInput" placeholder="Type your meditation reflection here..." spellcheck="true" lang="en" style="min-height:115px; cursor:text; line-height:1.6; width:100%;" oninput="onActiveQuestionInput(this.value)"></textarea>
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.65rem; flex-wrap:wrap; gap:0.4rem;">
                   <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
                     <span style="font-size:0.75rem; color:var(--text-muted);">Saved automatically</span>
+                    <button type="button" class="btn btn-sm btn-subtle" onclick="requestMicroCatalyst()" title="Request a brief catalytic thought-starter for this passage">✨ Catalytic Nudge</button>
                     <button type="button" class="btn btn-sm btn-subtle" onclick="clearCurrentQuestionAnswer()" title="Clear reflection for this question">↺ Clear</button>
                     <button type="button" class="btn btn-sm btn-subtle" onclick="resetMicroStudy()" title="Reset notes and all 13 questions to default">↺ Reset All</button>
                   </div>
@@ -1307,11 +1355,13 @@
                   <div id="activeTopicalTitle" style="font-family:var(--font-head); font-weight:700; font-size:1.05rem; color:var(--text);"></div>
                   <span id="activeTopicalBadge" style="font-size:0.72rem; padding:0.15rem 0.45rem; border-radius:9999px; background:rgba(52,211,153,0.15); color:#34d399; font-weight:600; display:none;">✓ Answered</span>
                 </div>
-                <div id="activeTopicalPrompt" style="font-size:0.83rem; color:var(--text-muted); font-style:italic; line-height:1.5; margin-bottom:0.75rem;"></div>
+                <div id="activeTopicalPrompt" style="font-size:0.83rem; color:var(--text-muted); font-style:italic; line-height:1.5; margin-bottom:0.6rem;"></div>
+                <div id="topicalCatalystBox" class="catalyst-box" style="display:none;"></div>
                 <textarea class="input-textarea" id="activeTopicalInput" placeholder="Type your topical reflection on this aspect here..." spellcheck="true" lang="en" style="min-height:115px; cursor:text; line-height:1.6; width:100%;" oninput="onActiveTopicalInput(this.value)"></textarea>
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.65rem; flex-wrap:wrap; gap:0.4rem;">
                   <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
                     <span style="font-size:0.75rem; color:var(--text-muted);">Saved automatically</span>
+                    <button type="button" class="btn btn-sm btn-subtle" onclick="requestTopicalCatalyst()" title="Request brief catalytic pointers for this topic">✨ Catalytic Nudge</button>
                     <button type="button" class="btn btn-sm btn-subtle" onclick="clearCurrentTopicalAnswer()" title="Clear reflection for this aspect">↺ Clear</button>
                     <button type="button" class="btn btn-sm btn-subtle" onclick="resetTopicalStudy()" title="Reset Topical notes and all 6 aspects to default">↺ Reset All</button>
                   </div>
@@ -1677,6 +1727,22 @@
   <div id="toast"></div>
 
   <script>
+    // Centralized runtime configuration (mirrors config/app.config.json)
+    const APP_CONFIG = {
+      productionUrl: 'https://quiet-time-guide.vercel.app',
+      endpoints: {
+        bibleApiBase: 'https://bible-api.com/',
+        bollsChapterBase: 'https://bolls.life/get-chapter/YLT/',
+        bollsSearchBase: 'https://bolls.life/search/YLT/?search=',
+        dictionaryApiBase: 'https://api.dictionaryapi.dev/api/v2/entries/en/',
+        cloudSyncBase: 'https://extendsclass.com/api/json-storage/bin',
+        bibleHubBase: 'https://biblehub.com/',
+        blueLetterBibleSearchBase: 'https://www.blueletterbible.org/search/search.cfm?Criteria=',
+        websters1828Base: 'https://webstersdictionary1828.com/Dictionary/',
+        catalystApi: '/api/catalyst'
+      }
+    };
+
     const QUESTIONS = [
       { id: "q1", title: "What does this verse mean?", prompt: "Explain the direct biblical meaning in plain language." },
       { id: "q2", title: "What does it mean to me in my specific circumstances?", prompt: "Connect this scripture to your current decisions, trials, or environment." },
@@ -1865,6 +1931,7 @@
       const toolbar = document.getElementById('wordToolbar');
       toolbar.style.display = 'flex';
       document.getElementById('selectedWordLabel').textContent = '"' + activeWord + '"';
+      dismissCatalystBox('wordCatalystBox');
 
       fetchLiveDefinition(activeWord);
     }
@@ -1874,6 +1941,7 @@
       document.querySelectorAll('.verse-word').forEach(w => w.classList.remove('selected'));
       const toolbar = document.getElementById('wordToolbar');
       if (toolbar) toolbar.style.display = 'none';
+      dismissCatalystBox('wordCatalystBox');
       latestDictData = null;
     }
 
@@ -2134,7 +2202,7 @@
 
       // 2. Try online API with exact word
       try {
-        const resp = await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + encodeURIComponent(cleanWord));
+        const resp = await fetch(APP_CONFIG.endpoints.dictionaryApiBase + encodeURIComponent(cleanWord));
         if (resp.ok) {
           const data = await resp.json();
           if (data && data.length > 0) {
@@ -2148,7 +2216,7 @@
       // 3. If exact word failed, try normalized root word (e.g. needeth -> need, shew -> show)
       if (rootWord !== cleanWord) {
         try {
-          const resp = await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + encodeURIComponent(rootWord));
+          const resp = await fetch(APP_CONFIG.endpoints.dictionaryApiBase + encodeURIComponent(rootWord));
           if (resp.ok) {
             const data = await resp.json();
             if (data && data.length > 0) {
@@ -2162,8 +2230,8 @@
 
       // 4. Word not found or device is offline: provide clean guidance and specialized KJV links
       const isOffline = !navigator.onLine;
-      const websterUrl = 'https://webstersdictionary1828.com/Dictionary/' + encodeURIComponent(cleanWord);
-      const strongsUrl = 'https://www.blueletterbible.org/search/search.cfm?Criteria=' + encodeURIComponent(cleanWord) + '&t=KJV#s=s_primary_0_1';
+      const websterUrl = APP_CONFIG.endpoints.websters1828Base + encodeURIComponent(cleanWord);
+      const strongsUrl = APP_CONFIG.endpoints.blueLetterBibleSearchBase + encodeURIComponent(cleanWord) + '&t=KJV#s=s_primary_0_1';
 
       area.innerHTML = '<div style="font-size:0.82rem; color:var(--text-muted); line-height:1.5;">' +
         '<span style="font-weight:600; color:var(--gold);">' + word + '</span>: ' +
@@ -2205,7 +2273,7 @@
       }
       const concordanceWord = encodeURIComponent((entry.word || activeWord || '').toLowerCase().replace(/[^a-z]/g, ''));
       html += '<div style="margin-top:0.5rem; padding-top:0.4rem; border-top:1px solid var(--border); font-size:0.75rem; display:flex; gap:0.6rem;">' +
-        '<a href="https://www.blueletterbible.org/search/search.cfm?Criteria=' + concordanceWord + '&t=KJV#s=s_primary_0_1" target="_blank" style="color:var(--gold); font-weight:600; text-decoration:underline;">📖 Open in Strong&#39;s Concordance ➜</a>' +
+        '<a href="' + APP_CONFIG.endpoints.blueLetterBibleSearchBase + concordanceWord + '&t=KJV#s=s_primary_0_1" target="_blank" rel="noopener noreferrer" style="color:var(--gold); font-weight:600; text-decoration:underline;">📖 Open in Strong&#39;s Concordance ➜</a>' +
         '</div>';
       html += '</div>';
       area.innerHTML = html;
@@ -2705,7 +2773,7 @@
             const parsedYlt = parseReferenceForBolls(trimmed);
             if (parsedYlt) {
               try {
-                const chapterUrl = 'https://bolls.life/get-chapter/YLT/' + parsedYlt.bookId + '/' + parsedYlt.chapter + '/';
+                const chapterUrl = APP_CONFIG.endpoints.bollsChapterBase + parsedYlt.bookId + '/' + parsedYlt.chapter + '/';
                 const chRes = await fetch(chapterUrl);
                 if (chRes.ok) {
                   const chapterVerses = await chRes.json();
@@ -2731,7 +2799,7 @@
               }
             }
 
-            const searchUrl = 'https://bolls.life/search/YLT/?search=' + encodeURIComponent(trimmed);
+            const searchUrl = APP_CONFIG.endpoints.bollsSearchBase + encodeURIComponent(trimmed);
             const res = await fetch(searchUrl);
             if (res.ok) {
               const list = await res.json();
@@ -2750,7 +2818,7 @@
           }
 
           // Bible-api.com standard for KJV, BSB, WEB, ASV, BBE, DARBY, DRA, OEB-US, OEB-CW, CLEMENTINE
-          const res = await fetch('https://bible-api.com/' + encodeURIComponent(trimmed) + '?translation=' + ver);
+          const res = await fetch(APP_CONFIG.endpoints.bibleApiBase + encodeURIComponent(trimmed) + '?translation=' + ver);
           if (res.ok) {
             const data = await res.json();
             if (data && data.text) {
@@ -2870,7 +2938,8 @@
     }
 
     function getBibleHubUrl(ref) {
-      if (!ref) return 'https://biblehub.com/';
+      const base = APP_CONFIG.endpoints.bibleHubBase;
+      if (!ref) return base;
       // Strip translation tags e.g. "(KJV)", "[ESV]"
       let clean = ref.replace(/\s*\([A-Za-z0-9-]+\)|\s*\[[A-Za-z0-9-]+\]/gi, '').trim();
 
@@ -2886,7 +2955,7 @@
         if (book === 'song_of_solomon' || book === 'song_of_songs') book = 'songs';
         const ch = fullMatch[2];
         const vs = fullMatch[3];
-        return 'https://biblehub.com/' + book + '/' + ch + '-' + vs + '.htm';
+        return base + book + '/' + ch + '-' + vs + '.htm';
       }
 
       // Book + Chapter only (e.g. "Psalm 23", "Romans 8")
@@ -2897,7 +2966,7 @@
         if (book === 'psalm') book = 'psalms';
         if (book === 'song_of_solomon' || book === 'song_of_songs') book = 'songs';
         const ch = chMatch[2];
-        return 'https://biblehub.com/' + book + '/' + ch + '-1.htm';
+        return base + book + '/' + ch + '-1.htm';
       }
 
       // Book only (e.g. "Romans", "Genesis")
@@ -2907,10 +2976,10 @@
         let book = BOOK_SLUG_MAP[rawBook] || rawBook.replace(/\s+/g, '_');
         if (book === 'psalm') book = 'psalms';
         if (book === 'song_of_solomon' || book === 'song_of_songs') book = 'songs';
-        return 'https://biblehub.com/' + book + '/1-1.htm';
+        return base + book + '/1-1.htm';
       }
 
-      return 'https://biblehub.com/';
+      return base;
     }
 
     function updateBibleHubLinks() {
@@ -3067,7 +3136,7 @@
       }
 
       const clean = word.toLowerCase().replace(/[^a-z]/g, '');
-      const url = 'https://www.blueletterbible.org/search/search.cfm?Criteria=' + encodeURIComponent(clean) + '&t=KJV#s=s_primary_0_1';
+      const url = APP_CONFIG.endpoints.blueLetterBibleSearchBase + encodeURIComponent(clean) + '&t=KJV#s=s_primary_0_1';
 
       // Safe trigger to bypass pop-up blockers on mobile and desktop browsers
       const a = document.createElement('a');
@@ -3121,6 +3190,7 @@
       if (input) input.value = saved;
 
       updateActiveQuestionBadge(saved);
+      renderMicroCatalystForActive();
     }
 
     function switchQuestionDropdown(qId) {
@@ -3232,6 +3302,7 @@
       const saved = localStorage.getItem('qt_topical_ans_' + currentTopicalIndex) || '';
       if (inputEl) inputEl.value = saved;
       updateActiveTopicalBadge(saved);
+      renderTopicalCatalystForActive();
     }
 
     function navigateTopicalQuestion(delta) {
@@ -3344,7 +3415,7 @@
 
     function getCloudEndpoint() {
       if (!cloudSyncId) return null;
-      return 'https://extendsclass.com/api/json-storage/bin/' + cloudSyncId;
+      return APP_CONFIG.endpoints.cloudSyncBase + '/' + cloudSyncId;
     }
 
     // Safely parse JSON from ExtendsClass
@@ -3656,7 +3727,7 @@
 
         const initialData = Object.assign({ updatedAt: Date.now() }, state);
 
-        const res = await fetch('https://extendsclass.com/api/json-storage/bin', {
+        const res = await fetch(APP_CONFIG.endpoints.cloudSyncBase, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(initialData)
@@ -4324,7 +4395,8 @@ function closeModal() {
       const docClone = document.documentElement.cloneNode(true);
       const clearIds = [
         'journalEditor', 'topicalJournalEditor', 'teleJournalEditor',
-        'archiveList', 'syncKeyDisplay', 'modalContent', 'verseDisplay'
+        'archiveList', 'syncKeyDisplay', 'modalContent', 'verseDisplay',
+        'microCatalystBox', 'topicalCatalystBox', 'wordCatalystBox'
       ];
       clearIds.forEach(id => {
         const el = docClone.querySelector('#' + id);
@@ -4345,7 +4417,7 @@ function closeModal() {
       const countEl = docClone.querySelector('#archiveCount');
       if (countEl) countEl.textContent = '0';
 
-      ['shareMenuDropdown', 'wordToolbar', 'passageShelf'].forEach(id => {
+      ['shareMenuDropdown', 'wordToolbar', 'passageShelf', 'microCatalystBox', 'topicalCatalystBox', 'wordCatalystBox'].forEach(id => {
         const el = docClone.querySelector('#' + id);
         if (el) el.style.display = 'none';
       });
@@ -4612,7 +4684,7 @@ function togglePassageShelf() {
       defInput.placeholder = "Looking up definition for '" + clean + "'...";
       topicalDefTimer = setTimeout(async () => {
         try {
-          const resp = await fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + encodeURIComponent(lower));
+          const resp = await fetch(APP_CONFIG.endpoints.dictionaryApiBase + encodeURIComponent(lower));
           if (resp.ok) {
             const data = await resp.json();
             if (data && data[0]?.meanings[0]?.definitions[0]?.definition) {
@@ -4779,6 +4851,221 @@ function togglePassageShelf() {
       renderArchive();
       showToast("Telescopic note saved to archive");
       if (typeof pushToCloud === 'function') pushToCloud();
+    }
+
+    // ==========================================
+    // OPTIONAL CATALYTIC STUDY COMPANION (/api/catalyst)
+    // ==========================================
+    const catalystCache = {
+      micro: {},
+      topical: {},
+      word: {}
+    };
+
+    function escapeCatalystHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function dismissCatalystBox(boxId) {
+      const box = document.getElementById(boxId);
+      if (box) {
+        box.style.display = 'none';
+        box.innerHTML = '';
+      }
+    }
+
+    async function fetchCatalyst(payload) {
+      if (window.location.protocol === 'file:') {
+        throw new Error('Live catalytic nudges are available on the hosted web app (' + APP_CONFIG.productionUrl + '). All local study tools work offline.');
+      }
+      const res = await fetch(APP_CONFIG.endpoints.catalystApi, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error || 'Catalytic assistant is temporarily unavailable.');
+      }
+      return data;
+    }
+
+    function renderMicroCatalystForActive() {
+      const box = document.getElementById('microCatalystBox');
+      if (!box) return;
+      const cacheKey = (currentScripture.reference || '') + '|' + (currentScripture.version || '');
+      const cached = catalystCache.micro[cacheKey];
+      if (!cached || !Array.isArray(cached.catalysts)) {
+        box.style.display = 'none';
+        return;
+      }
+      const q = QUESTIONS[currentQuestionIndex];
+      const item = cached.catalysts.find(c => (c.id || '').toLowerCase() === q.id) || cached.catalysts[currentQuestionIndex];
+      if (!item) {
+        box.style.display = 'none';
+        return;
+      }
+      box.innerHTML =
+        '<div class="catalyst-header">' +
+          '<span class="catalyst-label">✨ Catalytic Thought-Starter</span>' +
+          '<button type="button" class="btn btn-sm btn-subtle" style="padding:0.1rem 0.35rem;" onclick="dismissCatalystBox(\'microCatalystBox\')">✕</button>' +
+        '</div>' +
+        '<div class="catalyst-text">' + escapeCatalystHtml(item.catalyticPrompt) + '</div>' +
+        (cached.silentMeditationPause
+          ? '<div class="catalyst-pause">Pause &amp; Listen: ' + escapeCatalystHtml(cached.silentMeditationPause) + '</div>'
+          : '');
+      box.style.display = 'block';
+    }
+
+    async function requestMicroCatalyst() {
+      const box = document.getElementById('microCatalystBox');
+      if (!box) return;
+      if (!currentScripture || !currentScripture.reference || !currentScripture.text) {
+        showToast('Load a scripture passage first');
+        return;
+      }
+      const cacheKey = currentScripture.reference + '|' + (currentScripture.version || '');
+      if (catalystCache.micro[cacheKey]) {
+        renderMicroCatalystForActive();
+        return;
+      }
+
+      box.innerHTML = '<div class="catalyst-label">✨ Preparing quiet catalytic nudges...</div>';
+      box.style.display = 'block';
+      try {
+        const data = await fetchCatalyst({
+          mode: 'microscopic',
+          reference: currentScripture.reference,
+          version: (currentScripture.version || 'KJV').toUpperCase(),
+          text: currentScripture.text
+        });
+        catalystCache.micro[cacheKey] = data;
+        renderMicroCatalystForActive();
+      } catch (err) {
+        box.innerHTML =
+          '<div class="catalyst-header">' +
+            '<span class="catalyst-label">Catalytic Companion</span>' +
+            '<button type="button" class="btn btn-sm btn-subtle" style="padding:0.1rem 0.35rem;" onclick="dismissCatalystBox(\'microCatalystBox\')">✕</button>' +
+          '</div>' +
+          '<div style="color:var(--text-muted); font-size:0.82rem;">' + escapeCatalystHtml(err.message) + '</div>';
+      }
+    }
+
+    function renderTopicalCatalystForActive() {
+      const box = document.getElementById('topicalCatalystBox');
+      if (!box) return;
+      const topic = (document.getElementById('topicalTopic')?.value || '').trim().toLowerCase();
+      const cached = catalystCache.topical[topic];
+      if (!cached || !Array.isArray(cached.catalysts)) {
+        box.style.display = 'none';
+        return;
+      }
+      const targetId = 'w' + (currentTopicalIndex + 1);
+      const item = cached.catalysts.find(c => (c.id || '').toLowerCase() === targetId) || cached.catalysts[currentTopicalIndex];
+      if (!item) {
+        box.style.display = 'none';
+        return;
+      }
+      box.innerHTML =
+        '<div class="catalyst-header">' +
+          '<span class="catalyst-label">✨ Catalytic Study Pointer</span>' +
+          '<button type="button" class="btn btn-sm btn-subtle" style="padding:0.1rem 0.35rem;" onclick="dismissCatalystBox(\'topicalCatalystBox\')">✕</button>' +
+        '</div>' +
+        '<div class="catalyst-text">' + escapeCatalystHtml(item.catalyticPrompt) + '</div>' +
+        (cached.silentMeditationPause
+          ? '<div class="catalyst-pause">Pause &amp; Listen: ' + escapeCatalystHtml(cached.silentMeditationPause) + '</div>'
+          : '');
+      box.style.display = 'block';
+    }
+
+    async function requestTopicalCatalyst() {
+      const box = document.getElementById('topicalCatalystBox');
+      if (!box) return;
+      const topic = (document.getElementById('topicalTopic')?.value || '').trim();
+      const definition = (document.getElementById('topicalDef')?.value || '').trim();
+      if (!topic) {
+        showToast('Enter a topic first');
+        return;
+      }
+      const cacheKey = topic.toLowerCase();
+      if (catalystCache.topical[cacheKey]) {
+        renderTopicalCatalystForActive();
+        return;
+      }
+
+      box.innerHTML = '<div class="catalyst-label">✨ Preparing topical study pointers...</div>';
+      box.style.display = 'block';
+      try {
+        const data = await fetchCatalyst({
+          mode: 'topical',
+          topic,
+          definition: definition || 'N/A',
+          supportingScriptures: currentScripture?.reference || 'General Scripture'
+        });
+        catalystCache.topical[cacheKey] = data;
+        renderTopicalCatalystForActive();
+      } catch (err) {
+        box.innerHTML =
+          '<div class="catalyst-header">' +
+            '<span class="catalyst-label">Catalytic Companion</span>' +
+            '<button type="button" class="btn btn-sm btn-subtle" style="padding:0.1rem 0.35rem;" onclick="dismissCatalystBox(\'topicalCatalystBox\')">✕</button>' +
+          '</div>' +
+          '<div style="color:var(--text-muted); font-size:0.82rem;">' + escapeCatalystHtml(err.message) + '</div>';
+      }
+    }
+
+    async function requestWordCatalyst() {
+      const box = document.getElementById('wordCatalystBox');
+      if (!box) return;
+      if (!activeWord) {
+        showToast('Click any word in the scripture first');
+        return;
+      }
+      const cacheKey = (currentScripture.reference || '') + '|' + activeWord.toLowerCase();
+      const renderWordData = (data) => {
+        const itemsHtml = (data.catalysts || []).map(c =>
+          '<div class="catalyst-text"><strong style="color:var(--gold);">' + escapeCatalystHtml(c.questionTitle) + ':</strong> ' + escapeCatalystHtml(c.catalyticPrompt) + '</div>'
+        ).join('');
+        box.innerHTML =
+          '<div class="catalyst-header">' +
+            '<span class="catalyst-label">✨ Word Meditation Spark — "' + escapeCatalystHtml(activeWord) + '"</span>' +
+            '<button type="button" class="btn btn-sm btn-subtle" style="padding:0.1rem 0.35rem;" onclick="dismissCatalystBox(\'wordCatalystBox\')">✕</button>' +
+          '</div>' +
+          itemsHtml +
+          (data.silentMeditationPause
+            ? '<div class="catalyst-pause">Pause &amp; Listen: ' + escapeCatalystHtml(data.silentMeditationPause) + '</div>'
+            : '');
+        box.style.display = 'block';
+      };
+
+      if (catalystCache.word[cacheKey]) {
+        renderWordData(catalystCache.word[cacheKey]);
+        return;
+      }
+
+      box.innerHTML = '<div class="catalyst-label">✨ Looking up biblical nuance for "' + escapeCatalystHtml(activeWord) + '"...</div>';
+      box.style.display = 'block';
+      try {
+        const data = await fetchCatalyst({
+          mode: 'word',
+          reference: currentScripture.reference,
+          text: currentScripture.text,
+          focusWord: activeWord
+        });
+        catalystCache.word[cacheKey] = data;
+        renderWordData(data);
+      } catch (err) {
+        box.innerHTML =
+          '<div class="catalyst-header">' +
+            '<span class="catalyst-label">Catalytic Companion</span>' +
+            '<button type="button" class="btn btn-sm btn-subtle" style="padding:0.1rem 0.35rem;" onclick="dismissCatalystBox(\'wordCatalystBox\')">✕</button>' +
+          '</div>' +
+          '<div style="color:var(--text-muted); font-size:0.82rem;">' + escapeCatalystHtml(err.message) + '</div>';
+      }
     }
 
 </script>

@@ -67,6 +67,8 @@ Any update made to the application must be mirrored across all 5 distribution co
 
 Run the sync script after every change:
 ```powershell
+npm run sync
+# Or legacy external script:
 node "C:\Users\johna\.gemini\antigravity-cli\brain\43223302-9de8-4212-ac10-66578f37cfeb\scratch\sync_all_copies.js"
 ```
 
