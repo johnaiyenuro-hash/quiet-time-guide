@@ -1550,6 +1550,7 @@
               <span id="syncBtnText">Storage &amp; Sync</span>
             </button>
             <button class="dropdown-item" onclick="openFullPageModal(); closeShareMenu();">📖 Full Document Sheet</button>
+            <button class="dropdown-item" onclick="openRestoreModal(); closeShareMenu();">🕘 Restore Snapshots</button>
             <button class="dropdown-item" onclick="copyRevelation(); closeShareMenu();">📋 Copy Notes Text</button>
             <button class="dropdown-item" onclick="exportFreshFriendCopy(); closeShareMenu();">🎁 Clean Guide for Friend</button>
             <button class="dropdown-item" onclick="downloadMarkdown(); closeShareMenu();">📥 Download Markdown</button>
@@ -2671,15 +2672,15 @@
 
       // 4. Word not found or device is offline: provide clean guidance and specialized KJV links
       const isOffline = !navigator.onLine;
-      const websterUrl = 'http://webstersdictionary1828.com/Dictionary/' + encodeURIComponent(cleanWord);
+      const websterUrl = 'https://webstersdictionary1828.com/Dictionary/' + encodeURIComponent(cleanWord);
       const strongsUrl = 'https://www.blueletterbible.org/search/search.cfm?Criteria=' + encodeURIComponent(cleanWord) + '&t=KJV#s=s_primary_0_1';
 
       area.innerHTML = '<div style="font-size:0.82rem; color:var(--text-muted); line-height:1.5;">' +
         '<span style="font-weight:600; color:var(--gold);">' + word + '</span>: ' +
         (isOffline ? 'Offline. Not in local database.' : 'Biblical/archaic term not in standard modern dictionary.') +
         '<div style="margin-top:0.4rem; display:flex; gap:0.5rem; flex-wrap:wrap;">' +
-        '<a href="' + websterUrl + '" target="_blank" style="color:var(--gold); text-decoration:underline;">Search Webster 1828 (Biblical)</a> &bull; ' +
-        '<a href="' + strongsUrl + '" target="_blank" style="color:var(--gold); text-decoration:underline;">Strong&#39;s Concordance</a>' +
+        '<a href="' + websterUrl + '" target="_blank" rel="noopener noreferrer" style="color:var(--gold); text-decoration:underline;">Search Webster 1828 (Biblical)</a> &bull; ' +
+        '<a href="' + strongsUrl + '" target="_blank" rel="noopener noreferrer" style="color:var(--gold); text-decoration:underline;">Strong&#39;s Concordance</a>' +
         '</div></div>';
     }
 
@@ -3324,17 +3325,53 @@
         try {
           const ver = document.getElementById('bibleVersion').value || 'kjv';
 
-          // YLT Fallback via bolls.life
+          // YLT exact chapter/verse lookup via bolls.life (with search fallback)
           if (ver === 'ylt') {
+            const cleanBollsText = (t) => String(t || '')
+              .replace(/<S>.*?<\/S>/gi, '')
+              .replace(/<[^>]+>/g, ' ')
+              .replace(/\s+/g, ' ')
+              .trim();
+
+            const parsedYlt = parseReferenceForBolls(trimmed);
+            if (parsedYlt) {
+              try {
+                const chapterUrl = 'https://bolls.life/get-chapter/YLT/' + parsedYlt.bookId + '/' + parsedYlt.chapter + '/';
+                const chRes = await fetch(chapterUrl);
+                if (chRes.ok) {
+                  const chapterVerses = await chRes.json();
+                  if (Array.isArray(chapterVerses) && chapterVerses.length > 0) {
+                    const selected = parsedYlt.startVerse
+                      ? chapterVerses.filter(v => v.verse >= parsedYlt.startVerse && v.verse <= (parsedYlt.endVerse || parsedYlt.startVerse))
+                      : chapterVerses;
+                    if (selected.length > 0) {
+                      const cleanVerses = selected.map(v => ({ verse: v.verse, text: cleanBollsText(v.text) }));
+                      currentScripture.reference = parsedYlt.canonicalRef;
+                      currentScripture.text = cleanVerses.map(v => v.text).join(' ').trim();
+                      currentScripture.version = 'YLT';
+                      currentScripture.verses = cleanVerses;
+                      activeTargetVerse = currentScripture.reference;
+                      renderVerseDisplay();
+                      showToast("Verse loaded: " + currentScripture.reference + " (YLT)");
+                      return;
+                    }
+                  }
+                }
+              } catch (yltErr) {
+                console.warn('YLT chapter lookup failed, trying fallback:', yltErr);
+              }
+            }
+
             const searchUrl = 'https://bolls.life/search/YLT/?search=' + encodeURIComponent(trimmed);
             const res = await fetch(searchUrl);
             if (res.ok) {
               const list = await res.json();
               if (Array.isArray(list) && list.length > 0) {
+                const cleanVerses = list.map(item => ({ verse: item.verse, text: cleanBollsText(item.text) }));
                 currentScripture.reference = trimmed.replace(/\b\w/g, c => c.toUpperCase());
-                currentScripture.text = list.map(item => item.text).join(' ').trim();
+                currentScripture.text = cleanVerses.map(item => item.text).join(' ').trim();
                 currentScripture.version = 'YLT';
-                currentScripture.verses = list.map(item => ({ verse: item.verse, text: item.text }));
+                currentScripture.verses = cleanVerses;
                 activeTargetVerse = currentScripture.reference;
                 renderVerseDisplay();
                 showToast("Verse loaded: " + currentScripture.reference + " (YLT)");
@@ -3432,6 +3469,36 @@
       'jude': 'jude',
       'rev': 'revelation', 'revelation': 'revelation'
     };
+
+    function parseReferenceForBolls(ref) {
+      if (!ref) return null;
+      const clean = ref.replace(/^([1-3])([a-zA-Z])/, '$1 $2').trim();
+      const match = clean.match(/^([1-3]?\s*[A-Za-z][A-Za-z\s]*?)\s+(\d+)(?:[:.](\d+)(?:\s*[-–]\s*(\d+))?)?$/);
+      if (!match) return null;
+
+      const rawBook = match[1].trim().toLowerCase().replace(/\s+/g, ' ');
+      const slug = BOOK_SLUG_MAP[rawBook] || rawBook.replace(/\s+/g, '_');
+      const bookIdx = BIBLE_BOOKS.findIndex(b => {
+        const bLower = b.toLowerCase();
+        const bSlug = BOOK_SLUG_MAP[bLower] || bLower.replace(/\s+/g, '_');
+        return bLower === rawBook || bSlug === slug;
+      });
+      if (bookIdx === -1) return null;
+
+      const bookName = BIBLE_BOOKS[bookIdx];
+      const chapter = parseInt(match[2], 10);
+      const startVerse = match[3] ? parseInt(match[3], 10) : null;
+      const endVerse = match[4] ? parseInt(match[4], 10) : startVerse;
+      const verseSuffix = startVerse ? (':' + startVerse + (endVerse && endVerse !== startVerse ? '-' + endVerse : '')) : '';
+
+      return {
+        bookId: bookIdx + 1,
+        chapter,
+        startVerse,
+        endVerse,
+        canonicalRef: bookName + ' ' + chapter + verseSuffix
+      };
+    }
 
     function getBibleHubUrl(ref) {
       if (!ref) return 'https://biblehub.com/';
@@ -3722,6 +3789,7 @@
         const hasAns = val.trim().length > 0;
         select.options[currentQuestionIndex].textContent = (currentQuestionIndex + 1) + ". " + q.title + (hasAns ? " (✓)" : "");
       }
+      if (typeof debounceCloudSync === 'function') debounceCloudSync();
     }
 
     function updateActiveQuestionBadge(text) {
@@ -3865,6 +3933,7 @@ function pushQuestionToJournal(title, inputId, includeQuestion = true) {
         const hasAns = val.trim().length > 0;
         select.options[currentTopicalIndex].textContent = (currentTopicalIndex + 1) + ". " + d.title + (hasAns ? " (✓)" : "");
       }
+      if (typeof debounceCloudSync === 'function') debounceCloudSync();
     }
 
     function updateActiveTopicalBadge(text) {
@@ -4002,6 +4071,8 @@ function pushQuestionToJournal(title, inputId, includeQuestion = true) {
     const SYNC_KEY_STORAGE = 'qt_private_sync_key_v2';
     const SYNC_TIME_STORAGE = 'qt_last_sync_time_v2';
     const DRAFT_KEY = 'qt_user_draft_v2';
+    const TOPICAL_DRAFT_KEY = 'qt_topical_draft_v2';
+    const TELE_DRAFT_KEY = 'qt_telescopic_draft_v2';
     const ARCHIVE_KEY = 'qt_user_archive_v2';
     const SNAPSHOT_KEY = 'qt_user_snapshots_v2';
 
@@ -4050,6 +4121,141 @@ function pushQuestionToJournal(title, inputId, includeQuestion = true) {
       return Array.from(map.values()).sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
     }
 
+    function readDraftForSync(editorId, areaId, storageKey) {
+      const ed = document.getElementById(editorId);
+      const area = document.getElementById(areaId);
+      if (ed && ed.innerHTML && ed.innerHTML.trim()) {
+        const md = htmlToMarkdown(ed.innerHTML);
+        if (area) area.value = md;
+        return md;
+      }
+      if (area && area.value) return area.value;
+      return localStorage.getItem(storageKey) || '';
+    }
+
+    function collectStudyState() {
+      const draft = readDraftForSync('journalEditor', 'journalText', DRAFT_KEY);
+      const topicalDraft = readDraftForSync('topicalJournalEditor', 'topicalJournalText', TOPICAL_DRAFT_KEY);
+      const teleDraft = readDraftForSync('teleJournalEditor', 'teleJournalText', TELE_DRAFT_KEY);
+      const archive = JSON.parse(localStorage.getItem(ARCHIVE_KEY) || '[]');
+
+      const microAnswers = {};
+      QUESTIONS.forEach(q => {
+        const val = localStorage.getItem('qt_ans_' + q.id);
+        if (val !== null && val !== '') microAnswers[q.id] = val;
+      });
+
+      const topicalAnswers = {};
+      TOPICAL_DIMS.forEach((d, idx) => {
+        const val = localStorage.getItem('qt_topical_ans_' + idx);
+        if (val !== null && val !== '') topicalAnswers[String(idx)] = val;
+      });
+
+      return {
+        draft,
+        topicalDraft,
+        teleDraft,
+        topicalTopic: document.getElementById('topicalTopic')?.value || '',
+        teleBook: document.getElementById('teleBook')?.value || '',
+        teleContext: document.getElementById('teleContext')?.value || '',
+        teleTheme: document.getElementById('teleTheme')?.value || '',
+        microAnswers,
+        topicalAnswers,
+        archive,
+        scripture: currentScripture || { reference: "2 Timothy 2:15", version: "kjv", text: "Study to shew thyself approved unto God...", verses: [] }
+      };
+    }
+
+    function applyStudyState(data, { mergeArchive = false } = {}) {
+      if (!data || typeof data !== 'object') return;
+
+      if (data.draft !== undefined) {
+        const noteArea = document.getElementById('journalText');
+        const noteEditor = document.getElementById('journalEditor');
+        if (noteArea) noteArea.value = data.draft;
+        if (noteEditor) noteEditor.innerHTML = parseMarkdown(data.draft);
+        localStorage.setItem(DRAFT_KEY, data.draft);
+
+        const preview = document.getElementById('journalPreview');
+        if (preview && preview.style.display !== 'none') {
+          preview.innerHTML = parseMarkdown(data.draft);
+        }
+      }
+
+      if (data.topicalDraft !== undefined) {
+        const topArea = document.getElementById('topicalJournalText');
+        const topEditor = document.getElementById('topicalJournalEditor');
+        if (topArea) topArea.value = data.topicalDraft;
+        if (topEditor) topEditor.innerHTML = parseMarkdown(data.topicalDraft);
+        localStorage.setItem(TOPICAL_DRAFT_KEY, data.topicalDraft);
+      }
+
+      if (data.teleDraft !== undefined) {
+        const teleArea = document.getElementById('teleJournalText');
+        const teleEditor = document.getElementById('teleJournalEditor');
+        if (teleArea) teleArea.value = data.teleDraft;
+        if (teleEditor) teleEditor.innerHTML = parseMarkdown(data.teleDraft);
+        localStorage.setItem(TELE_DRAFT_KEY, data.teleDraft);
+      }
+
+      if (typeof data.topicalTopic === 'string' && data.topicalTopic.trim()) {
+        const topInput = document.getElementById('topicalTopic');
+        if (topInput) {
+          topInput.value = data.topicalTopic;
+          onTopicalTopicInput(data.topicalTopic);
+        }
+      }
+      if (typeof data.teleBook === 'string') {
+        const bkInput = document.getElementById('teleBook');
+        if (bkInput && data.teleBook.trim()) bkInput.value = data.teleBook;
+      }
+      if (typeof data.teleContext === 'string') {
+        const ctxInput = document.getElementById('teleContext');
+        if (ctxInput) ctxInput.value = data.teleContext;
+      }
+      if (typeof data.teleTheme === 'string') {
+        const thmInput = document.getElementById('teleTheme');
+        if (thmInput) thmInput.value = data.teleTheme;
+      }
+
+      if (data.microAnswers && typeof data.microAnswers === 'object') {
+        QUESTIONS.forEach(q => {
+          const val = data.microAnswers[q.id];
+          if (typeof val === 'string' && val.length > 0) {
+            localStorage.setItem('qt_ans_' + q.id, val);
+          } else {
+            localStorage.removeItem('qt_ans_' + q.id);
+          }
+        });
+        renderQuestions();
+      }
+
+      if (data.topicalAnswers && typeof data.topicalAnswers === 'object') {
+        TOPICAL_DIMS.forEach((d, idx) => {
+          const val = data.topicalAnswers[String(idx)];
+          if (typeof val === 'string' && val.length > 0) {
+            localStorage.setItem('qt_topical_ans_' + idx, val);
+          } else {
+            localStorage.removeItem('qt_topical_ans_' + idx);
+          }
+        });
+        initTopicalDropdown();
+      }
+
+      if (data.archive && Array.isArray(data.archive)) {
+        const nextArchive = mergeArchive
+          ? mergeArchives(JSON.parse(localStorage.getItem(ARCHIVE_KEY) || '[]'), data.archive)
+          : data.archive;
+        localStorage.setItem(ARCHIVE_KEY, JSON.stringify(nextArchive));
+        renderArchive();
+      }
+
+      if (data.scripture && data.scripture.reference) {
+        currentScripture = data.scripture;
+        renderVerseDisplay();
+      }
+    }
+
     // Migrate old v1 storage into v2 storage for the current device
     function migrateStorageIfLegacy() {
       try {
@@ -4083,31 +4289,7 @@ function pushQuestionToJournal(title, inputId, includeQuestion = true) {
             const isLocalDefault = !localDraft.trim() || localDraft.trim() === getDefaultTemplate().trim();
 
             if (remote.updatedAt > localSyncTime || isLocalDefault) {
-              if (remote.draft !== undefined && remote.draft !== localDraft) {
-                const noteArea = document.getElementById('journalText');
-                const noteEditor = document.getElementById('journalEditor');
-                if (noteArea) noteArea.value = remote.draft;
-                if (noteEditor) noteEditor.innerHTML = parseMarkdown(remote.draft);
-                localStorage.setItem(DRAFT_KEY, remote.draft);
-
-                const preview = document.getElementById('journalPreview');
-                if (preview && preview.style.display !== 'none') {
-                  preview.innerHTML = parseMarkdown(remote.draft);
-                }
-              }
-
-              if (remote.archive && Array.isArray(remote.archive)) {
-                const localArchive = JSON.parse(localStorage.getItem(ARCHIVE_KEY) || '[]');
-                const merged = mergeArchives(localArchive, remote.archive);
-                localStorage.setItem(ARCHIVE_KEY, JSON.stringify(merged));
-                renderArchive();
-              }
-
-              if (remote.scripture && remote.scripture.reference) {
-                currentScripture = remote.scripture;
-                renderVerseDisplay();
-              }
-
+              applyStudyState(remote, { mergeArchive: true });
               localStorage.setItem(SYNC_TIME_STORAGE, String(remote.updatedAt));
               if (!silent) showToast("☁️ Synced with your private cloud notebook");
             }
@@ -4126,13 +4308,13 @@ function pushQuestionToJournal(title, inputId, includeQuestion = true) {
 
     // Push local data to cloud (if private sync is active)
     async function pushToCloud(showSaveFeedback = false) {
-      const noteArea = document.getElementById('journalText');
-      const draft = noteArea ? noteArea.value : (localStorage.getItem(DRAFT_KEY) || '');
-      const archive = JSON.parse(localStorage.getItem(ARCHIVE_KEY) || '[]');
+      const state = collectStudyState();
 
       // 1. ALWAYS save to local browser storage first!
-      localStorage.setItem(DRAFT_KEY, draft);
-      localStorage.setItem(ARCHIVE_KEY, JSON.stringify(archive));
+      localStorage.setItem(DRAFT_KEY, state.draft);
+      localStorage.setItem(TOPICAL_DRAFT_KEY, state.topicalDraft);
+      localStorage.setItem(TELE_DRAFT_KEY, state.teleDraft);
+      localStorage.setItem(ARCHIVE_KEY, JSON.stringify(state.archive));
 
       // 2. If user is in private local mode (no sync key):
       if (!cloudSyncId) {
@@ -4155,12 +4337,7 @@ function pushQuestionToJournal(title, inputId, includeQuestion = true) {
 
       try {
         const now = Date.now();
-        const payload = {
-          updatedAt: now,
-          draft: draft,
-          archive: archive,
-          scripture: currentScripture
-        };
+        const payload = Object.assign({ updatedAt: now }, state);
 
         const endpoint = getCloudEndpoint();
         const res = await fetch(endpoint, {
@@ -4220,16 +4397,10 @@ function pushQuestionToJournal(title, inputId, includeQuestion = true) {
     async function enableCloudSync() {
       showToast("Creating your private sync session...");
       try {
-        const noteArea = document.getElementById('journalText');
-        const draft = noteArea ? noteArea.value : (localStorage.getItem(DRAFT_KEY) || getDefaultTemplate());
-        const archive = JSON.parse(localStorage.getItem(ARCHIVE_KEY) || '[]');
+        const state = collectStudyState();
+        if (!state.draft) state.draft = getDefaultTemplate();
 
-        const initialData = {
-          updatedAt: Date.now(),
-          draft: draft,
-          archive: archive,
-          scripture: currentScripture || { reference: "2 Timothy 2:15", version: "kjv", text: "Study to shew thyself approved unto God..." }
-        };
+        const initialData = Object.assign({ updatedAt: Date.now() }, state);
 
         const res = await fetch('https://extendsclass.com/api/json-storage/bin', {
           method: 'POST',
@@ -4369,13 +4540,10 @@ function pushQuestionToJournal(title, inputId, includeQuestion = true) {
     }
 
     function exportSyncBackup() {
-      const data = {
+      const data = Object.assign({
         exportedAt: new Date().toISOString(),
-        syncId: cloudSyncId || 'local',
-        draft: document.getElementById('journalText')?.value || '',
-        archive: JSON.parse(localStorage.getItem(ARCHIVE_KEY) || '[]'),
-        scripture: currentScripture
-      };
+        syncId: cloudSyncId || 'local'
+      }, collectStudyState());
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -4393,21 +4561,7 @@ function pushQuestionToJournal(title, inputId, includeQuestion = true) {
       reader.onload = async function(evt) {
         try {
           const imported = JSON.parse(evt.target.result);
-          if (imported.draft) {
-            const noteArea = document.getElementById('journalText');
-            const noteEditor = document.getElementById('journalEditor');
-            if (noteArea) noteArea.value = imported.draft;
-            if (noteEditor) noteEditor.innerHTML = parseMarkdown(imported.draft);
-            localStorage.setItem(DRAFT_KEY, imported.draft);
-          }
-          if (imported.archive && Array.isArray(imported.archive)) {
-            localStorage.setItem(ARCHIVE_KEY, JSON.stringify(imported.archive));
-            renderArchive();
-          }
-          if (imported.scripture) {
-            currentScripture = imported.scripture;
-            renderVerseDisplay();
-          }
+          applyStudyState(imported, { mergeArchive: false });
           showToast("Backup imported successfully!");
           await pushToCloud(true);
           closeSyncModal();
@@ -4779,7 +4933,11 @@ function insertTag(tag) {
         .replace(/<blockquote[^>]*>(.*?)<\/blockquote>/gi, '\n> $1\n')
         .replace(/<li[^>]*>(.*?)<\/li>/gi, '\n- $1')
         .replace(/<\/?ul[^>]*>/gi, '\n')
-        .replace(/<mark[^>]*>(.*?)<\/mark>/gi, '==$1==')
+        .replace(/<mark([^>]*)>([\s\S]*?)<\/mark>/gi, (_, attrs, inner) => {
+          const colorMatch = attrs.match(/hl-(gold|green|blue|rose|amber)/i);
+          const color = colorMatch ? colorMatch[1].toLowerCase() : 'gold';
+          return color === 'gold' ? '==' + inner + '==' : '==[' + color + ']' + inner + '==';
+        })
         .replace(/<span[^>]*style="[^"]*font-weight:\s*(?:bold|[6-9]00)[^"]*"[^>]*>(.*?)<\/span>/gi, '**$1**')
         .replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**')
         .replace(/<b[^>]*>(.*?)<\/b>/gi, '**$1**')
@@ -4802,9 +4960,10 @@ function insertTag(tag) {
       if (!md) return "<p><em>No notes written yet.</em></p>";
       let res = md
         .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-        // Highlight ==revelation== or <mark>revelation</mark>
-        .replace(/==(.*?)==/gim, '<mark class="note-highlight">$1</mark>')
-        .replace(/&lt;mark&gt;(.*?)&lt;\/mark&gt;/gim, '<mark class="note-highlight">$1</mark>')
+        // Highlight ==[color]revelation==, ==revelation==, or <mark>revelation</mark>
+        .replace(/==\[(gold|green|blue|rose|amber)\](.*?)==/gim, (_, color, inner) => '<mark class="note-highlight hl-' + color.toLowerCase() + '">' + inner + '</mark>')
+        .replace(/==(.*?)==/gim, '<mark class="note-highlight hl-gold">$1</mark>')
+        .replace(/&lt;mark(?:\s+class="[^"]*hl-(gold|green|blue|rose|amber)[^"]*")?&gt;(.*?)&lt;\/mark&gt;/gim, (_, color, inner) => '<mark class="note-highlight hl-' + (color ? color.toLowerCase() : 'gold') + '">' + inner + '</mark>')
         // Underline <u>text</u> or <ins>text</ins>
         .replace(/&lt;u&gt;(.*?)&lt;\/u&gt;/gim, '<u>$1</u>')
         .replace(/&lt;ins&gt;(.*?)&lt;\/ins&gt;/gim, '<u>$1</u>')
@@ -5399,8 +5558,7 @@ function togglePassageShelf() {
     // ==========================================
     // SEPARATE NOTES ENGINES (TOPICAL & TELESCOPIC)
     // ==========================================
-    const TOPICAL_DRAFT_KEY = 'qt_topical_draft_v2';
-    const TELE_DRAFT_KEY = 'qt_telescopic_draft_v2';
+    // TOPICAL_DRAFT_KEY and TELE_DRAFT_KEY declared with storage keys above
 
     function initSeparateDrafts() {
       // Topical Draft Init
