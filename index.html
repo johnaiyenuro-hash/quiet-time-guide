@@ -731,14 +731,40 @@
     }
     .topical-controls {
       display: flex;
-      gap: 0.5rem;
+      flex-direction: column;
+      gap: 0.55rem;
       margin-bottom: 1rem;
+    }
+    .topical-topic-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
       flex-wrap: wrap;
+    }
+    .topical-def-textarea {
+      min-height: 58px;
+      line-height: 1.5;
+      font-family: var(--font-serif);
+      font-size: 0.92rem;
+      background: var(--bg);
     }
     .tele-form {
       display: flex;
       flex-direction: column;
       gap: 0.85rem;
+    }
+    .tele-book-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .tele-form-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
     }
     .field-label {
       font-size: 0.8rem;
@@ -1891,9 +1917,23 @@
             </div>
 
             <div class="topical-controls">
-              <input type="text" id="topicalTopic" class="text-input" placeholder="Type a topic (e.g. Patience, Zeal, Faith, Love)..." value="Patience" oninput="onTopicalTopicInput(this.value)" style="min-width:200px;">
-              <input type="text" id="topicalDef" class="text-input" placeholder="Dictionary definition loads automatically..." style="flex:2; min-width:260px;">
-              <button type="button" class="btn btn-primary btn-sm" onclick="insertTopicalHeading()">+ Add Topic Heading</button>
+              <div class="topical-topic-row">
+                <input type="text" id="topicalTopic" class="text-input" placeholder="Type a topic (e.g. Patience, Zeal, Faith, Love)..." value="Patience" oninput="onTopicalTopicInput(this.value)" style="min-width:180px;">
+                <button type="button" class="btn btn-sm" onclick="insertTopicalHeading()">+ Add Topic Heading</button>
+              </div>
+              <div class="passage-quick-row" style="margin-top:0;">
+                <span class="meta-label">Topics:</span>
+                <button type="button" class="verse-chip" onclick="selectQuickTopic('Patience')">Patience</button>
+                <button type="button" class="verse-chip" onclick="selectQuickTopic('Faith')">Faith</button>
+                <button type="button" class="verse-chip" onclick="selectQuickTopic('Love')">Love</button>
+                <button type="button" class="verse-chip" onclick="selectQuickTopic('Zeal')">Zeal</button>
+                <button type="button" class="verse-chip" onclick="selectQuickTopic('Wisdom')">Wisdom</button>
+                <button type="button" class="verse-chip" onclick="selectQuickTopic('Grace')">Grace</button>
+              </div>
+              <div>
+                <label for="topicalDef" class="field-label">Topic Definition (auto-filled or editable):</label>
+                <textarea id="topicalDef" class="input-textarea topical-def-textarea" rows="2" placeholder="Dictionary definition loads automatically..."></textarea>
+              </div>
             </div>
 
             <!-- Condensed Topical Question Studio (Dropdown Selector) -->
@@ -1923,12 +1963,11 @@
                     <span class="meta-hint">Saved automatically</span>
                     <button type="button" class="btn btn-sm btn-subtle" onclick="requestTopicalCatalyst()" title="Get short study ideas to help you explore this topic">✨ Study Hint</button>
                     <button type="button" class="btn btn-sm btn-subtle" onclick="clearCurrentTopicalAnswer()" title="Clear your answer for this aspect">✕ Clear</button>
-                    <button type="button" class="btn btn-sm btn-subtle" onclick="resetTopicalStudy()" title="Reset Topical notes and all 6 aspects to default">↺ Reset All</button>
                   </div>
                   <div class="question-footer-group">
                     <button type="button" class="btn btn-sm" onclick="pushActiveTopical(false)">+ Insert Answer Only</button>
                     <button type="button" class="btn btn-sm btn-primary" onclick="pushActiveTopical(true)">+ Insert Aspect &amp; Answer</button>
-                    <button type="button" class="btn btn-sm" onclick="insertAllTopicalDimensions()" title="Insert all 6 aspects into topical notes">+ Insert All 6 Aspects</button>
+                    <button type="button" class="btn btn-sm btn-subtle" onclick="insertAllTopicalDimensions()" title="Insert all 6 aspects into topical notes">+ Insert All 6</button>
                   </div>
                 </div>
               </div>
@@ -1952,7 +1991,7 @@
             <textarea id="topicalJournalText" style="display:none;"></textarea>
 
             <div class="studio-footer">
-              <button type="button" class="btn btn-primary studio-save-btn" id="topicalBottomSaveBtn" data-default-label="💾 Save Topical Note" onclick="manualSaveCloud()">💾 Save Topical Note</button>
+              <button type="button" class="btn btn-gold-outline studio-save-btn" id="topicalBottomSaveBtn" data-default-label="💾 Save Topical Note" onclick="manualSaveCloud()">💾 Save Topical Note</button>
               <button type="button" class="btn studio-archive-btn" onclick="saveTopicalToArchive()">+ Archive Note</button>
             </div>
           </div>
@@ -1975,17 +2014,22 @@
             <div class="tele-form">
               <div>
                 <label for="teleBook" class="field-label">Book or Chapter Selected:</label>
-                <input type="text" id="teleBook" class="text-input" value="Ephesians" placeholder="e.g. Ephesians, Romans 8, Hebrews 11, Genesis 1-3...">
+                <div class="tele-book-row">
+                  <input type="text" id="teleBook" list="bibleBooksList" class="text-input" value="Ephesians" placeholder="e.g. Ephesians, Romans 8, Hebrews 11, Genesis 1-3..." oninput="onTeleFieldInput()">
+                  <button type="button" class="btn btn-sm" onclick="loadTelescopicPassage()" title="Load opening passage of this book/chapter into the Scripture Desk">📖 Load Passage</button>
+                </div>
+                <datalist id="bibleBooksList"></datalist>
               </div>
               <div>
                 <label for="teleContext" class="field-label">Macro Context &amp; Setting:</label>
-                <textarea id="teleContext" class="input-textarea" placeholder="Author, audience, background setting, and historical context of this chapter or book..."></textarea>
+                <textarea id="teleContext" class="input-textarea" placeholder="Author, audience, background setting, and historical context of this chapter or book..." oninput="onTeleFieldInput()"></textarea>
               </div>
               <div>
                 <label for="teleTheme" class="field-label">Central Theme &amp; Anchor Passages:</label>
-                <textarea id="teleTheme" class="input-textarea" placeholder="The primary message, divine argument, recurring motifs, and key turning points..."></textarea>
+                <textarea id="teleTheme" class="input-textarea" placeholder="The primary message, divine argument, recurring motifs, and key turning points..." oninput="onTeleFieldInput()"></textarea>
               </div>
-              <div style="display:flex; justify-content:flex-end;">
+              <div class="tele-form-footer">
+                <span class="meta-hint">Saved automatically</span>
                 <button type="button" class="btn btn-primary btn-sm" onclick="insertTelescopicNotes()">+ Insert Outline to Telescopic Notes</button>
               </div>
             </div>
@@ -2008,7 +2052,7 @@
             <textarea id="teleJournalText" style="display:none;"></textarea>
 
             <div class="studio-footer">
-              <button type="button" class="btn btn-primary studio-save-btn" id="teleBottomSaveBtn" data-default-label="💾 Save Telescopic Note" onclick="manualSaveCloud()">💾 Save Telescopic Note</button>
+              <button type="button" class="btn btn-gold-outline studio-save-btn" id="teleBottomSaveBtn" data-default-label="💾 Save Telescopic Note" onclick="manualSaveCloud()">💾 Save Telescopic Note</button>
               <button type="button" class="btn studio-archive-btn" onclick="saveTeleToArchive()">+ Archive Note</button>
             </div>
           </div>
@@ -5374,13 +5418,37 @@ function closeModal() {
     });
 
     // ==========================================
-    // TOPICAL AUTO-DEFINITION ON TYPE
+    // TOPICAL AUTO-DEFINITION ON TYPE & SYNC
     // ==========================================
+    const TOPICAL_TOPIC_KEY = 'qt_topical_topic_v1';
+    const TELE_FIELDS_KEY = 'qt_tele_fields_v1';
+
+    function syncUntouchedTopicalHeading(topic, def = '') {
+      const topArea = document.getElementById('topicalJournalText');
+      const topEditor = document.getElementById('topicalJournalEditor');
+      if (!topArea) return;
+      const cur = (topArea.value || '').trim();
+      const isStarter = /^# Topical Study — [^\n]+\n+- \*\*Definition:\*\*[^\n]*$/.test(cur);
+      if (isStarter || !cur) {
+        const nextTpl = "# Topical Study — " + (topic || 'Patience') + "\n\n- **Definition:** " + (def || '') + "\n\n";
+        topArea.value = nextTpl;
+        if (topEditor) topEditor.innerHTML = parseMarkdown(nextTpl);
+        localStorage.setItem(TOPICAL_DRAFT_KEY, nextTpl);
+      }
+    }
+
+    function selectQuickTopic(topic) {
+      const topInput = document.getElementById('topicalTopic');
+      if (topInput) topInput.value = topic;
+      onTopicalTopicInput(topic, false);
+    }
+
     let topicalDefTimer = null;
     function onTopicalTopicInput(val, silent = false) {
       clearTimeout(topicalDefTimer);
       const clean = val.trim();
       const defInput = document.getElementById('topicalDef');
+      try { if (clean) localStorage.setItem(TOPICAL_TOPIC_KEY, clean); } catch (e) {}
       if (!clean) {
         if (defInput) defInput.value = '';
         return;
@@ -5389,19 +5457,24 @@ function closeModal() {
       // Instant check in embedded dictionary first
       const lower = clean.toLowerCase();
       if (OFFLINE_BIBLE_DICTIONARY[lower]) {
-        defInput.value = OFFLINE_BIBLE_DICTIONARY[lower].meanings[0].definitions[0].definition;
+        const defText = OFFLINE_BIBLE_DICTIONARY[lower].meanings[0].definitions[0].definition;
+        if (defInput) defInput.value = defText;
+        syncUntouchedTopicalHeading(clean, defText);
         if (!silent) showToast("✓ Definition found for " + clean);
         return;
       }
 
-      defInput.placeholder = "Looking up definition for '" + clean + "'...";
+      syncUntouchedTopicalHeading(clean, '');
+      if (defInput) defInput.placeholder = "Looking up definition for '" + clean + "'...";
       topicalDefTimer = setTimeout(async () => {
         try {
           const resp = await fetch(APP_CONFIG.endpoints.dictionaryApiBase + encodeURIComponent(lower));
           if (resp.ok) {
             const data = await resp.json();
             if (data && data[0]?.meanings[0]?.definitions[0]?.definition) {
-              defInput.value = data[0].meanings[0].definitions[0].definition;
+              const defText = data[0].meanings[0].definitions[0].definition;
+              if (defInput) defInput.value = defText;
+              syncUntouchedTopicalHeading(clean, defText);
               if (!silent) showToast("✓ Definition loaded for " + clean);
               return;
             }
@@ -5409,8 +5482,49 @@ function closeModal() {
         } catch (e) {
           console.warn("Dictionary fetch failed:", e);
         }
-        defInput.placeholder = "Dictionary definition loads automatically...";
+        if (defInput) defInput.placeholder = "Dictionary definition loads automatically...";
       }, 350);
+    }
+
+    function initTelescopicBookList() {
+      const dl = document.getElementById('bibleBooksList');
+      if (!dl || !Array.isArray(BIBLE_BOOKS)) return;
+      dl.innerHTML = BIBLE_BOOKS.map(b => '<option value="' + b + '"></option>').join('');
+    }
+
+    function onTeleFieldInput() {
+      const book = document.getElementById('teleBook')?.value || '';
+      const context = document.getElementById('teleContext')?.value || '';
+      const theme = document.getElementById('teleTheme')?.value || '';
+      try {
+        localStorage.setItem(TELE_FIELDS_KEY, JSON.stringify({ book, context, theme }));
+      } catch (e) {}
+      const teleArea = document.getElementById('teleJournalText');
+      const teleEditor = document.getElementById('teleJournalEditor');
+      if (teleArea && book.trim()) {
+        const cur = (teleArea.value || '').trim();
+        const isStarter = /^# Telescopic Study — [^\n]+\n+- \*\*Author & Setting:\*\*[^\n]*\n- \*\*Central Theme:\*\*[^\n]*$/.test(cur);
+        if (isStarter || !cur) {
+          const nextTpl = "# Telescopic Study — " + book.trim() + "\n\n- **Author & Setting:** \n- **Central Theme:** \n\n";
+          teleArea.value = nextTpl;
+          if (teleEditor) teleEditor.innerHTML = parseMarkdown(nextTpl);
+          localStorage.setItem(TELE_DRAFT_KEY, nextTpl);
+        }
+      }
+      if (typeof debounceCloudSync === 'function') debounceCloudSync();
+    }
+
+    function loadTelescopicPassage() {
+      const raw = (document.getElementById('teleBook')?.value || '').trim();
+      if (!raw) {
+        showToast("Enter a book or chapter first");
+        return;
+      }
+      const ref = /\d/.test(raw) ? raw : (raw + ' 1:1-5');
+      const vInput = document.getElementById('verseInput');
+      if (vInput) vInput.value = ref;
+      onVerseInput(ref, true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // ==========================================
@@ -5419,6 +5533,28 @@ function closeModal() {
     // TOPICAL_DRAFT_KEY and TELE_DRAFT_KEY declared with storage keys above
 
     function initSeparateDrafts() {
+      initTelescopicBookList();
+
+      // Restore saved Topical topic
+      try {
+        const savedTopic = localStorage.getItem(TOPICAL_TOPIC_KEY);
+        const topInput = document.getElementById('topicalTopic');
+        if (savedTopic && topInput) topInput.value = savedTopic;
+      } catch (e) {}
+
+      // Restore saved Telescopic fields
+      try {
+        const savedTeleFields = JSON.parse(localStorage.getItem(TELE_FIELDS_KEY) || 'null');
+        if (savedTeleFields && typeof savedTeleFields === 'object') {
+          if (savedTeleFields.book && document.getElementById('teleBook')) document.getElementById('teleBook').value = savedTeleFields.book;
+          if (typeof savedTeleFields.context === 'string' && document.getElementById('teleContext')) document.getElementById('teleContext').value = savedTeleFields.context;
+          if (typeof savedTeleFields.theme === 'string' && document.getElementById('teleTheme')) document.getElementById('teleTheme').value = savedTeleFields.theme;
+        }
+      } catch (e) {}
+
+      const activeTopic = document.getElementById('topicalTopic')?.value || 'Patience';
+      const activeBook = document.getElementById('teleBook')?.value || 'Ephesians';
+
       // Topical Draft Init
       const topArea = document.getElementById('topicalJournalText');
       const topEditor = document.getElementById('topicalJournalEditor');
@@ -5426,7 +5562,7 @@ function closeModal() {
         const savedTop = localStorage.getItem(TOPICAL_DRAFT_KEY);
         let topText = savedTop;
         if (topText === null) {
-          topText = "# Topical Study — Patience\n\n- **Definition:** \n\n";
+          topText = "# Topical Study — " + activeTopic + "\n\n- **Definition:** \n\n";
           localStorage.setItem(TOPICAL_DRAFT_KEY, topText);
         }
         topArea.value = topText;
@@ -5440,15 +5576,15 @@ function closeModal() {
         const savedTele = localStorage.getItem(TELE_DRAFT_KEY);
         let teleText = savedTele;
         if (teleText === null) {
-          teleText = "# Telescopic Study — Ephesians\n\n- **Author & Setting:** \n- **Central Theme:** \n\n";
+          teleText = "# Telescopic Study — " + activeBook + "\n\n- **Author & Setting:** \n- **Central Theme:** \n\n";
           localStorage.setItem(TELE_DRAFT_KEY, teleText);
         }
         teleArea.value = teleText;
         if (teleEditor) teleEditor.innerHTML = parseMarkdown(teleText);
       }
 
-      // Load initial definition silently for default topic (avoids phantom toast on startup)
-      onTopicalTopicInput(document.getElementById('topicalTopic')?.value || 'Patience', true);
+      // Load initial definition silently for active topic (avoids phantom toast on startup)
+      onTopicalTopicInput(activeTopic, true);
     }
 // Topical Actions
     function appendTopicalJournal(text) {
@@ -5476,6 +5612,7 @@ function closeModal() {
         const defInput = document.getElementById('topicalDef');
         if (topInput) topInput.value = 'Patience';
         if (defInput) defInput.value = '';
+        localStorage.removeItem(TOPICAL_TOPIC_KEY);
         const tpl = "# Topical Study — Patience\n\n- **Definition:** \n\n";
         const area = document.getElementById('topicalJournalText');
         const editor = document.getElementById('topicalJournalEditor');
@@ -5546,6 +5683,7 @@ function closeModal() {
         if (bkInput) bkInput.value = 'Ephesians';
         if (ctxInput) ctxInput.value = '';
         if (thmInput) thmInput.value = '';
+        localStorage.removeItem(TELE_FIELDS_KEY);
         const tpl = "# Telescopic Study — Ephesians\n\n- **Author & Setting:** \n- **Central Theme:** \n\n";
         const area = document.getElementById('teleJournalText');
         const editor = document.getElementById('teleJournalEditor');
