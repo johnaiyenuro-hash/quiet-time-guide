@@ -1753,7 +1753,8 @@
             <button type="button" class="dropdown-item" role="menuitem" onclick="openFullPageModal(); closeShareMenu();">📖 Full Document Sheet</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="openRestoreModal(); closeShareMenu();">🕘 Restore Snapshots</button>
             <div class="dropdown-sep" role="separator"></div>
-            <button type="button" class="dropdown-item" role="menuitem" onclick="copyRevelation(); closeShareMenu();">📋 Copy Notes Text</button>
+            <button type="button" class="dropdown-item" role="menuitem" onclick="copyNotesForWhatsApp(); closeShareMenu();">💬 Copy Notes for WhatsApp</button>
+            <button type="button" class="dropdown-item" role="menuitem" onclick="copyRevelation(); closeShareMenu();">📋 Copy Notes (Markdown)</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="shareLiveGuideLink(); closeShareMenu();">🔗 Share App Link</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="downloadMarkdown(); closeShareMenu();">📥 Download Markdown</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="window.print(); closeShareMenu();">🖨️ Print / Save PDF</button>
@@ -1927,6 +1928,7 @@
               </div>
               <div class="studio-actions">
                 <button type="button" class="btn btn-sm" onclick="insertCurrentScripture()" title="Insert scripture into notes">+ Scripture</button>
+                <button type="button" class="btn btn-sm" onclick="copyNotesForWhatsApp()" title="Copy notes formatted cleanly for WhatsApp">💬 Copy for WhatsApp</button>
                 <button type="button" class="btn btn-sm" onclick="resetMicroStudy()" title="Reset Microscopic notes and all 13 questions to default">↺ Reset All</button>
               </div>
             </div>
@@ -2022,6 +2024,7 @@
               <div class="studio-title"><span>🏷️ Topical Notes</span></div>
               <div class="studio-actions">
                 <button type="button" class="btn btn-sm" onclick="insertCurrentScriptureToTopical()" title="Insert scripture into topical notes">+ Scripture</button>
+                <button type="button" class="btn btn-sm" onclick="copyNotesForWhatsApp()" title="Copy notes formatted cleanly for WhatsApp">💬 Copy for WhatsApp</button>
                 <button type="button" class="btn btn-sm" onclick="resetTopicalStudy()" title="Reset Topical notes and all 6 aspects to default">↺ Reset All</button>
               </div>
             </div>
@@ -2083,6 +2086,7 @@
               <div class="studio-title"><span>📜 Telescopic Notes</span></div>
               <div class="studio-actions">
                 <button type="button" class="btn btn-sm" onclick="insertCurrentScriptureToTele()" title="Insert scripture into telescopic notes">+ Scripture</button>
+                <button type="button" class="btn btn-sm" onclick="copyNotesForWhatsApp()" title="Copy notes formatted cleanly for WhatsApp">💬 Copy for WhatsApp</button>
                 <button type="button" class="btn btn-sm" onclick="resetTeleStudy()" title="Reset Telescopic notes and outline fields to default">↺ Reset All</button>
               </div>
             </div>
@@ -2243,6 +2247,7 @@
       <div class="modal-header">
         <span class="modal-title" style="font-size:1.05rem;">Quiet Time Revelation Document</span>
         <div class="studio-actions">
+          <button type="button" class="btn btn-sm" onclick="copyNotesForWhatsApp()" title="Copy notes formatted cleanly for WhatsApp">💬 Copy for WhatsApp</button>
           <button type="button" class="btn btn-sm" onclick="window.print()">🖨️ Print Sheet</button>
           <button type="button" class="btn btn-sm" onclick="closeModal()">✕ Close</button>
         </div>
@@ -5127,16 +5132,125 @@ function closeModal() {
       if (e.target.id === 'pageModal') closeModal();
     }
 
-    function copyRevelation() {
+    function formatMarkdownForWhatsApp(md) {
+      if (!md || typeof md !== 'string') return '';
+
+      const BOLD_OPEN = '\uE000';
+      const BOLD_CLOSE = '\uE001';
+
+      const wrapWhatsApp = (marker, raw) => {
+        const cleaned = raw.trim();
+        if (!cleaned) return '';
+        const lead = raw.match(/^\s*/)[0];
+        const trail = raw.match(/\s*$/)[0];
+        return lead + marker + cleaned + marker + trail;
+      };
+
+      const lines = md
+        .replace(/\r\n/g, '\n')
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .split('\n');
+
+      const out = lines.map(rawLine => {
+        let line = rawLine;
+
+        // Horizontal rule -> subtle clean divider
+        if (/^\s*---+\s*$/.test(line)) {
+          return '──────────';
+        }
+
+        // Strip QTAPP underline and highlight markers cleanly
+        line = line
+          .replace(/<\/?(?:u|ins)>/gi, '')
+          .replace(/==\[(?:gold|green|blue|rose|amber)\](.*?)==/gi, '$1')
+          .replace(/==(.*?)==/g, '$1')
+          .replace(/<\/?mark[^>]*>/gi, '');
+
+        // Headings (#, ##, ###) -> WhatsApp bold headings (strip inner ** / * to avoid broken nesting)
+        const h1 = line.match(/^\s*#\s+(.+)$/);
+        if (h1) {
+          const cleanTitle = h1[1].replace(/\*\*|\*/g, '').trim();
+          return cleanTitle ? '*' + cleanTitle.toUpperCase() + '*' : '';
+        }
+        const hSub = line.match(/^\s*#{2,6}\s+(.+)$/);
+        if (hSub) {
+          const cleanSub = hSub[1].replace(/\*\*|\*/g, '').trim();
+          return cleanSub ? '*' + cleanSub + '*' : '';
+        }
+
+        // Bullet list items -> universal bullet character
+        line = line.replace(/^\s*[-*]\s+/, '• ');
+
+        // Convert Markdown **bold** to placeholders first so *italic* doesn't collide
+        line = line.replace(/\*\*([\s\S]+?)\*\*/g, (_, inner) => {
+          const trimmed = inner.trim();
+          if (!trimmed) return '';
+          const lead = inner.match(/^\s*/)[0];
+          const trail = inner.match(/\s*$/)[0];
+          return lead + BOLD_OPEN + trimmed + BOLD_CLOSE + trail;
+        });
+
+        // Convert Markdown *italic* -> WhatsApp _italic_
+        line = line.replace(/(^|[^\w*])\*([^*\n]+?)\*(?!\w)/g, (_, prefix, inner) => {
+          return prefix + wrapWhatsApp('_', inner);
+        });
+
+        // Restore WhatsApp *bold* markers
+        line = line.split(BOLD_OPEN).join('*').split(BOLD_CLOSE).join('*');
+
+        return line.replace(/[ \t]+$/g, '');
+      });
+
+      return out.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+    }
+
+    async function copyTextWithFallback(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          return true;
+        } catch {
+          return false;
+        }
+      }
+    }
+
+    async function copyNotesForWhatsApp() {
+      const ctx = getActiveNoteContext();
+      const rawMd = (ctx && ctx.editor)
+        ? htmlToMarkdown(ctx.editor.innerHTML)
+        : (ctx && ctx.area ? ctx.area.value : (document.getElementById('journalText')?.value || ''));
+      const formatted = formatMarkdownForWhatsApp(rawMd);
+      if (!formatted) {
+        showToast("No notes to copy yet");
+        return;
+      }
+      const ok = await copyTextWithFallback(formatted);
+      showToast(ok ? "💬 Notes copied for WhatsApp!" : "Unable to access clipboard");
+    }
+
+    async function copyRevelation() {
       const ctx = getActiveNoteContext();
       const val = (ctx && ctx.editor)
         ? htmlToMarkdown(ctx.editor.innerHTML)
         : (ctx && ctx.area ? ctx.area.value : (document.getElementById('journalText')?.value || ''));
-      navigator.clipboard.writeText(val).then(() => {
-        showToast((ctx ? ctx.name : 'Revelation') + " copied to clipboard");
-      }).catch(() => {
-        showToast("Unable to access clipboard");
-      });
+      const ok = await copyTextWithFallback(val);
+      showToast(ok ? ((ctx ? ctx.name : 'Revelation') + " copied to clipboard") : "Unable to access clipboard");
     }
 
     function downloadMarkdown() {
