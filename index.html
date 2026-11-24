@@ -184,7 +184,6 @@
       min-width: 210px;
       z-index: 150;
       padding: 0.35rem;
-      display: flex;
       flex-direction: column;
       gap: 0.2rem;
     }
@@ -396,6 +395,74 @@
       padding: 0.65rem 0.25rem;
       border-top: 1px solid var(--border);
       margin-top: 0.5rem;
+    }
+    .verse-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.22rem 0.6rem;
+      border-radius: 9999px;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-family: var(--font-ui);
+      font-size: 0.74rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+    }
+    .verse-chip:hover {
+      border-color: var(--border-accent);
+      color: var(--gold);
+    }
+    .verse-chip.active {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--btn-primary-text);
+      font-weight: 600;
+    }
+    body.theme-light .verse-chip.active,
+    body.theme-sepia .verse-chip.active {
+      color: #ffffff;
+    }
+    .dict-word-title {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.35rem;
+    }
+    .dict-phonetic {
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+    .dict-meanings {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      font-size: 0.84rem;
+      color: var(--text);
+    }
+    .dict-pos {
+      display: inline-block;
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--gold);
+      margin-bottom: 0.15rem;
+    }
+    .dict-def-item {
+      font-family: var(--font-serif);
+      font-size: 0.86rem;
+      line-height: 1.55;
+      color: var(--text);
+      margin-bottom: 0.2rem;
     }
 
     /* Grid Layout: Study Tools (Left) & Revelation Studio (Right) */
@@ -1687,20 +1754,12 @@
 
             <!-- Bottom Studio Controls -->
             <div style="display:flex; gap:0.5rem; margin-top:0.85rem;">
-              <button class="btn btn-primary" id="bottomSaveBtn" style="flex:2; justify-content:center; font-weight:600; font-size:0.88rem; padding:0.6rem 1rem;" onclick="manualSaveCloud()">💾 Save Reflection</button>
+              <button class="btn btn-primary studio-save-btn" id="bottomSaveBtn" data-default-label="💾 Save Reflection" style="flex:2; justify-content:center; font-weight:600; font-size:0.88rem; padding:0.6rem 1rem;" onclick="manualSaveCloud()">💾 Save Reflection</button>
               <button class="btn" style="flex:1; justify-content:center; font-size:0.82rem;" onclick="saveToArchive()">+ Add to Archive</button>
             </div>
 
-          </div></div>
+          </div>
         </div>
-      </div>
-    </div>
-      </div>
-    </div>
-
-    
-      </div>
-    </div>
       </div>
     </div>
 
@@ -1800,7 +1859,7 @@
             <div id="topicalJournalPreview" class="preview-box" style="display:none;"></div>
 
             <div style="display:flex; gap:0.5rem; margin-top:0.85rem;">
-              <button class="btn btn-primary" style="flex:2; justify-content:center; font-weight:600; font-size:0.88rem; padding:0.6rem 1rem;" onclick="manualSaveCloud()">💾 Save Topical Note</button>
+              <button class="btn btn-primary studio-save-btn" id="topicalBottomSaveBtn" data-default-label="💾 Save Topical Note" style="flex:2; justify-content:center; font-weight:600; font-size:0.88rem; padding:0.6rem 1rem;" onclick="manualSaveCloud()">💾 Save Topical Note</button>
               <button class="btn" style="flex:1; justify-content:center; font-size:0.82rem;" onclick="saveTopicalToArchive()">+ Archive Note</button>
             </div>
           </div>
@@ -1878,7 +1937,7 @@
             <div id="teleJournalPreview" class="preview-box" style="display:none;"></div>
 
             <div style="display:flex; gap:0.5rem; margin-top:0.85rem;">
-              <button class="btn btn-primary" style="flex:2; justify-content:center; font-weight:600; font-size:0.88rem; padding:0.6rem 1rem;" onclick="manualSaveCloud()">💾 Save Telescopic Note</button>
+              <button class="btn btn-primary studio-save-btn" id="teleBottomSaveBtn" data-default-label="💾 Save Telescopic Note" style="flex:2; justify-content:center; font-weight:600; font-size:0.88rem; padding:0.6rem 1rem;" onclick="manualSaveCloud()">💾 Save Telescopic Note</button>
               <button class="btn" style="flex:1; justify-content:center; font-size:0.82rem;" onclick="saveTeleToArchive()">+ Archive Note</button>
             </div>
           </div>
@@ -4026,7 +4085,9 @@ function pushQuestionToJournal(title, inputId, includeQuestion = true) {
             if (remote.updatedAt > localSyncTime || isLocalDefault) {
               if (remote.draft !== undefined && remote.draft !== localDraft) {
                 const noteArea = document.getElementById('journalText');
+                const noteEditor = document.getElementById('journalEditor');
                 if (noteArea) noteArea.value = remote.draft;
+                if (noteEditor) noteEditor.innerHTML = parseMarkdown(remote.draft);
                 localStorage.setItem(DRAFT_KEY, remote.draft);
 
                 const preview = document.getElementById('journalPreview');
@@ -4232,33 +4293,31 @@ function pushQuestionToJournal(title, inputId, includeQuestion = true) {
     function setSaveButtonsState(state) {
       const headerIcon = document.getElementById('headerSaveIcon');
       const headerText = document.getElementById('headerSaveText');
-      const studioBtn = document.getElementById('studioSaveBtn');
-      const bottomBtn = document.getElementById('bottomSaveBtn');
+      const studioSaveBtns = document.querySelectorAll('.studio-save-btn');
 
       if (state === 'saving') {
         if (headerText) headerText.textContent = 'Saving...';
-        if (studioBtn) studioBtn.textContent = 'Saving...';
-        if (bottomBtn) bottomBtn.textContent = '💾 Saving...';
+        studioSaveBtns.forEach(btn => { btn.textContent = '💾 Saving...'; });
       } else if (state === 'saved') {
         if (headerIcon) headerIcon.textContent = '✓';
         if (headerText) headerText.textContent = 'Saved!';
-        if (studioBtn) studioBtn.textContent = '✓ Saved!';
-        if (bottomBtn) bottomBtn.textContent = '✓ Saved!';
+        studioSaveBtns.forEach(btn => { btn.textContent = '✓ Saved!'; });
         setTimeout(() => {
           if (headerIcon) headerIcon.textContent = '💾';
           if (headerText) headerText.textContent = 'Save';
-          if (studioBtn) studioBtn.textContent = '💾 Save';
-          if (bottomBtn) bottomBtn.textContent = '💾 Save (Sync Across Devices)';
+          studioSaveBtns.forEach(btn => {
+            btn.textContent = btn.dataset.defaultLabel || '💾 Save Reflection';
+          });
         }, 2500);
       } else if (state === 'error') {
         if (headerText) headerText.textContent = 'Local Only';
-        if (studioBtn) studioBtn.textContent = 'Local';
-        if (bottomBtn) bottomBtn.textContent = '💾 Saved to Device';
+        studioSaveBtns.forEach(btn => { btn.textContent = '💾 Saved to Device'; });
         setTimeout(() => {
           if (headerIcon) headerIcon.textContent = '💾';
           if (headerText) headerText.textContent = 'Save';
-          if (studioBtn) studioBtn.textContent = '💾 Save';
-          if (bottomBtn) bottomBtn.textContent = '💾 Save (Sync Across Devices)';
+          studioSaveBtns.forEach(btn => {
+            btn.textContent = btn.dataset.defaultLabel || '💾 Save Reflection';
+          });
         }, 2500);
       }
     }
@@ -4335,7 +4394,10 @@ function pushQuestionToJournal(title, inputId, includeQuestion = true) {
         try {
           const imported = JSON.parse(evt.target.result);
           if (imported.draft) {
-            document.getElementById('journalText').value = imported.draft;
+            const noteArea = document.getElementById('journalText');
+            const noteEditor = document.getElementById('journalEditor');
+            if (noteArea) noteArea.value = imported.draft;
+            if (noteEditor) noteEditor.innerHTML = parseMarkdown(imported.draft);
             localStorage.setItem(DRAFT_KEY, imported.draft);
           }
           if (imported.archive && Array.isArray(imported.archive)) {
@@ -4843,18 +4905,89 @@ function closeModal() {
     }
 
     function copyRevelation() {
-      const val = document.getElementById('journalText').value;
-      navigator.clipboard.writeText(val);
-      showToast("Revelation copied to clipboard");
+      const ctx = getActiveNoteContext();
+      const val = (ctx && ctx.editor)
+        ? htmlToMarkdown(ctx.editor.innerHTML)
+        : (ctx && ctx.area ? ctx.area.value : (document.getElementById('journalText')?.value || ''));
+      navigator.clipboard.writeText(val).then(() => {
+        showToast((ctx ? ctx.name : 'Revelation') + " copied to clipboard");
+      }).catch(() => {
+        showToast("Unable to access clipboard");
+      });
     }
 
     function downloadMarkdown() {
-      const val = document.getElementById('journalText').value;
+      const ctx = getActiveNoteContext();
+      const val = (ctx && ctx.editor)
+        ? htmlToMarkdown(ctx.editor.innerHTML)
+        : (ctx && ctx.area ? ctx.area.value : (document.getElementById('journalText')?.value || ''));
+      let filename = "Revelation_" + (currentScripture.reference || 'Quiet_Time').replace(/[\s:]+/g, '_') + ".md";
+      if (ctx && ctx.type === 'topical') {
+        const topic = (document.getElementById('topicalTopic')?.value || 'Topic').trim();
+        filename = "Topical_Study_" + topic.replace(/[\s:]+/g, '_') + ".md";
+      } else if (ctx && ctx.type === 'tele') {
+        const book = (document.getElementById('teleBook')?.value || 'Book').trim();
+        filename = "Telescopic_Study_" + book.replace(/[\s:]+/g, '_') + ".md";
+      }
       const blob = new Blob([val], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = "Revelation_" + currentScripture.reference.replace(/[\s:]+/g, '_') + ".md";
+      a.href = url;
+      a.download = filename;
       a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function exportFreshFriendCopy() {
+      const docClone = document.documentElement.cloneNode(true);
+      const clearIds = [
+        'journalEditor', 'topicalJournalEditor', 'teleJournalEditor',
+        'journalPreview', 'topicalJournalPreview', 'teleJournalPreview',
+        'archiveList', 'syncKeyDisplay', 'modalContent', 'verseDisplay'
+      ];
+      clearIds.forEach(id => {
+        const el = docClone.querySelector('#' + id);
+        if (el) el.innerHTML = '';
+      });
+      const clearValues = [
+        'journalText', 'topicalJournalText', 'teleJournalText',
+        'activeQuestionInput', 'activeTopicalInput', 'teleContext', 'teleTheme',
+        'topicalDef', 'manualSyncKeyInput'
+      ];
+      clearValues.forEach(id => {
+        const el = docClone.querySelector('#' + id);
+        if (el) {
+          el.textContent = '';
+          el.removeAttribute('value');
+        }
+      });
+      const countEl = docClone.querySelector('#archiveCount');
+      if (countEl) countEl.textContent = '0';
+
+      ['shareMenuDropdown', 'wordToolbar', 'passageShelf'].forEach(id => {
+        const el = docClone.querySelector('#' + id);
+        if (el) el.style.display = 'none';
+      });
+      docClone.querySelectorAll('.modal-backdrop.open, .drawer-backdrop.open, .drawer-panel.open').forEach(el => {
+        el.classList.remove('open');
+      });
+      const toastEl = docClone.querySelector('#toast');
+      if (toastEl) {
+        toastEl.classList.remove('show');
+        toastEl.textContent = '';
+      }
+
+      let cleanHtml = '<!DOCTYPE html>\n' + docClone.outerHTML;
+      cleanHtml = cleanHtml.replace(/const\s+EMBEDDED_SYNC_ID\s*=\s*["'][^"']*["'];/, 'const EMBEDDED_SYNC_ID = "";');
+
+      const blob = new Blob([cleanHtml], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'quiet_time_guide_app.html';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      showToast("🎁 Clean private guide downloaded for sharing");
     }
 
     function saveToArchive() {
@@ -4909,10 +5042,33 @@ function closeModal() {
     function loadArchiveItem(id) {
       const archive = JSON.parse(localStorage.getItem(ARCHIVE_KEY) || '[]');
       const found = archive.find(i => i.id === id);
-      if (found) {
-        document.getElementById('journalText').value = found.content;
-        switchMainTab('microTab', document.querySelector('.tab-link'));
-        showToast("Loaded entry into editor");
+      if (!found) return;
+
+      const ref = found.ref || '';
+      if (ref.startsWith('🏷️ Topic:')) {
+        const area = document.getElementById('topicalJournalText');
+        const editor = document.getElementById('topicalJournalEditor');
+        if (area) area.value = found.content;
+        if (editor) editor.innerHTML = parseMarkdown(found.content);
+        localStorage.setItem(TOPICAL_DRAFT_KEY, found.content);
+        switchMainTab('topicalTab', document.getElementById('navTopical'));
+        showToast("Loaded archived Topical study");
+      } else if (ref.startsWith('📜 Book:')) {
+        const area = document.getElementById('teleJournalText');
+        const editor = document.getElementById('teleJournalEditor');
+        if (area) area.value = found.content;
+        if (editor) editor.innerHTML = parseMarkdown(found.content);
+        localStorage.setItem(TELE_DRAFT_KEY, found.content);
+        switchMainTab('telescopicTab', document.getElementById('navTele'));
+        showToast("Loaded archived Telescopic study");
+      } else {
+        const area = document.getElementById('journalText');
+        const editor = document.getElementById('journalEditor');
+        if (area) area.value = found.content;
+        if (editor) editor.innerHTML = parseMarkdown(found.content);
+        localStorage.setItem(DRAFT_KEY, found.content);
+        switchMainTab('microTab', document.getElementById('navMicro'));
+        showToast("Loaded archived entry into editor");
       }
     }
 

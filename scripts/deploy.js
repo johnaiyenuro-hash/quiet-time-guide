@@ -15,11 +15,13 @@ if (!token) {
   process.exit(1);
 }
 
-// Sync latest HTML from Google Drive or local workspace into index.html
-const srcHtml = fs.readFileSync('G:/My Drive/fl media/Distribution/download/quiet_time_guide_app.html', 'utf8');
-fs.writeFileSync(path.join(projectDir, 'index.html'), srcHtml, 'utf8');
+const indexPath = path.join(projectDir, 'index.html');
+if (!fs.existsSync(indexPath)) {
+  console.error('Error: index.html not found in project root');
+  process.exit(1);
+}
 
-console.log('Deploying to production on Vercel...');
+console.log('Deploying workspace index.html to production on Vercel...');
 const output = execSync(`npx vercel deploy --prod --yes --token ${token}`, {
   cwd: projectDir,
   encoding: 'utf8'
