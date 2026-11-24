@@ -57,20 +57,11 @@ QTAPP strictly adheres to Impeccable design quality with **0 anti-patterns**:
 
 ---
 
-## 4. Multi-Copy File Synchronization Protocol
-Any update made to the application must be mirrored across all 5 distribution copies:
-1. `C:\Users\johna\quiet-time-app\index.html` (Working source)
-2. `C:\Users\johna\quiet_time_guide_app.html` (Local desktop copy)
-3. `G:\My Drive\fl media\Distribution\download\quiet_time_guide_app.html` (Google Drive distribution)
-4. `G:\My Drive\fl media\Distribution\download\Antigravity\quiet_time_guide_app.html` (Google Drive Antigravity)
-5. `G:\My Drive\fl media\Distribution\download\quiet_time_guide_app - john.html` (John's personal copy with embedded sync key `fedbdde`)
-
-Run the sync script after every change:
-```powershell
-npm run sync
-# Or legacy external script:
-node "C:\Users\johna\.gemini\antigravity-cli\brain\43223302-9de8-4212-ac10-66578f37cfeb\scratch\sync_all_copies.js"
-```
+## 4. Distribution & Hosting Model
+QTAPP is distributed exclusively as a live web application hosted on Vercel:
+- **Source of Truth:** `C:\Users\johna\quiet-time-app\index.html` (on Git branch `main`)
+- **Live Production URL:** https://quiet-time-guide.vercel.app
+- **Sharing:** Users share the live URL via the in-app **🔗 Share App Link** action (`shareLiveGuideLink()`). Offline standalone `.html` distribution copies are retired.
 
 ---
 

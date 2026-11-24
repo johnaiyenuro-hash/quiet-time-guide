@@ -19,14 +19,13 @@
 | `config/devotional-catalyst.schema.json` | Canonical `DevotionalCatalystResponse` JSON Schema enforced by `api/catalyst.mjs`. |
 | `manifest.json` & `icon.svg` | PWA manifest and app icon for home screen installability. |
 | `scripts/deploy.js` | Vercel production deployment script deploying workspace `index.html`. |
-| `scripts/sync-copies.js` | In-repo multi-copy mirror script (`npm run sync`). |
 | `docs/AI_STUDIO_PROMPTS_AND_SCHEMAS.md` | Human-readable Google AI Studio System Instructions, 3 catalytic prompt templates, `DevotionalCatalystResponse` JSON schema, and TypeScript storage interfaces. |
-| `AGENTS.md` | Antigravity operational profile, 4 study pillars, typography/layout rules, 5-copy sync protocol, deploy/audit commands. |
+| `AGENTS.md` | Antigravity operational profile, 4 study pillars, typography/layout rules, Vercel distribution model, deploy/audit commands. |
 | `DESIGN.md` | Design tokens (Midnight Dark, Papyrus Sepia, Daylight Light), typography (`Cinzel`, `Lora`, `Outfit`), layout, and component rules. |
 | `GEMINI.md` | Quick Antigravity configuration pointing to `AGENTS.md`. |
 | `PRODUCT.md` | Product positioning, operating context, privacy commitments, and study capabilities. |
 | `PROFILE.md` | High-level identity, devotional mission, and UI/storage overview. |
-| `package.json` | Node manifest (`"engines": { "node": ">=22" }`, scripts `start`/`sync`/`deploy`, deps `@google/genai` and `@vercel/functions`). |
+| `package.json` | Node manifest (`"engines": { "node": ">=22" }`, scripts `start`/`deploy`, deps `@google/genai` and `@vercel/functions`). |
 | `vercel.json` | Vercel config (`{ "cleanUrls": true, "fluid": true }`). |
 | `.env.example` | Environment variable template (`GEMINI_API_KEY`, `GEMINI_MODEL`, `VERCEL_TOKEN`). |
 
@@ -279,14 +278,12 @@ interface ArchiveEntry {
 * **`GEMINI_API_KEY`** (Serverless Runtime — Vercel Project Env Var): Required for `POST /api/catalyst`.
 * **`GEMINI_MODEL`** (Serverless Runtime — Optional): Overrides default `gemini-4-hydrogen`.
 * **`VERCEL_TOKEN`** (Deployment CLI): Passed to `npx vercel deploy --prod --yes` via `scripts/deploy.js`.
-* **`QTAPP_PERSONAL_SYNC_ID`** (Optional Sync Script Env Var): Used by `scripts/sync-copies.js` for John's personal copy (defaults to `fedbdde`).
 
 ### 5.2 Build / Hosting Configuration
-* `package.json`: `{ "name": "qtapp", "version": "1.0.0", "description": "QTAPP — Quiet Time Study & Revelation Journal", "scripts": { "start": "npx serve ." } }`
-* `vercel.json`: `{ "cleanUrls": true }`
+* `package.json`: `{ "name": "qtapp", "version": "1.0.0", "description": "QTAPP — Quiet Time Study & Revelation Journal", "scripts": { "start": "npx serve .", "deploy": "node scripts/deploy.js" } }`
+* `vercel.json`: `{ "cleanUrls": true, "fluid": true }`
 
 ### 5.3 Client Configuration & `localStorage` Keys (in `index.html`)
-* `EMBEDDED_SYNC_ID`: `""` in `index.html` (`AGENTS.md` documents `"fedbdde"` in `quiet_time_guide_app - john.html`).
 * `SYNC_KEY_STORAGE`: `'qt_private_sync_key_v2'`
 * `SYNC_TIME_STORAGE`: `'qt_last_sync_time_v2'`
 * `DRAFT_KEY`: `'qt_user_draft_v2'` (legacy fallback: `'qt_journal_draft_clean_v1'`)
@@ -315,7 +312,7 @@ body (.theme-sepia | .theme-light | default Midnight Dark)
 │       ├── .guide-pill-btn (7 Steps Guide trigger)
 │       ├── Theme toggle button (toggleTheme)
 │       ├── #headerSaveBtn (manualSaveCloud)
-│       └── .dropdown-wrap -> #shareMenuDropdown (Storage & Sync, Full Document Sheet, Copy, Clean Guide for Friend, Download MD, Print)
+│       └── .dropdown-wrap -> #shareMenuDropdown (Storage & Sync, Full Document Sheet, Restore Snapshots, Copy Notes, Share App Link, Download MD, Print, Hard Reset)
 │
 ├── main
 │   ├── section#scriptureDesk.scripture-card
@@ -356,7 +353,7 @@ body (.theme-sepia | .theme-light | default Midnight Dark)
 ## 7. Implementation Alignment Status (Resolved in Milestones 1–4)
 
 All discrepancies observed in the initial snapshot have been resolved:
-1. **Missing Helper Definitions & Dead Code:** `exportFreshFriendCopy()` is implemented; obsolete `initAutocompleteDatalist()`, `renderSevenSteps()`, `#*JournalPreview`, and ~30 unreachable legacy functions and ~35 dead CSS selectors were removed.
+1. **Missing Helper Definitions & Dead Code:** `shareLiveGuideLink()` replaces the retired offline HTML download (`exportFreshFriendCopy()`); obsolete `initAutocompleteDatalist()`, `renderSevenSteps()`, `#*JournalPreview`, and ~30 unreachable legacy functions and ~35 dead CSS selectors were removed.
 2. **Unified `contenteditable` Sync:** `pullFromCloud()`, `importSyncBackup()`, and `loadArchiveItem()` all update the visible `.unified-editor` DOM and `localStorage`, and multi-color highlights survive Markdown round-trips.
 3. **Full-Scope Cloud Sync & Backup:** `pushToCloud()`, `pullFromCloud()`, `enableCloudSync()`, `exportSyncBackup()`, and `importSyncBackup()` persist all three study drafts (`draft`, `topicalDraft`, `teleDraft`), Topical/Telescopic metadata, all 13 Microscopic Q&A answers, and all 6 Topical W's answers (backward-compatible with legacy payloads).
-4. **Design Font & Doc Alignment:** `DESIGN.md`, `PRODUCT.md`, `PROFILE.md`, `AGENTS.md`, and `SPEC.md` now consistently specify `Outfit`, `Lora`, and `Cinzel`, document the unified editor, `manifest.json`, in-repo `scripts/sync-copies.js`, and live `POST /api/catalyst` endpoint.
+4. **Design Font & Doc Alignment:** `DESIGN.md`, `PRODUCT.md`, `PROFILE.md`, `AGENTS.md`, and `SPEC.md` now consistently specify `Outfit`, `Lora`, and `Cinzel`, document the unified editor, `manifest.json`, live Vercel-only sharing, and live `POST /api/catalyst` endpoint.

@@ -18,20 +18,15 @@ Use this skill whenever working on the **QTAPP** scripture study app.
 
 ## Workflows & Commands
 
-### 1. Synchronizing All 5 Distribution Replicas
-Always run after modifying `index.html`:
-```powershell
-node "C:\Users\johna\.gemini\antigravity-cli\brain\43223302-9de8-4212-ac10-66578f37cfeb\scratch\sync_all_copies.js"
-```
-
-### 2. Deploying to Vercel Production
+### 1. Deploying to Vercel Production
+Pushes to `main` on GitHub auto-deploy to production, or deploy manually via CLI:
 ```powershell
 cd C:\Users\johna\quiet-time-app
 node scripts/deploy.js
 # Or: npx vercel deploy --prod --yes --token $env:VERCEL_TOKEN
 ```
 
-### 3. Auditing Impeccable Design Quality
+### 2. Auditing Impeccable Design Quality
 ```powershell
 npx @impeccable/cli-windows-x64 detect index.html
 npx @impeccable/cli-windows-x64 detect https://quiet-time-guide.vercel.app

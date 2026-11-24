@@ -199,7 +199,7 @@ Typographic scale and hierarchy prioritize sustained reading comfort and contemp
 - Formatting bar with Undo/Redo, Bold, Italic, Underline, 5 semantic highlight colors (Gold, Green, Blue, Rose, Amber), Section Heading (`H3`), and Bullet Lists.
 
 ### 4. Consolidated Share & Export Menu
-- Secondary actions (`Storage & Sync`, `Full Document Sheet`, `Restore Snapshots`, `Copy Notes Text`, `Clean Guide for Friend`, `Download Markdown`, `Print / Save PDF`) are housed in the calm `⋯` dropdown menu.
+- Secondary actions (`Storage & Sync`, `Full Document Sheet`, `Restore Snapshots`, `Copy Notes Text`, `Share App Link`, `Download Markdown`, `Print / Save PDF`, `Hard Reset`) are housed in the calm `⋯` dropdown menu.
 
 ### 5. Catalytic Nudge Callout (`.catalyst-box`)
 - Optional, user-triggered 1px-bordered `--surface` callout presenting brief 1–2 sentence Socratic thought-starters and a silent meditation pause via `/api/catalyst` (`store: false`). Never auto-runs or writes notes on the user's behalf.

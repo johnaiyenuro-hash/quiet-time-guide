@@ -7,7 +7,6 @@
   },
   "scripts": {
     "start": "npx serve .",
-    "sync": "node scripts/sync-copies.js",
     "deploy": "node scripts/deploy.js"
   },
   "dependencies": {

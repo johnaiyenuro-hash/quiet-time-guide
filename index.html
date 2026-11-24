@@ -1513,7 +1513,7 @@
             <button type="button" class="dropdown-item" role="menuitem" onclick="openFullPageModal(); closeShareMenu();">📖 Full Document Sheet</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="openRestoreModal(); closeShareMenu();">🕘 Restore Snapshots</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="copyRevelation(); closeShareMenu();">📋 Copy Notes Text</button>
-            <button type="button" class="dropdown-item" role="menuitem" onclick="exportFreshFriendCopy(); closeShareMenu();">🎁 Clean Guide for Friend</button>
+            <button type="button" class="dropdown-item" role="menuitem" onclick="shareLiveGuideLink(); closeShareMenu();">🔗 Share App Link</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="downloadMarkdown(); closeShareMenu();">📥 Download Markdown</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="window.print(); closeShareMenu();">🖨️ Print / Save PDF</button>
             <button type="button" class="dropdown-item btn-danger-text" role="menuitem" onclick="hardResetWorkspace(); closeShareMenu();">🧹 Hard Reset (Fresh Start)</button>
@@ -3842,10 +3842,7 @@
     const ARCHIVE_KEY = 'qt_user_archive_v2';
     const SNAPSHOT_KEY = 'qt_user_snapshots_v2';
 
-    // Preset sync ID (only for John's personal offline file; empty for web/friends)
-    const EMBEDDED_SYNC_ID = "";
-
-    let cloudSyncId = localStorage.getItem(SYNC_KEY_STORAGE) || EMBEDDED_SYNC_ID || '';
+    let cloudSyncId = localStorage.getItem(SYNC_KEY_STORAGE) || '';
     let isSyncing = false;
     let debounceCloudTimer = null;
 
@@ -4486,29 +4483,7 @@ function resetMicroStudy() {
         console.warn('Hard reset storage warning:', e);
       }
 
-      // If this copy has an embedded personal sync key, push a fresh blank state so cloud doesn't restore old data on reload
-      if (EMBEDDED_SYNC_ID && typeof pushToCloud === 'function') {
-        const def = getDefaultTemplate();
-        const area = document.getElementById('journalText');
-        const editor = document.getElementById('journalEditor');
-        if (area) area.value = def;
-        if (editor) editor.innerHTML = parseMarkdown(def);
-        const topArea = document.getElementById('topicalJournalText');
-        const topEditor = document.getElementById('topicalJournalEditor');
-        const topDef = "# Topical Study — Patience\n\n- **Definition:** \n\n";
-        if (topArea) topArea.value = topDef;
-        if (topEditor) topEditor.innerHTML = parseMarkdown(topDef);
-        const teleArea = document.getElementById('teleJournalText');
-        const teleEditor = document.getElementById('teleJournalEditor');
-        const teleDef = "# Telescopic Study — Ephesians\n\n- **Author & Setting:** \n- **Central Theme:** \n\n";
-        if (teleArea) teleArea.value = teleDef;
-        if (teleEditor) teleEditor.innerHTML = parseMarkdown(teleDef);
-        localStorage.setItem(SYNC_TIME_STORAGE, String(Date.now()));
-        await pushToCloud(false);
-      } else {
-        cloudSyncId = '';
-      }
-
+      cloudSyncId = '';
       window.location.reload();
     }
 
@@ -4894,56 +4869,34 @@ function closeModal() {
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
 
-    function exportFreshFriendCopy() {
-      const docClone = document.documentElement.cloneNode(true);
-      const clearIds = [
-        'journalEditor', 'topicalJournalEditor', 'teleJournalEditor',
-        'archiveList', 'syncKeyDisplay', 'modalContent', 'verseDisplay',
-        'microCatalystBox', 'topicalCatalystBox', 'wordCatalystBox'
-      ];
-      clearIds.forEach(id => {
-        const el = docClone.querySelector('#' + id);
-        if (el) el.innerHTML = '';
-      });
-      const clearValues = [
-        'journalText', 'topicalJournalText', 'teleJournalText',
-        'activeQuestionInput', 'activeTopicalInput', 'teleContext', 'teleTheme',
-        'topicalDef', 'manualSyncKeyInput'
-      ];
-      clearValues.forEach(id => {
-        const el = docClone.querySelector('#' + id);
-        if (el) {
-          el.textContent = '';
-          el.removeAttribute('value');
-        }
-      });
-      const countEl = docClone.querySelector('#archiveCount');
-      if (countEl) countEl.textContent = '0';
+    async function shareLiveGuideLink() {
+      const shareUrl = APP_CONFIG.productionUrl || (window.location.origin + window.location.pathname);
+      const shareTitle = 'Quiet Time Study & Revelation Journal';
+      const shareText = 'A quiet, private scripture study and devotional journal with Microscopic, Topical, Telescopic study and the Daily Seven Steps.';
 
-      ['shareMenuDropdown', 'wordToolbar', 'passageShelf', 'microCatalystBox', 'topicalCatalystBox', 'wordCatalystBox'].forEach(id => {
-        const el = docClone.querySelector('#' + id);
-        if (el) el.style.display = 'none';
-      });
-      docClone.querySelectorAll('.modal-backdrop.open, .drawer-backdrop.open, .drawer-panel.open').forEach(el => {
-        el.classList.remove('open');
-      });
-      const toastEl = docClone.querySelector('#toast');
-      if (toastEl) {
-        toastEl.classList.remove('show');
-        toastEl.textContent = '';
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: shareTitle, text: shareText, url: shareUrl });
+          return;
+        } catch (err) {
+          if (err && err.name === 'AbortError') return;
+        }
       }
 
-      let cleanHtml = '<!DOCTYPE html>\n' + docClone.outerHTML;
-      cleanHtml = cleanHtml.replace(/const\s+EMBEDDED_SYNC_ID\s*=\s*["'][^"']*["'];/, 'const EMBEDDED_SYNC_ID = "";');
-
-      const blob = new Blob([cleanHtml], { type: 'text/html;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'quiet_time_guide_app.html';
-      a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-      showToast("🎁 Clean private guide downloaded for sharing");
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        showToast("🔗 Live guide link copied! Ready to share.");
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = shareUrl;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast("🔗 Live guide link copied! Ready to share.");
+      }
     }
 
     function saveToArchive() {
