@@ -1,7 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Quiet Time Study & Revelation Journal">
-  <rect width="512" height="512" rx="96" fill="#0d1117"/>
-  <rect x="36" y="36" width="440" height="440" rx="72" fill="#151b23" stroke="#d4af37" stroke-width="8"/>
-  <path d="M128 164c42-18 86-18 128 6 42-24 86-24 128-6v192c-42-18-86-18-128 6-42-24-86-24-128-6V164z" fill="none" stroke="#d4af37" stroke-width="16" stroke-linejoin="round"/>
-  <line x1="256" y1="170" x2="256" y2="362" stroke="#d4af37" stroke-width="12" stroke-linecap="round"/>
-  <circle cx="256" cy="116" r="14" fill="#d4af37"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Quiet Time Study &amp; Revelation Journal">
+  <defs>
+    <radialGradient id="aura" cx="50%" cy="42%" r="55%">
+      <stop offset="0%" stop-color="#d4af37" stop-opacity="0.22"/>
+      <stop offset="65%" stop-color="#151b23" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#0d1117" stop-opacity="1"/>
+    </radialGradient>
+    <linearGradient id="goldStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f3d87d"/>
+      <stop offset="50%" stop-color="#d4af37"/>
+      <stop offset="100%" stop-color="#b48a28"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="108" fill="#0d1117"/>
+  <rect x="28" y="28" width="456" height="456" rx="84" fill="url(#aura)" stroke="url(#goldStroke)" stroke-width="5" stroke-opacity="0.72"/>
+  <rect x="44" y="44" width="424" height="424" rx="70" fill="none" stroke="#d4af37" stroke-width="1.5" stroke-opacity="0.25"/>
+  <!-- Serene 4-point celestial spark above the Word -->
+  <path d="M256 96 L265 126 L295 135 L265 144 L256 174 L247 144 L217 135 L247 126 Z" fill="url(#goldStroke)"/>
+  <!-- Open Scripture Book -->
+  <path d="M112 204 C156 184 214 186 256 212 C298 186 356 184 400 204 L400 368 C356 348 298 350 256 376 C214 350 156 348 112 368 Z" fill="#121821" stroke="url(#goldStroke)" stroke-width="14" stroke-linejoin="round"/>
+  <!-- Spine crease -->
+  <line x1="256" y1="212" x2="256" y2="376" stroke="url(#goldStroke)" stroke-width="10" stroke-linecap="round"/>
+  <!-- Subtle page lines -->
+  <path d="M148 242 C176 232 206 234 230 246 M148 278 C176 268 206 270 230 282 M148 314 C176 304 206 306 230 318" fill="none" stroke="#d4af37" stroke-width="6" stroke-linecap="round" stroke-opacity="0.5"/>
+  <path d="M364 242 C336 232 306 234 282 246 M364 278 C336 268 306 270 282 282 M364 314 C336 304 306 306 282 318" fill="none" stroke="#d4af37" stroke-width="6" stroke-linecap="round" stroke-opacity="0.5"/>
+  <!-- Bookmark ribbon -->
+  <path d="M244 374 L244 414 L256 402 L268 414 L268 374" fill="url(#goldStroke)" fill-opacity="0.9"/>
 </svg>
