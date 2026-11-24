@@ -212,7 +212,7 @@
     main {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 1.5rem;
+      padding: 1rem 1.5rem 1.5rem;
       width: 100%;
       flex: 1;
     }
@@ -221,8 +221,8 @@
     .scripture-card {
       background: transparent;
       border: none;
-      padding: 0 0 1rem 0;
-      margin-bottom: 0.5rem;
+      padding: 0 0 0.65rem 0;
+      margin-bottom: 0.35rem;
     }
     .scripture-input-row {
       display: flex;
@@ -282,6 +282,7 @@
       font-weight: 600;
       color: var(--gold);
       background: var(--surface-elevated);
+      border: 1px solid transparent;
       border-radius: 4px;
       padding: 0.1rem 0.35rem;
       margin-right: 0.45rem;
@@ -289,9 +290,14 @@
     }
     .verse-word {
       cursor: pointer;
-      display: inline-block;
-      padding: 2px 4px;
-      margin: 0 1px;
+      display: inline;
+      background: transparent;
+      border: none;
+      font: inherit;
+      color: inherit;
+      line-height: inherit;
+      padding: 1px 2px;
+      margin: 0;
       border-radius: 3px;
       transition: background 0.15s ease, color 0.15s ease;
       touch-action: manipulation;
@@ -449,6 +455,21 @@
     }
 
     /* Shared Semantic UI Components */
+    .dropdown-sep {
+      height: 1px;
+      background: var(--border);
+      margin: 0.25rem 0.2rem;
+    }
+    .btn-gold-outline {
+      border-color: var(--border-accent);
+      color: var(--gold);
+      background: rgba(212, 175, 55, 0.08);
+    }
+    .btn-gold-outline:hover {
+      background: rgba(212, 175, 55, 0.16);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
     .btn-danger-text { color: var(--danger); }
     .btn-link-plain { text-decoration: none; }
     .btn-compact { padding: 0.18rem 0.5rem; font-size: 0.72rem; }
@@ -884,13 +905,13 @@
     .studio-panel {
       display: flex;
       flex-direction: column;
-      height: calc(100vh - 88px);
-      min-height: 460px;
-      max-height: calc(100vh - 88px);
+      height: clamp(460px, calc(100vh - 235px), 760px);
+      min-height: 440px;
+      max-height: calc(100vh - 84px);
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 1.25rem;
+      padding: 1.15rem 1.25rem;
     }
     .view-switcher {
       display: flex;
@@ -980,18 +1001,24 @@
     .hl-swatches {
       display: inline-flex;
       align-items: center;
-      gap: 0.25rem;
+      gap: 0.38rem;
     }
     .hl-swatch-dot {
-      width: 12px;
-      height: 12px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.28);
       cursor: pointer;
       padding: 0;
       margin: 0;
       display: inline-block;
+      position: relative;
       transition: transform 0.15s ease;
+    }
+    .hl-swatch-dot::after {
+      content: '';
+      position: absolute;
+      inset: -7px;
     }
     .hl-swatch-dot:hover {
       transform: scale(1.25);
@@ -1169,68 +1196,6 @@
 
     .tab-section { display: none; }
     .tab-section.active { display: block; }
-
-    /* Responsive Breakpoints & Mobile Optimization */
-    @media (max-width: 1120px) {
-      .brand-sub { display: none; }
-      .header-actions .btn { white-space: nowrap; }
-    }
-    @media (max-width: 860px) {
-      .study-grid { grid-template-columns: 1fr; }
-      .study-right { position: static; }
-      .studio-panel { height: auto; max-height: none; min-height: 420px; }
-      .unified-editor { min-height: 320px; max-height: 60vh; }
-    }
-
-    @media (max-width: 640px) {
-      header.unified-header {
-        height: auto;
-        padding: 0.45rem 0;
-      }
-      .unified-header-inner {
-        flex-wrap: wrap;
-        padding: 0 0.85rem;
-        gap: 0.5rem;
-      }
-      .brand-sub { display: none; }
-      .unified-nav {
-        order: 3;
-        width: 100%;
-        overflow-x: auto;
-        justify-content: space-between;
-      }
-      .nav-tab-btn {
-        min-height: 36px;
-        padding: 0.35rem 0.65rem;
-      }
-      .btn { min-height: 36px; }
-      .verse-box { top: 0; position: static; }
-      main { padding: 0.85rem; }
-
-      .verse-text { font-size: 1.15rem; line-height: 1.75; }
-      .verse-word { padding: 3px 5px; min-height: 36px; }
-
-      .modal-backdrop {
-        align-items: flex-end;
-        padding: 0;
-      }
-      .modal-card {
-        max-height: 85vh;
-        border-radius: var(--radius) var(--radius) 0 0;
-        border-left: none;
-        border-right: none;
-        border-bottom: none;
-      }
-    }
-
-    @media print {
-      header.unified-header, .view-switcher, .btn, .scripture-input-row, .dropdown-wrap, .note-format-bar {
-        display: none !important;
-      }
-      body { background: #ffffff !important; color: var(--text) !important; }
-      .study-grid { display: block !important; }
-      .studio-panel { border: none !important; padding: 0 !important; position: static !important; }
-    }
 
     /* Pull-Out Drawer for 7 Steps Guide */
     .drawer-backdrop {
@@ -1522,6 +1487,117 @@
       border-bottom-color: rgba(251, 191, 36, 0.55) !important;
     }
 
+    /* Per-theme soft elevation shadows */
+    body.theme-light .verse-box,
+    body.theme-sepia .verse-box {
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Responsive Breakpoints & Mobile Optimization (Placed Last to Win Cascade) */
+    @media (max-width: 1120px) {
+      .brand-sub { display: none; }
+      .header-actions .btn { white-space: nowrap; }
+    }
+    @media (max-width: 860px) {
+      .study-grid { grid-template-columns: minmax(0, 1fr); }
+      .study-right { position: static; }
+      .studio-panel { height: auto; max-height: none; min-height: 420px; }
+      .unified-editor { min-height: 320px; max-height: 60vh; }
+    }
+    @media (max-width: 640px) {
+      body { overflow-x: clip; }
+      header.unified-header {
+        height: auto;
+        padding: 0.45rem 0;
+      }
+      .unified-header-inner {
+        height: auto;
+        flex-wrap: wrap;
+        padding: 0 0.75rem;
+        gap: 0.45rem;
+      }
+      .brand-sub { display: none; }
+      .brand-title { font-size: 0.95rem; }
+      .header-actions {
+        gap: 0.3rem;
+        flex-wrap: nowrap;
+      }
+      .header-actions .btn {
+        padding: 0.3rem 0.55rem;
+        font-size: 0.74rem;
+      }
+      .header-theme-btn { display: none; }
+      .unified-nav {
+        order: 3;
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 2px;
+        padding: 3px;
+      }
+      .nav-tab-btn {
+        justify-content: center;
+        min-height: 36px;
+        padding: 0.32rem 0.25rem;
+        font-size: 0.72rem;
+        gap: 0.2rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .nav-tab-icon { display: none; }
+      .btn { min-height: 36px; }
+      main { padding: 0.85rem; }
+      .scripture-header-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+      .scripture-actions {
+        width: 100%;
+        flex-wrap: wrap;
+      }
+      .verse-box {
+        top: 0;
+        position: static;
+        padding: 0.85rem 0.95rem;
+      }
+      .verse-text {
+        font-size: 1.08rem;
+        line-height: 1.78;
+        max-height: none;
+        overflow-y: visible;
+      }
+      .text-input { min-width: 0; }
+      .studio-select-wrap { flex: 1 1 100%; }
+      .question-footer {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .question-footer-group {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .modal-backdrop {
+        align-items: flex-end;
+        padding: 0;
+      }
+      .modal-card {
+        max-height: 85vh;
+        border-radius: var(--radius) var(--radius) 0 0;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+      }
+    }
+    @media print {
+      header.unified-header, .view-switcher, .btn, .scripture-input-row, .dropdown-wrap, .note-format-bar {
+        display: none !important;
+      }
+      body { background: #ffffff !important; color: var(--text) !important; }
+      .study-grid { display: block !important; }
+      .studio-panel { border: none !important; padding: 0 !important; position: static !important; height: auto !important; max-height: none !important; }
+    }
+
   </style>
 </head>
 <body>
@@ -1534,34 +1610,38 @@
       </button>
 
       <nav class="unified-nav" aria-label="Study modes" role="tablist">
-        <button type="button" class="nav-tab-btn active" id="navMicro" role="tab" aria-selected="true" aria-controls="microTab" onclick="switchMainTab('microTab', this)">🔬 Microscopic</button>
-        <button type="button" class="nav-tab-btn" id="navTopical" role="tab" aria-selected="false" aria-controls="topicalTab" onclick="switchMainTab('topicalTab', this)">🏷️ Topical</button>
-        <button type="button" class="nav-tab-btn" id="navTele" role="tab" aria-selected="false" aria-controls="telescopicTab" onclick="switchMainTab('telescopicTab', this)">📜 Telescopic</button>
-        <button type="button" class="nav-tab-btn" id="navArchive" role="tab" aria-selected="false" aria-controls="archiveTab" onclick="switchMainTab('archiveTab', this)">📁 Archive (<span id="archiveCount" class="archive-count">0</span>)</button>
+        <button type="button" class="nav-tab-btn active" id="navMicro" role="tab" aria-selected="true" aria-controls="microTab" onclick="switchMainTab('microTab', this)"><span class="nav-tab-icon" aria-hidden="true">🔬</span> Microscopic</button>
+        <button type="button" class="nav-tab-btn" id="navTopical" role="tab" aria-selected="false" aria-controls="topicalTab" onclick="switchMainTab('topicalTab', this)"><span class="nav-tab-icon" aria-hidden="true">🏷️</span> Topical</button>
+        <button type="button" class="nav-tab-btn" id="navTele" role="tab" aria-selected="false" aria-controls="telescopicTab" onclick="switchMainTab('telescopicTab', this)"><span class="nav-tab-icon" aria-hidden="true">📜</span> Telescopic</button>
+        <button type="button" class="nav-tab-btn" id="navArchive" role="tab" aria-selected="false" aria-controls="archiveTab" onclick="switchMainTab('archiveTab', this)"><span class="nav-tab-icon" aria-hidden="true">📁</span> Archive (<span id="archiveCount" class="archive-count">0</span>)</button>
       </nav>
 
       <div class="header-actions">
         <button type="button" class="btn btn-sm guide-pill-btn" onclick="openSevenStepsDrawer()" title="Pull out Daily 7 Steps Guide">
-          <span>🌿</span> <span>7 Steps Guide</span>
+          <span aria-hidden="true">🌿</span> <span>7 Steps Guide</span>
         </button>
-        <button type="button" class="btn btn-sm btn-subtle" onclick="toggleTheme()" title="Switch Light / Dark / Sepia">Appearance</button>
-        <button type="button" class="btn btn-primary btn-sm" id="headerSaveBtn" onclick="manualSaveCloud()" title="Save current reflection">
+        <button type="button" id="themeToggleBtn" class="btn btn-sm btn-subtle header-theme-btn" onclick="toggleTheme()" title="Switch Light / Dark / Sepia">Theme: Dark</button>
+        <button type="button" class="btn btn-gold-outline btn-sm" id="headerSaveBtn" onclick="manualSaveCloud()" title="Save current reflection">
           <span id="headerSaveIcon">💾</span> <span id="headerSaveText">Save</span>
         </button>
 
         <div class="dropdown-wrap">
-          <button type="button" id="shareMenuBtn" class="btn btn-sm btn-subtle" aria-haspopup="menu" aria-expanded="false" aria-controls="shareMenuDropdown" onclick="toggleShareMenu(event)" title="More options and export">⋯</button>
+          <button type="button" id="shareMenuBtn" class="btn btn-sm btn-subtle" aria-label="More options and actions" aria-haspopup="menu" aria-expanded="false" aria-controls="shareMenuDropdown" onclick="toggleShareMenu(event)" title="More options and export">⋯</button>
           <div id="shareMenuDropdown" class="dropdown-menu" role="menu">
             <button type="button" class="dropdown-item" role="menuitem" id="syncStatusBtn" onclick="openSyncModal(); closeShareMenu();">
               <span id="syncIndicatorDot" class="status-dot"></span>
               <span id="syncBtnText">Storage &amp; Sync</span>
             </button>
+            <button type="button" class="dropdown-item" role="menuitem" onclick="toggleTheme(); closeShareMenu();">🌓 Switch Theme (<span id="menuThemeLabel">Dark</span>)</button>
+            <div class="dropdown-sep" role="separator"></div>
             <button type="button" class="dropdown-item" role="menuitem" onclick="openFullPageModal(); closeShareMenu();">📖 Full Document Sheet</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="openRestoreModal(); closeShareMenu();">🕘 Restore Snapshots</button>
+            <div class="dropdown-sep" role="separator"></div>
             <button type="button" class="dropdown-item" role="menuitem" onclick="copyRevelation(); closeShareMenu();">📋 Copy Notes Text</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="shareLiveGuideLink(); closeShareMenu();">🔗 Share App Link</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="downloadMarkdown(); closeShareMenu();">📥 Download Markdown</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="window.print(); closeShareMenu();">🖨️ Print / Save PDF</button>
+            <div class="dropdown-sep" role="separator"></div>
             <button type="button" class="dropdown-item btn-danger-text" role="menuitem" onclick="hardResetWorkspace(); closeShareMenu();">🧹 Hard Reset (Fresh Start)</button>
           </div>
         </div>
@@ -1667,18 +1747,18 @@
             <!-- Target Verse Selector for Multi-Verse Passages -->
             <div class="target-verse-bar">
               <div class="target-verse-row">
-                <div class="target-verse-select-wrap">
-                  <label for="targetVerseSelect" class="meta-label">Target Verse for Questions:</label>
+                <div id="targetVerseSelectWrap" class="target-verse-select-wrap" style="display:none;">
+                  <label for="targetVerseSelect" class="meta-label">Target Verse:</label>
                   <select id="targetVerseSelect" class="text-input target-verse-select" onchange="setTargetVerse(this.value)">
                   </select>
                 </div>
                 <div class="target-verse-actions">
-                  <button type="button" class="btn btn-sm" onclick="insertAllQuestionsToJournal(false)" title="Insert only your written reflection answers">+ Insert All Answers Only</button>
-                  <button type="button" class="btn btn-sm" onclick="insertAllQuestionsToJournal(true)" title="Insert full question outlines &amp; reflections">+ Insert All Q&amp;A</button>
-                  <button type="button" class="btn btn-sm" onclick="insertAllVersesAsSections()" title="Insert each verse as its own section in notes">+ Outline All Verses</button>
+                  <button type="button" class="btn btn-sm btn-subtle" onclick="insertAllQuestionsToJournal(false)" title="Insert only your written reflection answers">+ Insert All Answers</button>
+                  <button type="button" class="btn btn-sm btn-subtle" onclick="insertAllQuestionsToJournal(true)" title="Insert full question outlines &amp; reflections">+ Insert All Q&amp;A</button>
+                  <button type="button" id="outlineAllVersesBtn" class="btn btn-sm btn-subtle" style="display:none;" onclick="insertAllVersesAsSections()" title="Insert each verse as its own section in notes">+ Outline All Verses</button>
                 </div>
               </div>
-              <div id="targetVerseChips" class="target-verse-chips"></div>
+              <div id="targetVerseChips" class="target-verse-chips" style="display:none;"></div>
             </div>
 
             <!-- Condensed Question Studio (Dropdown Selector) -->
@@ -1708,7 +1788,6 @@
                     <span class="meta-hint">Saved automatically</span>
                     <button type="button" class="btn btn-sm btn-subtle" onclick="requestMicroCatalyst()" title="Get a short thought-starter to help you reflect on this verse">✨ Study Hint</button>
                     <button type="button" class="btn btn-sm btn-subtle" onclick="clearCurrentQuestionAnswer()" title="Clear your answer for this question">✕ Clear</button>
-                    <button type="button" class="btn btn-sm btn-subtle" onclick="resetMicroStudy()" title="Reset notes and all 13 questions to default">↺ Reset All</button>
                   </div>
                   <div class="question-footer-group">
                     <button type="button" class="btn btn-sm" onclick="pushActiveQuestion(false)">+ Insert Answer Only</button>
@@ -1738,7 +1817,7 @@
             <textarea id="journalText" style="display:none;"></textarea>
 
             <div class="studio-footer">
-              <button type="button" class="btn btn-primary studio-save-btn" id="bottomSaveBtn" data-default-label="💾 Save Reflection" onclick="manualSaveCloud()">💾 Save Reflection</button>
+              <button type="button" class="btn btn-gold-outline studio-save-btn" id="bottomSaveBtn" data-default-label="💾 Save Reflection" onclick="manualSaveCloud()">💾 Save Reflection</button>
               <button type="button" class="btn studio-archive-btn" onclick="saveToArchive()">+ Add to Archive</button>
             </div>
           </div>
@@ -2259,6 +2338,7 @@
     let currentActiveTabId = "microTab";
 
     function init() {
+      initSavedTheme();
       renderFormatToolbars();
       renderSevenStepsDrawer();
       initKeyboardFormatShortcuts();
@@ -2278,47 +2358,42 @@
       document.getElementById('verseRefTag').textContent = currentScripture.reference + " (" + currentScripture.version.toUpperCase() + ")";
       container.innerHTML = "";
 
+      const appendTokenizedVerse = (parentEl, rawText) => {
+        const tokens = rawText.split(/(\s+|[.,;!?—"()]+)/);
+        tokens.forEach(tok => {
+          if (!tok) return;
+          if (/^[\w'-]+$/i.test(tok.trim())) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'verse-word';
+            btn.textContent = tok;
+            btn.onclick = () => selectWord(tok.trim(), btn);
+            parentEl.appendChild(btn);
+          } else {
+            parentEl.appendChild(document.createTextNode(tok));
+          }
+        });
+      };
+
       // If we have parsed multi-verse breakdown
       if (currentScripture.verses && currentScripture.verses.length > 1) {
         currentScripture.verses.forEach(v => {
           const p = document.createElement('p');
           p.style.marginBottom = '0.5rem';
 
-          const badge = document.createElement('span');
+          const badge = document.createElement('button');
+          badge.type = 'button';
           badge.className = 'verse-num-badge' + (activeTargetVerse.includes(':' + v.verse) ? ' active' : '');
           badge.textContent = 'v.' + v.verse;
           badge.title = 'Click to focus reflection questions on verse ' + v.verse;
           badge.onclick = () => setTargetVerse(getVerseRef(v.verse));
           p.appendChild(badge);
 
-          const vTokens = v.text.trim().split(/(\s+|[.,;!?—"()]+)/);
-          vTokens.forEach(tok => {
-            if (/^[\w'-]+$/i.test(tok.trim())) {
-              const span = document.createElement('span');
-              span.className = 'verse-word';
-              span.textContent = tok;
-              span.onclick = () => selectWord(tok.trim(), span);
-              p.appendChild(span);
-            } else {
-              p.appendChild(document.createTextNode(tok));
-            }
-          });
-
+          appendTokenizedVerse(p, v.text.trim());
           container.appendChild(p);
         });
       } else {
-        const tokens = currentScripture.text.split(/(\s+|[.,;!?—"()]+)/);
-        tokens.forEach(tok => {
-          if (/^[\w'-]+$/i.test(tok.trim())) {
-            const span = document.createElement('span');
-            span.className = 'verse-word';
-            span.textContent = tok;
-            span.onclick = () => selectWord(tok.trim(), span);
-            container.appendChild(span);
-          } else {
-            container.appendChild(document.createTextNode(tok));
-          }
-        });
+        appendTokenizedVerse(container, currentScripture.text);
       }
 
       updateTargetVerseOptions();
@@ -2366,6 +2441,13 @@
         if (!options.includes(found)) options.push(found);
       }
 
+      const selectWrap = document.getElementById('targetVerseSelectWrap');
+      const outlineBtn = document.getElementById('outlineAllVersesBtn');
+      const hasMultipleTargets = options.length > 1;
+      if (selectWrap) selectWrap.style.display = hasMultipleTargets ? 'flex' : 'none';
+      if (chips) chips.style.display = hasMultipleTargets ? 'flex' : 'none';
+      if (outlineBtn) outlineBtn.style.display = (currentScripture.verses && currentScripture.verses.length > 1) ? 'inline-flex' : 'none';
+
       options.forEach(opt => {
         const optEl = document.createElement('option');
         optEl.value = opt;
@@ -2373,11 +2455,14 @@
         if (opt === activeTargetVerse) optEl.selected = true;
         sel.appendChild(optEl);
 
-        const chip = document.createElement('span');
-        chip.className = 'verse-chip' + (opt === activeTargetVerse ? ' active' : '');
-        chip.textContent = opt === currentScripture.reference && currentScripture.verses?.length > 1 ? 'Whole Passage' : opt;
-        chip.onclick = () => setTargetVerse(opt);
-        chips.appendChild(chip);
+        if (hasMultipleTargets) {
+          const chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = 'verse-chip' + (opt === activeTargetVerse ? ' active' : '');
+          chip.textContent = opt === currentScripture.reference && currentScripture.verses?.length > 1 ? 'Whole Passage' : opt;
+          chip.onclick = () => setTargetVerse(opt);
+          chips.appendChild(chip);
+        }
       });
     }
 
@@ -2879,7 +2964,14 @@
       document.querySelectorAll('.hl-swatch-dot').forEach(dot => {
         dot.classList.toggle('active', dot.classList.contains('dot-' + color));
       });
-      toggleHighlight(color, true);
+      const sel = window.getSelection();
+      const ctx = getActiveNoteContext();
+      const editor = ctx && ctx.editor ? ctx.editor : document.getElementById('journalEditor');
+      const hasLiveSelection = sel && sel.rangeCount > 0 && !sel.isCollapsed && editor && editor.contains(sel.getRangeAt(0).commonAncestorContainer);
+      const hasSavedSelection = lastSavedRange && lastActiveEditor === editor && !lastSavedRange.collapsed;
+      if (hasLiveSelection || hasSavedSelection) {
+        toggleHighlight(color, true);
+      }
     }
 
     function toggleHighlight(requestedColor = null, forceApply = false) {
@@ -5018,15 +5110,19 @@ function closeModal() {
       } else {
         const area = document.getElementById('journalText');
         const editor = document.getElementById('journalEditor');
+        if (area && area.value.trim() && area.value.trim() !== found.content.trim()) {
+          saveSnapshot(area.value);
+        }
         if (area) area.value = found.content;
         if (editor) editor.innerHTML = parseMarkdown(found.content);
         localStorage.setItem(DRAFT_KEY, found.content);
         switchMainTab('microTab', document.getElementById('navMicro'));
-        showToast("Loaded archived entry into editor");
+        showToast("Loaded archived entry (previous draft saved to snapshots)");
       }
     }
 
     function deleteArchiveItem(id) {
+      if (!confirm("Delete this saved revelation from your archive?")) return;
       let archive = JSON.parse(localStorage.getItem(ARCHIVE_KEY) || '[]');
       archive = archive.filter(i => i.id !== id);
       localStorage.setItem(ARCHIVE_KEY, JSON.stringify(archive));
@@ -5103,13 +5199,39 @@ function closeModal() {
       }
     }
 
+    const THEME_STORAGE_KEY = 'qt_theme_v1';
     const themes = ['dark', 'sepia', 'light'];
+    const themeLabels = { dark: 'Dark', sepia: 'Sepia', light: 'Light' };
     let themeIdx = 0;
-    function toggleTheme() {
-      themeIdx = (themeIdx + 1) % themes.length;
+
+    function applyTheme(name, persist = true) {
+      const idx = themes.indexOf(name);
+      themeIdx = idx >= 0 ? idx : 0;
+      const active = themes[themeIdx];
       document.body.className = '';
-      if (themes[themeIdx] === 'sepia') document.body.className = 'theme-sepia';
-      if (themes[themeIdx] === 'light') document.body.className = 'theme-light';
+      if (active === 'sepia') document.body.className = 'theme-sepia';
+      if (active === 'light') document.body.className = 'theme-light';
+      const label = themeLabels[active] || 'Dark';
+      const btn = document.getElementById('themeToggleBtn');
+      if (btn) btn.textContent = 'Theme: ' + label;
+      const menuLbl = document.getElementById('menuThemeLabel');
+      if (menuLbl) menuLbl.textContent = label;
+      if (persist) {
+        try { localStorage.setItem(THEME_STORAGE_KEY, active); } catch (e) {}
+      }
+    }
+
+    function initSavedTheme() {
+      try {
+        const saved = localStorage.getItem(THEME_STORAGE_KEY);
+        applyTheme(saved && themes.includes(saved) ? saved : 'dark', false);
+      } catch (e) {
+        applyTheme('dark', false);
+      }
+    }
+
+    function toggleTheme() {
+      applyTheme(themes[(themeIdx + 1) % themes.length], true);
     }
 
     function showToast(msg) {
@@ -5182,7 +5304,7 @@ function closeModal() {
     // TOPICAL AUTO-DEFINITION ON TYPE
     // ==========================================
     let topicalDefTimer = null;
-    function onTopicalTopicInput(val) {
+    function onTopicalTopicInput(val, silent = false) {
       clearTimeout(topicalDefTimer);
       const clean = val.trim();
       const defInput = document.getElementById('topicalDef');
@@ -5195,7 +5317,7 @@ function closeModal() {
       const lower = clean.toLowerCase();
       if (OFFLINE_BIBLE_DICTIONARY[lower]) {
         defInput.value = OFFLINE_BIBLE_DICTIONARY[lower].meanings[0].definitions[0].definition;
-        showToast("✓ Definition found for " + clean);
+        if (!silent) showToast("✓ Definition found for " + clean);
         return;
       }
 
@@ -5207,7 +5329,7 @@ function closeModal() {
             const data = await resp.json();
             if (data && data[0]?.meanings[0]?.definitions[0]?.definition) {
               defInput.value = data[0].meanings[0].definitions[0].definition;
-              showToast("✓ Definition loaded for " + clean);
+              if (!silent) showToast("✓ Definition loaded for " + clean);
               return;
             }
           }
@@ -5252,8 +5374,8 @@ function closeModal() {
         if (teleEditor) teleEditor.innerHTML = parseMarkdown(teleText);
       }
 
-      // Load initial definition for default topic
-      onTopicalTopicInput(document.getElementById('topicalTopic')?.value || 'Patience');
+      // Load initial definition silently for default topic (avoids phantom toast on startup)
+      onTopicalTopicInput(document.getElementById('topicalTopic')?.value || 'Patience', true);
     }
 // Topical Actions
     function appendTopicalJournal(text) {
