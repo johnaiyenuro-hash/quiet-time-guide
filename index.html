@@ -777,6 +777,46 @@
       flex-direction: column;
       gap: 0.75rem;
     }
+    .archive-empty {
+      text-align: center;
+      padding: 2.5rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .archive-empty-verse {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      color: var(--gold);
+      max-width: 480px;
+      line-height: 1.65;
+    }
+    .archive-empty-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      max-width: 440px;
+      line-height: 1.55;
+    }
+    .snapshot-row {
+      width: 100%;
+      text-align: left;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      padding: 0.65rem 0.85rem;
+      border-radius: var(--radius);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      color: var(--text);
+      font-family: var(--font-ui);
+      transition: border-color 0.15s ease;
+    }
+    .snapshot-row:hover,
+    .snapshot-row:focus-visible {
+      border-color: var(--border-accent);
+    }
     .archive-row {
       background: var(--surface-elevated);
       padding: 0.75rem 1rem;
@@ -2068,7 +2108,7 @@
             <h2>Saved Revelations Archive</h2>
             <div class="card-subtitle">Past study entries stored locally in browser storage.</div>
           </div>
-          <button type="button" class="btn btn-sm btn-danger-text" onclick="clearArchive()">Clear All</button>
+          <button type="button" id="clearArchiveBtn" class="btn btn-sm btn-danger-text" style="display:none;" onclick="clearArchive()">Clear All</button>
         </div>
 
         <div id="archiveList" class="archive-list"></div>
@@ -2372,7 +2412,7 @@
         } else if (s.action === 'concordance') {
           actionHtml = '<div class="drawer-step-action"><button type="button" class="btn btn-sm" onclick="openConcordanceForWord()">📖 Look up in Concordance</button></div>';
         } else if (s.action === 'saveArchive') {
-          actionHtml = '<div class="drawer-step-action"><button type="button" class="btn btn-primary btn-sm" onclick="saveToArchive(); closeSevenStepsDrawer(); showToast(\'🎉 Quiet Time saved to Archive\');">Save to Archive</button></div>';
+          actionHtml = '<div class="drawer-step-action"><button type="button" class="btn btn-primary btn-sm" onclick="saveActiveTabToArchive(); closeSevenStepsDrawer();">Archive This Quiet Time</button></div>';
         }
         return '<div class="drawer-step-item">' +
           '<div class="drawer-step-meta">' + escapeCatalystHtml(s.step) + ' &bull; ' + escapeCatalystHtml(s.ref) + '</div>' +
@@ -4755,16 +4795,10 @@ function openRestoreModal() {
         list.innerHTML = '<div style="color:var(--text-muted); font-size:0.8rem; font-style:italic; padding:0.5rem 0;">No previous autosaves found for this session.</div>';
       } else {
         snaps.forEach((s, idx) => {
-          const item = document.createElement('div');
-          item.style.background = 'var(--surface-elevated)';
-          item.style.border = '1px solid var(--border)';
-          item.style.padding = '0.65rem 0.85rem';
-          item.style.borderRadius = 'var(--radius)';
-          item.style.display = 'flex';
-          item.style.justifyContent = 'space-between';
-          item.style.alignItems = 'center';
-          item.style.cursor = 'pointer';
-          item.innerHTML = '<div><div style="font-size:0.82rem; font-weight:600;">Snapshot from ' + s.time + '</div><div style="font-size:0.72rem; color:var(--text-muted);">' + s.date + ' (' + s.text.length + ' chars)</div></div><span style="font-size:0.75rem; color:var(--gold); font-weight:600;">Restore ➜</span>';
+          const item = document.createElement('button');
+          item.type = 'button';
+          item.className = 'snapshot-row';
+          item.innerHTML = '<div><div style="font-size:0.82rem; font-weight:600;">Snapshot from ' + escapeCatalystHtml(s.time) + '</div><div style="font-size:0.72rem; color:var(--text-muted);">' + escapeCatalystHtml(s.date) + ' (' + s.text.length + ' chars)</div></div><span style="font-size:0.75rem; color:var(--gold); font-weight:600;">Restore ➜</span>';
           item.onclick = () => {
             restoreFromSnapshot(idx);
             closeRestoreModal();
@@ -5173,14 +5207,31 @@ function closeModal() {
       pushToCloud();
     }
 
+    function saveActiveTabToArchive() {
+      if (currentActiveTabId === 'topicalTab') {
+        saveTopicalToArchive();
+      } else if (currentActiveTabId === 'telescopicTab') {
+        saveTeleToArchive();
+      } else {
+        saveToArchive();
+      }
+    }
+
     function renderArchive() {
       const rawArchive = JSON.parse(localStorage.getItem(ARCHIVE_KEY) || '[]');
       const archive = Array.isArray(rawArchive) ? rawArchive.map(normalizeArchiveEntry).filter(Boolean) : [];
       document.getElementById('archiveCount').textContent = archive.length;
+      const clearBtn = document.getElementById('clearArchiveBtn');
+      if (clearBtn) clearBtn.style.display = archive.length > 0 ? 'inline-flex' : 'none';
       const list = document.getElementById('archiveList');
       list.innerHTML = "";
       if (archive.length === 0) {
-        list.innerHTML = '<div class="meta-hint" style="padding:1rem 0;">No saved entries yet.</div>';
+        list.innerHTML =
+          '<div class="archive-empty">' +
+            '<div class="archive-empty-verse">&ldquo;Write thou these words...&rdquo; &mdash; Exodus 34:27</div>' +
+            '<div class="archive-empty-desc">Your archived Quiet Time reflections are stored privately right here on your device. Click <strong>+ Add to Archive</strong> after a study to keep it for future remembrance.</div>' +
+            '<button type="button" class="btn btn-primary btn-sm" onclick="switchMainTab(\'microTab\', document.getElementById(\'navMicro\'))">Return to Today\'s Study</button>' +
+          '</div>';
         return;
       }
       archive.forEach(item => {
@@ -5408,6 +5459,11 @@ function closeModal() {
       }
     }
     document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        manualSaveCloud();
+        return;
+      }
       if (e.key === 'Escape') {
         closeSevenStepsDrawer();
         closeSyncModal();
