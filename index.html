@@ -23,6 +23,11 @@
       --gold: #d4af37;
       --gold-dim: #b8922c;
       --gold-hover: #e6c55d;
+      --success: #34d399;
+      --danger: #f87171;
+      --info: #38bdf8;
+      --warning: #fbbf24;
+      --prayer: #c084fc;
       --btn-primary-text: #0d1117;
       --radius: 8px;
       --font-ui: 'Outfit', system-ui, -apple-system, sans-serif;
@@ -57,7 +62,22 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    
+
+    ::selection {
+      background: rgba(212, 175, 55, 0.28);
+      color: var(--text);
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
+
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
     ::placeholder {
       color: var(--text-muted);
       opacity: 1;
@@ -66,6 +86,7 @@
     body {
       background: var(--bg);
       color: var(--text);
+      caret-color: var(--gold);
       font-family: var(--font-ui); /* impeccable-disable-line overused-font */
       letter-spacing: normal;
       line-height: 1.6;
@@ -396,6 +417,371 @@
       border-top: 1px solid var(--border);
       padding-top: 0.4rem;
       margin-top: 0.35rem;
+    }
+    .catalyst-item-title {
+      color: var(--gold);
+      font-weight: 600;
+    }
+    .catalyst-meta {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-left: 0.35rem;
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: normal;
+    }
+
+    /* Shared Semantic UI Components */
+    .btn-danger-text { color: var(--danger); }
+    .btn-link-plain { text-decoration: none; }
+    .btn-compact { padding: 0.18rem 0.5rem; font-size: 0.72rem; }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--info);
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .status-badge-ok {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--success);
+    }
+    .meta-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+    }
+    .meta-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .target-verse-bar { margin-bottom: 1rem; }
+    .target-verse-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .target-verse-select-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .target-verse-select {
+      padding: 0.25rem 0.6rem;
+      font-size: 0.8rem;
+      width: auto;
+    }
+    .target-verse-actions {
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+    }
+    .target-verse-chips {
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+    .question-dropdown-studio {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.15rem;
+      margin-top: 0.75rem;
+    }
+    .studio-nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.85rem;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .studio-select-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex: 1;
+      min-width: 240px;
+    }
+    .studio-select-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .studio-select {
+      flex: 1;
+      font-size: 0.85rem;
+      padding: 0.4rem 0.65rem;
+    }
+    .studio-stepper {
+      display: flex;
+      gap: 0.35rem;
+      align-items: center;
+    }
+    .step-indicator {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 0 0.2rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .active-question-card {
+      border-top: 1px solid var(--border);
+      padding-top: 0.85rem;
+      margin-top: 0.25rem;
+    }
+    .question-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+      gap: 0.5rem;
+    }
+    .question-title {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text);
+    }
+    .answered-badge {
+      font-size: 0.72rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 9999px;
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--success);
+      font-weight: 600;
+      display: none;
+      white-space: nowrap;
+    }
+    .question-prompt {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      font-style: italic;
+      line-height: 1.5;
+      margin-bottom: 0.6rem;
+    }
+    .question-textarea {
+      min-height: 115px;
+      cursor: text;
+      line-height: 1.6;
+      width: 100%;
+    }
+    .question-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.65rem;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .question-footer-group {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .studio-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .studio-title {
+      font-family: var(--font-head);
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .studio-actions {
+      display: flex;
+      gap: 0.35rem;
+      align-items: center;
+    }
+    .studio-footer {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.85rem;
+    }
+    .studio-save-btn {
+      flex: 2;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 0.6rem 1rem;
+    }
+    .studio-archive-btn {
+      flex: 1;
+      justify-content: center;
+      font-size: 0.82rem;
+    }
+    .topical-controls {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .tele-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    .field-label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    .archive-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .archive-row {
+      background: var(--surface-elevated);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .archive-ref {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--gold);
+    }
+    .archive-date {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .archive-actions {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .drawer-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .drawer-title {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--gold);
+    }
+    .drawer-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .drawer-intro {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .drawer-steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    .drawer-step-meta {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .drawer-step-title {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0.2rem 0 0.35rem 0;
+    }
+    .drawer-step-verse {
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      color: var(--gold);
+      font-style: italic;
+      margin-bottom: 0.4rem;
+    }
+    .drawer-step-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .drawer-step-action {
+      margin-top: 0.5rem;
+    }
+    .modal-card-sm { max-width: 490px; }
+    .modal-card-md { max-width: 520px; }
+    .modal-card-lg { max-width: 860px; }
+    .modal-title {
+      font-family: var(--font-head);
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .modal-body-compact { padding: 1.25rem; }
+    .modal-tabs-bar {
+      padding: 0.75rem 1.25rem 0.25rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .sync-card {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-bottom: 1.15rem;
+    }
+    .sync-card-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .sync-card-desc {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .sync-section {
+      border-top: 1px solid var(--border);
+      padding-top: 0.85rem;
+      margin-top: 0.85rem;
+    }
+    .sync-row {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.4rem;
+    }
+    .sync-key-code {
+      color: var(--gold);
+      font-weight: 700;
+    }
+    .archive-count {
+      font-variant-numeric: tabular-nums;
     }
 
     /* Grid Layout: Study Tools (Left) & Revelation Studio (Right) */
@@ -752,6 +1138,28 @@
     }
 
     @media (max-width: 640px) {
+      header.unified-header {
+        height: auto;
+        padding: 0.45rem 0;
+      }
+      .unified-header-inner {
+        flex-wrap: wrap;
+        padding: 0 0.85rem;
+        gap: 0.5rem;
+      }
+      .brand-sub { display: none; }
+      .unified-nav {
+        order: 3;
+        width: 100%;
+        overflow-x: auto;
+        justify-content: space-between;
+      }
+      .nav-tab-btn {
+        min-height: 36px;
+        padding: 0.35rem 0.65rem;
+      }
+      .btn { min-height: 36px; }
+      .verse-box { top: 0; position: static; }
       main { padding: 0.85rem; }
 
       .verse-text { font-size: 1.15rem; line-height: 1.75; }
@@ -858,6 +1266,10 @@
       align-items: baseline;
       gap: 0.5rem;
       cursor: pointer;
+      background: transparent;
+      border: none;
+      padding: 0;
+      text-align: left;
     }
     .brand-title {
       font-family: var(--font-head);
@@ -1070,40 +1482,40 @@
 
   <header class="unified-header">
     <div class="unified-header-inner">
-      <div class="brand-group" onclick="switchMainTab('microTab', document.getElementById('navMicro'))">
-        <div class="brand-title">QUIET TIME</div>
-        <div class="brand-sub">Study &amp; Journal</div>
-      </div>
+      <button type="button" class="brand-group" onclick="switchMainTab('microTab', document.getElementById('navMicro'))">
+        <span class="brand-title">QUIET TIME</span>
+        <span class="brand-sub">Study &amp; Journal</span>
+      </button>
 
-      <nav class="unified-nav" aria-label="Study modes">
-        <button class="nav-tab-btn active" id="navMicro" onclick="switchMainTab('microTab', this)">🔬 Microscopic</button>
-        <button class="nav-tab-btn" id="navTopical" onclick="switchMainTab('topicalTab', this)">🏷️ Topical</button>
-        <button class="nav-tab-btn" id="navTele" onclick="switchMainTab('telescopicTab', this)">📜 Telescopic</button>
-        <button class="nav-tab-btn" id="navArchive" onclick="switchMainTab('archiveTab', this)">📁 Archive (<span id="archiveCount">0</span>)</button>
+      <nav class="unified-nav" aria-label="Study modes" role="tablist">
+        <button type="button" class="nav-tab-btn active" id="navMicro" role="tab" aria-selected="true" aria-controls="microTab" onclick="switchMainTab('microTab', this)">🔬 Microscopic</button>
+        <button type="button" class="nav-tab-btn" id="navTopical" role="tab" aria-selected="false" aria-controls="topicalTab" onclick="switchMainTab('topicalTab', this)">🏷️ Topical</button>
+        <button type="button" class="nav-tab-btn" id="navTele" role="tab" aria-selected="false" aria-controls="telescopicTab" onclick="switchMainTab('telescopicTab', this)">📜 Telescopic</button>
+        <button type="button" class="nav-tab-btn" id="navArchive" role="tab" aria-selected="false" aria-controls="archiveTab" onclick="switchMainTab('archiveTab', this)">📁 Archive (<span id="archiveCount" class="archive-count">0</span>)</button>
       </nav>
 
       <div class="header-actions">
-        <button class="btn btn-sm guide-pill-btn" onclick="openSevenStepsDrawer()" title="Pull out Daily 7 Steps Guide">
+        <button type="button" class="btn btn-sm guide-pill-btn" onclick="openSevenStepsDrawer()" title="Pull out Daily 7 Steps Guide">
           <span>🌿</span> <span>7 Steps Guide</span>
         </button>
-        <button class="btn btn-sm btn-subtle" onclick="toggleTheme()" title="Switch Light / Dark / Sepia">Appearance</button>
-        <button class="btn btn-primary btn-sm" id="headerSaveBtn" onclick="manualSaveCloud()" title="Save current reflection">
+        <button type="button" class="btn btn-sm btn-subtle" onclick="toggleTheme()" title="Switch Light / Dark / Sepia">Appearance</button>
+        <button type="button" class="btn btn-primary btn-sm" id="headerSaveBtn" onclick="manualSaveCloud()" title="Save current reflection">
           <span id="headerSaveIcon">💾</span> <span id="headerSaveText">Save</span>
         </button>
 
         <div class="dropdown-wrap">
-          <button class="btn btn-sm btn-subtle" onclick="toggleShareMenu(event)" title="More options and export">⋯</button>
-          <div id="shareMenuDropdown" class="dropdown-menu">
-            <button class="dropdown-item" id="syncStatusBtn" onclick="openSyncModal(); closeShareMenu();">
-              <span id="syncIndicatorDot" style="width:7px; height:7px; border-radius:50%; background:#38bdf8; display:inline-block;"></span>
+          <button type="button" id="shareMenuBtn" class="btn btn-sm btn-subtle" aria-haspopup="menu" aria-expanded="false" aria-controls="shareMenuDropdown" onclick="toggleShareMenu(event)" title="More options and export">⋯</button>
+          <div id="shareMenuDropdown" class="dropdown-menu" role="menu">
+            <button type="button" class="dropdown-item" role="menuitem" id="syncStatusBtn" onclick="openSyncModal(); closeShareMenu();">
+              <span id="syncIndicatorDot" class="status-dot"></span>
               <span id="syncBtnText">Storage &amp; Sync</span>
             </button>
-            <button class="dropdown-item" onclick="openFullPageModal(); closeShareMenu();">📖 Full Document Sheet</button>
-            <button class="dropdown-item" onclick="openRestoreModal(); closeShareMenu();">🕘 Restore Snapshots</button>
-            <button class="dropdown-item" onclick="copyRevelation(); closeShareMenu();">📋 Copy Notes Text</button>
-            <button class="dropdown-item" onclick="exportFreshFriendCopy(); closeShareMenu();">🎁 Clean Guide for Friend</button>
-            <button class="dropdown-item" onclick="downloadMarkdown(); closeShareMenu();">📥 Download Markdown</button>
-            <button class="dropdown-item" onclick="window.print(); closeShareMenu();">🖨️ Print / Save PDF</button>
+            <button type="button" class="dropdown-item" role="menuitem" onclick="openFullPageModal(); closeShareMenu();">📖 Full Document Sheet</button>
+            <button type="button" class="dropdown-item" role="menuitem" onclick="openRestoreModal(); closeShareMenu();">🕘 Restore Snapshots</button>
+            <button type="button" class="dropdown-item" role="menuitem" onclick="copyRevelation(); closeShareMenu();">📋 Copy Notes Text</button>
+            <button type="button" class="dropdown-item" role="menuitem" onclick="exportFreshFriendCopy(); closeShareMenu();">🎁 Clean Guide for Friend</button>
+            <button type="button" class="dropdown-item" role="menuitem" onclick="downloadMarkdown(); closeShareMenu();">📥 Download Markdown</button>
+            <button type="button" class="dropdown-item" role="menuitem" onclick="window.print(); closeShareMenu();">🖨️ Print / Save PDF</button>
           </div>
         </div>
       </div>
@@ -1119,13 +1531,13 @@
           <span class="scripture-hint">Click any word to meditate &amp; look up definition</span>
         </div>
         <div class="scripture-actions">
-          <button class="btn btn-sm btn-subtle" id="toggleShelfBtn" onclick="togglePassageShelf()" title="Change passage reference or select preset">
+          <button type="button" class="btn btn-sm btn-subtle" id="toggleShelfBtn" aria-expanded="false" aria-controls="passageShelf" onclick="togglePassageShelf()" title="Change passage reference or select translation">
             <span id="shelfToggleIcon">🔍</span> <span id="shelfToggleText">Change Verse</span>
           </button>
-          <a id="bibleHubLinkBtn" href="https://biblehub.com/2_timothy/2-15.htm" target="_blank" rel="noopener noreferrer" class="btn btn-sm" onclick="handleBibleHubClick(event)" title="Compare 30+ translations on BibleHub Parallel" style="text-decoration:none;">
+          <a id="bibleHubLinkBtn" href="https://biblehub.com/2_timothy/2-15.htm" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-link-plain" onclick="handleBibleHubClick(event)" title="Compare 30+ translations on BibleHub Parallel">
             🌐 BibleHub Parallel
           </a>
-          <button class="btn btn-sm" onclick="insertCurrentScripture()" title="Insert passage into active note">
+          <button type="button" class="btn btn-sm" onclick="insertCurrentScripture()" title="Insert passage into active note">
             + Insert to Notes
           </button>
         </div>
@@ -1179,15 +1591,15 @@
           </div>
         </div>
 
-        <div id="wordCatalystBox" class="catalyst-box" style="display:none;"></div>
+        <div id="wordCatalystBox" class="catalyst-box" aria-live="polite" style="display:none;"></div>
 
         <div class="live-dict-wrap">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
-            <span style="font-size:0.75rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em;">Live Dictionary / Lexicon Definition</span>
-            <button class="btn btn-sm" style="padding:0.18rem 0.5rem; font-size:0.72rem;" onclick="insertDictDefinitionToNotes()">+ Insert Definition to Notes</button>
+          <div class="studio-header" style="margin-bottom:0.35rem;">
+            <span class="meta-label">Live Dictionary / Lexicon Definition</span>
+            <button type="button" class="btn btn-sm btn-compact" onclick="insertDictDefinitionToNotes()">+ Insert Definition to Notes</button>
           </div>
           <div id="dictContentArea">
-            <div style="color:var(--text-muted); font-size:0.82rem; font-style:italic;">Looking up definition...</div>
+            <div class="meta-hint" style="font-style:italic;">Looking up definition...</div>
           </div>
         </div>
       </div>
@@ -1206,56 +1618,52 @@
             </div>
 
             <!-- Target Verse Selector for Multi-Verse Passages -->
-            <div class="target-verse-bar" style="margin-bottom:1rem;">
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-                <div style="display:flex; align-items:center; gap:0.5rem;">
-                  <span style="font-size:0.75rem; font-weight:600; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.04em;">Target Verse for Questions:</span>
-                  <select id="targetVerseSelect" class="text-input" style="padding:0.25rem 0.6rem; font-size:0.8rem; width:auto;" onchange="setTargetVerse(this.value)">
-                    <!-- Populated dynamically -->
+            <div class="target-verse-bar">
+              <div class="target-verse-row">
+                <div class="target-verse-select-wrap">
+                  <label for="targetVerseSelect" class="meta-label">Target Verse for Questions:</label>
+                  <select id="targetVerseSelect" class="text-input target-verse-select" onchange="setTargetVerse(this.value)">
                   </select>
                 </div>
-                <div style="display:flex; gap:0.35rem; flex-wrap:wrap;">
-                  <button class="btn btn-sm" onclick="insertAllQuestionsToJournal(false)" title="Insert only your written reflection answers">+ Insert All Answers Only</button>
-                  <button class="btn btn-sm" onclick="insertAllQuestionsToJournal(true)" title="Insert full question outlines & reflections">+ Insert All Q&amp;A</button>
-                  <button class="btn btn-sm" onclick="insertAllVersesAsSections()" title="Insert each verse as its own section in notes">+ Outline All Verses</button>
+                <div class="target-verse-actions">
+                  <button type="button" class="btn btn-sm" onclick="insertAllQuestionsToJournal(false)" title="Insert only your written reflection answers">+ Insert All Answers Only</button>
+                  <button type="button" class="btn btn-sm" onclick="insertAllQuestionsToJournal(true)" title="Insert full question outlines &amp; reflections">+ Insert All Q&amp;A</button>
+                  <button type="button" class="btn btn-sm" onclick="insertAllVersesAsSections()" title="Insert each verse as its own section in notes">+ Outline All Verses</button>
                 </div>
               </div>
-              <div id="targetVerseChips" style="display:flex; gap:0.35rem; flex-wrap:wrap; align-items:center; margin-top:0.5rem;">
-                <!-- Populated dynamically with verse chips -->
-              </div>
+              <div id="targetVerseChips" class="target-verse-chips"></div>
             </div>
 
             <!-- Condensed Question Studio (Dropdown Selector) -->
-            <div class="question-dropdown-studio" style="background:var(--surface-elevated); border:1px solid var(--border); border-radius:var(--radius); padding:1.15rem; margin-top:0.75rem;">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem; gap:0.5rem; flex-wrap:wrap;">
-                <div style="display:flex; align-items:center; gap:0.4rem; flex:1; min-width:240px;">
-                  <label for="questionSelectDropdown" style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--gold); letter-spacing:0.04em; white-space:nowrap;">Question:</label>
-                  <select id="questionSelectDropdown" class="text-input" style="flex:1; font-size:0.85rem; padding:0.4rem 0.65rem;" onchange="switchQuestionDropdown(this.value)">
-                  </select>
+            <div class="question-dropdown-studio">
+              <div class="studio-nav-row">
+                <div class="studio-select-wrap">
+                  <label for="questionSelectDropdown" class="studio-select-label">Question:</label>
+                  <select id="questionSelectDropdown" class="text-input studio-select" onchange="switchQuestionDropdown(this.value)"></select>
                 </div>
-                <div style="display:flex; gap:0.35rem; align-items:center;">
+                <div class="studio-stepper">
                   <button type="button" class="btn btn-sm btn-subtle" onclick="navigateQuestion(-1)" title="Previous Question">◀ Prev</button>
-                  <span id="questionStepIndicator" style="font-size:0.75rem; color:var(--text-muted); font-weight:600; padding:0 0.2rem;">1 / 13</span>
+                  <span id="questionStepIndicator" class="step-indicator">1 / 13</span>
                   <button type="button" class="btn btn-sm btn-subtle" onclick="navigateQuestion(1)" title="Next Question">Next ▶</button>
                 </div>
               </div>
 
-              <div id="activeQuestionCard" style="border-top:1px solid var(--border); padding-top:0.85rem; margin-top:0.25rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
-                  <div id="activeQuestionTitle" style="font-family:var(--font-head); font-weight:700; font-size:1.05rem; color:var(--text);"></div>
-                  <span id="activeQuestionBadge" style="font-size:0.72rem; padding:0.15rem 0.45rem; border-radius:9999px; background:rgba(52,211,153,0.15); color:#34d399; font-weight:600; display:none;">✓ Answered</span>
+              <div id="activeQuestionCard" class="active-question-card">
+                <div class="question-title-row">
+                  <div id="activeQuestionTitle" class="question-title"></div>
+                  <span id="activeQuestionBadge" class="answered-badge">✓ Answered</span>
                 </div>
-                <div id="activeQuestionPrompt" style="font-size:0.83rem; color:var(--text-muted); font-style:italic; line-height:1.5; margin-bottom:0.6rem;"></div>
-                <div id="microCatalystBox" class="catalyst-box" style="display:none;"></div>
-                <textarea class="input-textarea" id="activeQuestionInput" placeholder="Type your meditation reflection here..." spellcheck="true" lang="en" style="min-height:115px; cursor:text; line-height:1.6; width:100%;" oninput="onActiveQuestionInput(this.value)"></textarea>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.65rem; flex-wrap:wrap; gap:0.4rem;">
-                  <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
-                    <span style="font-size:0.75rem; color:var(--text-muted);">Saved automatically</span>
+                <div id="activeQuestionPrompt" class="question-prompt"></div>
+                <div id="microCatalystBox" class="catalyst-box" aria-live="polite" style="display:none;"></div>
+                <textarea class="input-textarea question-textarea" id="activeQuestionInput" placeholder="Type your meditation reflection here..." spellcheck="true" lang="en" oninput="onActiveQuestionInput(this.value)"></textarea>
+                <div class="question-footer">
+                  <div class="question-footer-group">
+                    <span class="meta-hint">Saved automatically</span>
                     <button type="button" class="btn btn-sm btn-subtle" onclick="requestMicroCatalyst()" title="Request a brief catalytic thought-starter for this passage">✨ Catalytic Nudge</button>
                     <button type="button" class="btn btn-sm btn-subtle" onclick="clearCurrentQuestionAnswer()" title="Clear reflection for this question">↺ Clear</button>
                     <button type="button" class="btn btn-sm btn-subtle" onclick="resetMicroStudy()" title="Reset notes and all 13 questions to default">↺ Reset All</button>
                   </div>
-                  <div style="display:flex; gap:0.4rem;">
+                  <div class="question-footer-group">
                     <button type="button" class="btn btn-sm" onclick="pushActiveQuestion(false)">+ Insert Answer Only</button>
                     <button type="button" class="btn btn-sm btn-primary" onclick="pushActiveQuestion(true)">+ Insert Q&amp;A</button>
                   </div>
@@ -1265,59 +1673,33 @@
           </div>
         </div>
 
-        <!-- Persistent Right Column: Journal Studio -->
         <!-- Right Side: Journal Studio -->
         <div class="study-right">
           <div class="studio-panel">
-            
-            <!-- Top Studio Header: Unified Rendered & Editable View -->
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; gap:0.5rem; flex-wrap:wrap;">
-              <div style="font-family:var(--font-head); font-weight:600; font-size:0.95rem; color:var(--text); display:flex; align-items:center; gap:0.4rem;">
+            <div class="studio-header">
+              <div class="studio-title">
                 <span class="has-tooltip" data-tooltip="Rhema (Greek: ῥῆμα): The specific, living, spoken word of God personalized to your heart and circumstances by the Holy Spirit.">📝 Notes (Rhema) <span class="term-help-icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="7"></circle><line x1="8" y1="7" x2="8" y2="12"></line><line x1="8" y1="4" x2="8.01" y2="4"></line></svg></span></span>
               </div>
-              <div style="display:flex; gap:0.35rem; align-items:center;">
-                <button class="btn btn-sm" onclick="insertCurrentScripture()" title="Insert scripture into notes">+ Scripture</button>
-                <button class="btn btn-sm" onclick="resetMicroStudy()" title="Reset Microscopic notes and all 13 questions to default">↺ Reset All</button>
+              <div class="studio-actions">
+                <button type="button" class="btn btn-sm" onclick="insertCurrentScripture()" title="Insert scripture into notes">+ Scripture</button>
+                <button type="button" class="btn btn-sm" onclick="resetMicroStudy()" title="Reset Microscopic notes and all 13 questions to default">↺ Reset All</button>
               </div>
             </div>
 
-            <!-- Note Formatting Controls -->
-            <div class="note-format-bar">
-              <button type="button" class="format-btn" onclick="execNoteFormat('undo')" title="Undo (Ctrl+Z)">↶</button>
-              <button type="button" class="format-btn" onclick="execNoteFormat('redo')" title="Redo (Ctrl+Y)">↷</button>
-              <span class="toolbar-sep"></span>
-              <button type="button" class="format-btn" onclick="execNoteFormat('bold')" title="Bold text (Ctrl+B)"><b>B</b></button>
-              <button type="button" class="format-btn" onclick="execNoteFormat('italic')" title="Italic text (Ctrl+I)"><i>I</i></button>
-              <button type="button" class="format-btn" onclick="execNoteFormat('underline')" title="Underline text (Ctrl+U)"><u>U</u></button>
-              <div class="hl-picker-wrap">
-                <button type="button" class="format-btn btn-hl" onclick="execNoteFormat('highlight')" title="Highlight text / Remove highlight (Ctrl+H)"><span>🖊️ Highlight</span></button>
-                <div class="hl-swatches">
-                  <button type="button" class="hl-swatch-dot dot-gold active" onclick="setHighlightColor('gold')" title="Gold (Revelation)"></button>
-                  <button type="button" class="hl-swatch-dot dot-green" onclick="setHighlightColor('green')" title="Green (Growth)"></button>
-                  <button type="button" class="hl-swatch-dot dot-blue" onclick="setHighlightColor('blue')" title="Blue (Grace)"></button>
-                  <button type="button" class="hl-swatch-dot dot-rose" onclick="setHighlightColor('rose')" title="Rose (Love)"></button>
-                  <button type="button" class="hl-swatch-dot dot-amber" onclick="setHighlightColor('amber')" title="Amber (Warning)"></button>
-                </div>
-              </div>
-              <div style="flex:1;"></div>
-              <button type="button" class="format-btn" onclick="execNoteFormat('h3')" title="Insert Section Heading">H3</button>
-              <button type="button" class="format-btn" onclick="execNoteFormat('list')" title="Insert Bullet Point">• List</button>
-            </div>
+            <div class="note-format-bar" data-format-bar></div>
             <div id="journalEditor" class="unified-editor" contenteditable="true" spellcheck="true" lang="en" placeholder="Record your revelation, reflections, and prayers here..."></div>
             <textarea id="journalText" style="display:none;"></textarea>
 
-            <!-- Bottom Studio Controls -->
-            <div style="display:flex; gap:0.5rem; margin-top:0.85rem;">
-              <button class="btn btn-primary studio-save-btn" id="bottomSaveBtn" data-default-label="💾 Save Reflection" style="flex:2; justify-content:center; font-weight:600; font-size:0.88rem; padding:0.6rem 1rem;" onclick="manualSaveCloud()">💾 Save Reflection</button>
-              <button class="btn" style="flex:1; justify-content:center; font-size:0.82rem;" onclick="saveToArchive()">+ Add to Archive</button>
+            <div class="studio-footer">
+              <button type="button" class="btn btn-primary studio-save-btn" id="bottomSaveBtn" data-default-label="💾 Save Reflection" onclick="manualSaveCloud()">💾 Save Reflection</button>
+              <button type="button" class="btn studio-archive-btn" onclick="saveToArchive()">+ Add to Archive</button>
             </div>
-
           </div>
         </div>
       </div>
     </div>
 
-    <!-- TAB 3: TOPICAL STUDY (THE SIX W'S) -->
+    <!-- TAB 2: TOPICAL STUDY (THE SIX W'S) -->
     <div id="topicalTab" class="tab-section">
       <div class="study-grid">
         <div class="study-left">
@@ -1329,43 +1711,42 @@
               </div>
             </div>
 
-            <div style="display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap;">
+            <div class="topical-controls">
               <input type="text" id="topicalTopic" class="text-input" placeholder="Type a topic (e.g. Patience, Zeal, Faith, Love)..." value="Patience" oninput="onTopicalTopicInput(this.value)" style="min-width:200px;">
               <input type="text" id="topicalDef" class="text-input" placeholder="Dictionary definition loads automatically..." style="flex:2; min-width:260px;">
-              <button class="btn btn-primary btn-sm" onclick="insertTopicalHeading()">+ Add Topic Heading</button>
+              <button type="button" class="btn btn-primary btn-sm" onclick="insertTopicalHeading()">+ Add Topic Heading</button>
             </div>
 
             <!-- Condensed Topical Question Studio (Dropdown Selector) -->
-            <div class="question-dropdown-studio" style="background:var(--surface-elevated); border:1px solid var(--border); border-radius:var(--radius); padding:1.15rem; margin-top:0.75rem;">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.85rem; gap:0.5rem; flex-wrap:wrap;">
-                <div style="display:flex; align-items:center; gap:0.4rem; flex:1; min-width:240px;">
-                  <label for="topicalQuestionSelectDropdown" style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--gold); letter-spacing:0.04em; white-space:nowrap;">Aspect:</label>
-                  <select id="topicalQuestionSelectDropdown" class="text-input" style="flex:1; font-size:0.85rem; padding:0.4rem 0.65rem;" onchange="switchTopicalDropdown(this.value)">
-                  </select>
+            <div class="question-dropdown-studio">
+              <div class="studio-nav-row">
+                <div class="studio-select-wrap">
+                  <label for="topicalQuestionSelectDropdown" class="studio-select-label">Aspect:</label>
+                  <select id="topicalQuestionSelectDropdown" class="text-input studio-select" onchange="switchTopicalDropdown(this.value)"></select>
                 </div>
-                <div style="display:flex; gap:0.35rem; align-items:center;">
+                <div class="studio-stepper">
                   <button type="button" class="btn btn-sm btn-subtle" onclick="navigateTopicalQuestion(-1)" title="Previous Aspect">◀ Prev</button>
-                  <span id="topicalStepIndicator" style="font-size:0.75rem; color:var(--text-muted); font-weight:600; padding:0 0.2rem;">1 / 6</span>
+                  <span id="topicalStepIndicator" class="step-indicator">1 / 6</span>
                   <button type="button" class="btn btn-sm btn-subtle" onclick="navigateTopicalQuestion(1)" title="Next Aspect">Next ▶</button>
                 </div>
               </div>
 
-              <div id="activeTopicalCard" style="border-top:1px solid var(--border); padding-top:0.85rem; margin-top:0.25rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
-                  <div id="activeTopicalTitle" style="font-family:var(--font-head); font-weight:700; font-size:1.05rem; color:var(--text);"></div>
-                  <span id="activeTopicalBadge" style="font-size:0.72rem; padding:0.15rem 0.45rem; border-radius:9999px; background:rgba(52,211,153,0.15); color:#34d399; font-weight:600; display:none;">✓ Answered</span>
+              <div id="activeTopicalCard" class="active-question-card">
+                <div class="question-title-row">
+                  <div id="activeTopicalTitle" class="question-title"></div>
+                  <span id="activeTopicalBadge" class="answered-badge">✓ Answered</span>
                 </div>
-                <div id="activeTopicalPrompt" style="font-size:0.83rem; color:var(--text-muted); font-style:italic; line-height:1.5; margin-bottom:0.6rem;"></div>
-                <div id="topicalCatalystBox" class="catalyst-box" style="display:none;"></div>
-                <textarea class="input-textarea" id="activeTopicalInput" placeholder="Type your topical reflection on this aspect here..." spellcheck="true" lang="en" style="min-height:115px; cursor:text; line-height:1.6; width:100%;" oninput="onActiveTopicalInput(this.value)"></textarea>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.65rem; flex-wrap:wrap; gap:0.4rem;">
-                  <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
-                    <span style="font-size:0.75rem; color:var(--text-muted);">Saved automatically</span>
+                <div id="activeTopicalPrompt" class="question-prompt"></div>
+                <div id="topicalCatalystBox" class="catalyst-box" aria-live="polite" style="display:none;"></div>
+                <textarea class="input-textarea question-textarea" id="activeTopicalInput" placeholder="Type your topical reflection on this aspect here..." spellcheck="true" lang="en" oninput="onActiveTopicalInput(this.value)"></textarea>
+                <div class="question-footer">
+                  <div class="question-footer-group">
+                    <span class="meta-hint">Saved automatically</span>
                     <button type="button" class="btn btn-sm btn-subtle" onclick="requestTopicalCatalyst()" title="Request brief catalytic pointers for this topic">✨ Catalytic Nudge</button>
                     <button type="button" class="btn btn-sm btn-subtle" onclick="clearCurrentTopicalAnswer()" title="Clear reflection for this aspect">↺ Clear</button>
                     <button type="button" class="btn btn-sm btn-subtle" onclick="resetTopicalStudy()" title="Reset Topical notes and all 6 aspects to default">↺ Reset All</button>
                   </div>
-                  <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+                  <div class="question-footer-group">
                     <button type="button" class="btn btn-sm" onclick="pushActiveTopical(false)">+ Insert Answer Only</button>
                     <button type="button" class="btn btn-sm btn-primary" onclick="pushActiveTopical(true)">+ Insert Aspect &amp; Answer</button>
                     <button type="button" class="btn btn-sm" onclick="insertAllTopicalDimensions()" title="Insert all 6 aspects into topical notes">+ Insert All 6 Aspects</button>
@@ -1379,49 +1760,28 @@
         <!-- Dedicated Right Column: Topical Study Notes Studio -->
         <div class="study-right">
           <div class="studio-panel">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; gap:0.5rem; flex-wrap:wrap;">
-              <div style="font-family:var(--font-head); font-weight:600; font-size:0.95rem; color:var(--text); display:flex; align-items:center; gap:0.4rem;">
-                <span>🏷️ Topical Notes</span>
-              </div>
-              <div style="display:flex; gap:0.35rem; align-items:center;">
-                <button class="btn btn-sm" onclick="insertCurrentScriptureToTopical()" title="Insert scripture into topical notes">+ Scripture</button>
-                <button class="btn btn-sm" onclick="resetTopicalStudy()" title="Reset Topical notes and all 6 aspects to default">↺ Reset All</button>
+            <div class="studio-header">
+              <div class="studio-title"><span>🏷️ Topical Notes</span></div>
+              <div class="studio-actions">
+                <button type="button" class="btn btn-sm" onclick="insertCurrentScriptureToTopical()" title="Insert scripture into topical notes">+ Scripture</button>
+                <button type="button" class="btn btn-sm" onclick="resetTopicalStudy()" title="Reset Topical notes and all 6 aspects to default">↺ Reset All</button>
               </div>
             </div>
 
-            <div class="note-format-bar">
-              <button type="button" class="format-btn" onclick="execNoteFormat('undo')" title="Undo (Ctrl+Z)">↶</button>
-              <button type="button" class="format-btn" onclick="execNoteFormat('redo')" title="Redo (Ctrl+Y)">↷</button>
-              <span class="toolbar-sep"></span>
-              <button type="button" class="format-btn" onclick="execNoteFormat('bold')" title="Bold text (Ctrl+B)"><b>B</b></button>
-              <button type="button" class="format-btn" onclick="execNoteFormat('italic')" title="Italic text (Ctrl+I)"><i>I</i></button>
-              <button type="button" class="format-btn" onclick="execNoteFormat('underline')" title="Underline text (Ctrl+U)"><u>U</u></button>
-              <div class="hl-picker-wrap">
-                <button type="button" class="format-btn btn-hl" onclick="execNoteFormat('highlight')" title="Highlight text / Remove highlight (Ctrl+H)"><span>🖊️ Highlight</span></button>
-                <div class="hl-swatches">
-                  <button type="button" class="hl-swatch-dot dot-gold active" onclick="setHighlightColor('gold')" title="Gold (Revelation)"></button>
-                  <button type="button" class="hl-swatch-dot dot-green" onclick="setHighlightColor('green')" title="Green (Growth)"></button>
-                  <button type="button" class="hl-swatch-dot dot-blue" onclick="setHighlightColor('blue')" title="Blue (Grace)"></button>
-                  <button type="button" class="hl-swatch-dot dot-rose" onclick="setHighlightColor('rose')" title="Rose (Love)"></button>
-                  <button type="button" class="hl-swatch-dot dot-amber" onclick="setHighlightColor('amber')" title="Amber (Warning)"></button>
-                </div>
-              </div>
-              <div style="flex:1;"></div>
-              <button type="button" class="format-btn" onclick="execNoteFormat('h3')" title="Insert Section Heading">H3</button>
-              <button type="button" class="format-btn" onclick="execNoteFormat('list')" title="Insert Bullet Point">• List</button>
-            </div>
+            <div class="note-format-bar" data-format-bar></div>
             <div id="topicalJournalEditor" class="unified-editor" contenteditable="true" spellcheck="true" lang="en" placeholder="Record your topical study insights, observations, and scriptural cross-references here..."></div>
             <textarea id="topicalJournalText" style="display:none;"></textarea>
 
-            <div style="display:flex; gap:0.5rem; margin-top:0.85rem;">
-              <button class="btn btn-primary studio-save-btn" id="topicalBottomSaveBtn" data-default-label="💾 Save Topical Note" style="flex:2; justify-content:center; font-weight:600; font-size:0.88rem; padding:0.6rem 1rem;" onclick="manualSaveCloud()">💾 Save Topical Note</button>
-              <button class="btn" style="flex:1; justify-content:center; font-size:0.82rem;" onclick="saveTopicalToArchive()">+ Archive Note</button>
+            <div class="studio-footer">
+              <button type="button" class="btn btn-primary studio-save-btn" id="topicalBottomSaveBtn" data-default-label="💾 Save Topical Note" onclick="manualSaveCloud()">💾 Save Topical Note</button>
+              <button type="button" class="btn studio-archive-btn" onclick="saveTopicalToArchive()">+ Archive Note</button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- TAB 3: TELESCOPIC STUDY -->
     <div id="telescopicTab" class="tab-section">
       <div class="study-grid">
         <div class="study-left">
@@ -1433,21 +1793,21 @@
               </div>
             </div>
 
-            <div style="display:flex; flex-direction:column; gap:0.85rem;">
+            <div class="tele-form">
               <div>
-                <label style="font-size:0.8rem; font-weight:500; display:block; margin-bottom:0.25rem;">Book or Chapter Selected:</label>
+                <label for="teleBook" class="field-label">Book or Chapter Selected:</label>
                 <input type="text" id="teleBook" class="text-input" value="Ephesians" placeholder="e.g. Ephesians, Romans 8, Hebrews 11, Genesis 1-3...">
               </div>
               <div>
-                <label style="font-size:0.8rem; font-weight:500; display:block; margin-bottom:0.25rem;">Macro Context &amp; Setting:</label>
+                <label for="teleContext" class="field-label">Macro Context &amp; Setting:</label>
                 <textarea id="teleContext" class="input-textarea" placeholder="Author, audience, background setting, and historical context of this chapter or book..."></textarea>
               </div>
               <div>
-                <label style="font-size:0.8rem; font-weight:500; display:block; margin-bottom:0.25rem;">Central Theme &amp; Anchor Passages:</label>
+                <label for="teleTheme" class="field-label">Central Theme &amp; Anchor Passages:</label>
                 <textarea id="teleTheme" class="input-textarea" placeholder="The primary message, divine argument, recurring motifs, and key turning points..."></textarea>
               </div>
               <div style="display:flex; justify-content:flex-end;">
-                <button class="btn btn-primary btn-sm" onclick="insertTelescopicNotes()">+ Insert Outline to Telescopic Notes</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="insertTelescopicNotes()">+ Insert Outline to Telescopic Notes</button>
               </div>
             </div>
           </div>
@@ -1456,50 +1816,28 @@
         <!-- Dedicated Right Column: Telescopic Study Notes Studio -->
         <div class="study-right">
           <div class="studio-panel">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; gap:0.5rem; flex-wrap:wrap;">
-              <div style="font-family:var(--font-head); font-weight:600; font-size:0.95rem; color:var(--text); display:flex; align-items:center; gap:0.4rem;">
-                <span>📜 Telescopic Notes</span>
-              </div>
-              <div style="display:flex; gap:0.35rem; align-items:center;">
-                <button class="btn btn-sm" onclick="insertCurrentScriptureToTele()" title="Insert scripture into telescopic notes">+ Scripture</button>
-                <button class="btn btn-sm" onclick="resetTeleStudy()" title="Reset Telescopic notes and outline fields to default">↺ Reset All</button>
+            <div class="studio-header">
+              <div class="studio-title"><span>📜 Telescopic Notes</span></div>
+              <div class="studio-actions">
+                <button type="button" class="btn btn-sm" onclick="insertCurrentScriptureToTele()" title="Insert scripture into telescopic notes">+ Scripture</button>
+                <button type="button" class="btn btn-sm" onclick="resetTeleStudy()" title="Reset Telescopic notes and outline fields to default">↺ Reset All</button>
               </div>
             </div>
 
-            <div class="note-format-bar">
-              <button type="button" class="format-btn" onclick="execNoteFormat('undo')" title="Undo (Ctrl+Z)">↶</button>
-              <button type="button" class="format-btn" onclick="execNoteFormat('redo')" title="Redo (Ctrl+Y)">↷</button>
-              <span class="toolbar-sep"></span>
-              <button type="button" class="format-btn" onclick="execNoteFormat('bold')" title="Bold text (Ctrl+B)"><b>B</b></button>
-              <button type="button" class="format-btn" onclick="execNoteFormat('italic')" title="Italic text (Ctrl+I)"><i>I</i></button>
-              <button type="button" class="format-btn" onclick="execNoteFormat('underline')" title="Underline text (Ctrl+U)"><u>U</u></button>
-              <div class="hl-picker-wrap">
-                <button type="button" class="format-btn btn-hl" onclick="execNoteFormat('highlight')" title="Highlight text / Remove highlight (Ctrl+H)"><span>🖊️ Highlight</span></button>
-                <div class="hl-swatches">
-                  <button type="button" class="hl-swatch-dot dot-gold active" onclick="setHighlightColor('gold')" title="Gold (Revelation)"></button>
-                  <button type="button" class="hl-swatch-dot dot-green" onclick="setHighlightColor('green')" title="Green (Growth)"></button>
-                  <button type="button" class="hl-swatch-dot dot-blue" onclick="setHighlightColor('blue')" title="Blue (Grace)"></button>
-                  <button type="button" class="hl-swatch-dot dot-rose" onclick="setHighlightColor('rose')" title="Rose (Love)"></button>
-                  <button type="button" class="hl-swatch-dot dot-amber" onclick="setHighlightColor('amber')" title="Amber (Warning)"></button>
-                </div>
-              </div>
-              <div style="flex:1;"></div>
-              <button type="button" class="format-btn" onclick="execNoteFormat('h3')" title="Insert Section Heading">H3</button>
-              <button type="button" class="format-btn" onclick="execNoteFormat('list')" title="Insert Bullet Point">• List</button>
-            </div>
+            <div class="note-format-bar" data-format-bar></div>
             <div id="teleJournalEditor" class="unified-editor" contenteditable="true" spellcheck="true" lang="en" placeholder="Record your whole-book telescopic study, structural outline, recurring motifs, and overarching themes here..."></div>
             <textarea id="teleJournalText" style="display:none;"></textarea>
 
-            <div style="display:flex; gap:0.5rem; margin-top:0.85rem;">
-              <button class="btn btn-primary studio-save-btn" id="teleBottomSaveBtn" data-default-label="💾 Save Telescopic Note" style="flex:2; justify-content:center; font-weight:600; font-size:0.88rem; padding:0.6rem 1rem;" onclick="manualSaveCloud()">💾 Save Telescopic Note</button>
-              <button class="btn" style="flex:1; justify-content:center; font-size:0.82rem;" onclick="saveTeleToArchive()">+ Archive Note</button>
+            <div class="studio-footer">
+              <button type="button" class="btn btn-primary studio-save-btn" id="teleBottomSaveBtn" data-default-label="💾 Save Telescopic Note" onclick="manualSaveCloud()">💾 Save Telescopic Note</button>
+              <button type="button" class="btn studio-archive-btn" onclick="saveTeleToArchive()">+ Archive Note</button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- TAB 5: SAVED ARCHIVE -->
+    <!-- TAB 4: SAVED ARCHIVE -->
     <div id="archiveTab" class="tab-section">
       <div class="card">
         <div class="card-header">
@@ -1507,106 +1845,32 @@
             <h2>Saved Revelations Archive</h2>
             <div class="card-subtitle">Past study entries stored locally in browser storage.</div>
           </div>
-          <button class="btn btn-sm" onclick="clearArchive()" style="color:#f87171;">Clear All</button>
+          <button type="button" class="btn btn-sm btn-danger-text" onclick="clearArchive()">Clear All</button>
         </div>
 
-        <div id="archiveList" style="display:flex; flex-direction:column; gap:0.75rem;"></div>
+        <div id="archiveList" class="archive-list"></div>
       </div>
     </div>
-  
-  
 
-  <!-- Pull-Out Drawer Backdrop & Panel -->
+  <!-- Pull-Out Drawer Backdrop & Panel (Rendered from STUDY_FRAMEWORKS.sevenSteps) -->
   <div id="sevenStepsDrawerBackdrop" class="drawer-backdrop" onclick="closeSevenStepsDrawerBackdrop(event)">
-    <div id="sevenStepsDrawer" class="drawer-panel">
+    <div id="sevenStepsDrawer" class="drawer-panel" role="dialog" aria-modal="true" aria-label="Daily Seven Steps">
       <div class="drawer-header">
-        <div style="display:flex; align-items:center; gap:0.5rem;">
-          <span style="font-size:1.25rem;">🌿</span>
+        <div class="drawer-brand">
+          <span style="font-size:1.25rem;" aria-hidden="true">🌿</span>
           <div>
-            <div style="font-family:var(--font-head); font-weight:700; font-size:1.05rem; color:var(--gold);">Daily Seven Steps</div>
-            <div style="font-size:0.75rem; color:var(--text-muted);">How to Have an Effective Quiet Time with God</div>
+            <div class="drawer-title">Daily Seven Steps</div>
+            <div class="drawer-sub">How to Have an Effective Quiet Time with God</div>
           </div>
         </div>
-        <button class="btn btn-sm" onclick="closeSevenStepsDrawer()">✕</button>
+        <button type="button" class="btn btn-sm" aria-label="Close Daily Seven Steps" onclick="closeSevenStepsDrawer()">✕</button>
       </div>
 
       <div class="drawer-body">
-        <div style="font-size:0.84rem; color:var(--text-muted); line-height:1.5;">
+        <div class="drawer-intro">
           Based on foundational biblical teaching by Bishop Dag Heward-Mills. Follow this spiritual rhythm during your devotional study.
         </div>
-
-        <!-- Step 1 -->
-        <div class="drawer-step-item">
-          <div style="font-size:0.72rem; font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:0.04em;">Step 1 &bull; Psalm 119:18</div>
-          <div style="font-family:var(--font-head); font-size:1rem; font-weight:600; color:var(--text); margin:0.2rem 0 0.35rem 0;">Pray to Begin</div>
-          <div style="font-family:var(--font-serif); font-size:0.95rem; color:var(--gold); font-style:italic; margin-bottom:0.4rem;">
-            &ldquo;Open thou mine eyes, that I may behold wondrous things out of thy law.&rdquo;
-          </div>
-          <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.5; margin-bottom:0.5rem;">
-            Quiet your thoughts. Give thanks to God for His presence and ask the Holy Spirit to grant you spiritual illumination.
-          </div>
-          <button class="btn btn-sm" onclick="appendOpeningPrayer(); showToast('Opening prayer added to notes');">+ Add Opening Prayer to Journal</button>
-        </div>
-
-        <!-- Step 2 -->
-        <div class="drawer-step-item">
-          <div style="font-size:0.72rem; font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:0.04em;">Step 2 &bull; Exodus 34:6-7</div>
-          <div style="font-family:var(--font-head); font-size:1rem; font-weight:600; color:var(--text); margin:0.2rem 0 0.35rem 0;">Read the Passage</div>
-          <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.5;">
-            Read systematically through your chosen portion. Read without rushing to take in the full context of God's message.
-          </div>
-        </div>
-
-        <!-- Step 3 -->
-        <div class="drawer-step-item">
-          <div style="font-size:0.72rem; font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:0.04em;">Step 3 &bull; 2 Timothy 2:7</div>
-          <div style="font-family:var(--font-head); font-size:1rem; font-weight:600; color:var(--text); margin:0.2rem 0 0.35rem 0;">Meditate &amp; Reflect</div>
-          <div style="font-family:var(--font-serif); font-size:0.95rem; color:var(--gold); font-style:italic; margin-bottom:0.4rem;">
-            &ldquo;Consider what I say; and the Lord give thee understanding in all things.&rdquo;
-          </div>
-          <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.5;">
-            Reread key verses slowly. Click any word in the Scripture Box to view its original Greek/Hebrew definition and lexicon notes.
-          </div>
-        </div>
-
-        <!-- Step 4 -->
-        <div class="drawer-step-item">
-          <div style="font-size:0.72rem; font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:0.04em;">Step 4 &bull; Acts 17:11</div>
-          <div style="font-family:var(--font-head); font-size:1rem; font-weight:600; color:var(--text); margin:0.2rem 0 0.35rem 0;">Deeper Study</div>
-          <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.5;">
-            Examine the verse through the 13 analytical questions (Microscopic) or the 6 W's (Topical) to identify commands, promises, warnings, and applications.
-          </div>
-        </div>
-
-        <!-- Step 5 -->
-        <div class="drawer-step-item">
-          <div style="font-size:0.72rem; font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:0.04em;">Step 5 &bull; 2 Timothy 2:15</div>
-          <div style="font-family:var(--font-head); font-size:1rem; font-weight:600; color:var(--text); margin:0.2rem 0 0.35rem 0;">Use Study Tools</div>
-          <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.5; margin-bottom:0.5rem;">
-            Consult Strong's Concordance, cross-references, and reliable biblical guides to rightly divide the word of truth.
-          </div>
-          <button class="btn btn-sm" onclick="openConcordanceForWord()">📖 Look up in Concordance</button>
-        </div>
-
-        <!-- Step 6 -->
-        <div class="drawer-step-item">
-          <div style="font-size:0.72rem; font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:0.04em;">Step 6 &bull; Exodus 34:1</div>
-          <div style="font-family:var(--font-head); font-size:1rem; font-weight:600; color:var(--text); margin:0.2rem 0 0.35rem 0;">Write Down Revelations</div>
-          <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.5;">
-            Revelations written down are remembered and practiced. Record what God spoke to you in the Journal Studio on the right.
-          </div>
-        </div>
-
-        <!-- Step 7 -->
-        <div class="drawer-step-item">
-          <div style="font-size:0.72rem; font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:0.04em;">Step 7 &bull; 1 Thessalonians 5:17</div>
-          <div style="font-family:var(--font-head); font-size:1rem; font-weight:600; color:var(--text); margin:0.2rem 0 0.35rem 0;">Conclude in Prayer</div>
-          <div style="font-size:0.82rem; color:var(--text-muted); line-height:1.5; margin-bottom:0.5rem;">
-            Convert your written revelations into real prayer petitions. Pray over the commands to obey, claim the promises, and spend time listening in silence.
-          </div>
-          <button class="btn btn-primary btn-sm" onclick="saveToArchive(); closeSevenStepsDrawer(); showToast('🎉 Quiet Time saved to Archive');">Save to Archive</button>
-        </div>
-
+        <div id="sevenStepsList" class="drawer-steps-list"></div>
       </div>
     </div>
   </div>
@@ -1614,117 +1878,115 @@
   </main>
 
   <!-- Cloud Sync & Multi-Device Pairing Modal -->
-  <div id="syncModal" class="modal-backdrop" onclick="closeSyncModalBackdrop(event)">
-    <div class="modal-card" style="max-width:490px;">
+  <div id="syncModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Device Storage and Cloud Sync" onclick="closeSyncModalBackdrop(event)">
+    <div class="modal-card modal-card-sm">
       <div class="modal-header">
-        <span style="font-family:var(--font-head); font-weight:600; font-size:1rem;">Device Storage & Cloud Sync</span>
-        <button class="btn btn-sm" onclick="closeSyncModal()">✕</button>
+        <span class="modal-title">Device Storage &amp; Cloud Sync</span>
+        <button type="button" class="btn btn-sm" aria-label="Close Sync Dialog" onclick="closeSyncModal()">✕</button>
       </div>
-      <div class="modal-body" style="padding:1.25rem;">
-        
+      <div class="modal-body modal-body-compact">
         <!-- Private Local Mode Card (Default) -->
-        <div id="syncLocalCard" style="background:var(--surface-elevated); border:1px solid var(--border); border-radius:var(--radius); padding:1rem; margin-bottom:1.15rem;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
-            <span style="font-size:0.75rem; font-weight:600; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.04em;">Storage Mode:</span>
-            <span id="syncModalStatusBadge" style="font-size:0.82rem; font-weight:600; color:#34d399;">🔒 100% Private (Saved to this Device)</span>
+        <div id="syncLocalCard" class="sync-card">
+          <div class="sync-card-row">
+            <span class="meta-label">Storage Mode:</span>
+            <span id="syncModalStatusBadge" class="status-badge-ok">🔒 100% Private (Saved to this Device)</span>
           </div>
-          <div style="font-size:0.83rem; color:var(--text-muted); line-height:1.5;">
+          <div class="sync-card-desc">
             Your notes, scripture, and archives are saved directly in your device browser. Nobody else can see or edit your reflections.
           </div>
           <div style="margin-top:0.85rem;">
-            <button class="btn btn-primary" style="width:100%; justify-content:center; padding:0.6rem; font-weight:600;" onclick="enableCloudSync()">🔗 Enable Sync between Phone & Laptop</button>
+            <button type="button" class="btn btn-primary" style="width:100%; justify-content:center; padding:0.6rem; font-weight:600;" onclick="enableCloudSync()">🔗 Enable Sync between Phone &amp; Laptop</button>
           </div>
         </div>
 
-        <!-- Connected Cloud Sync Card (When User Has a Private Sync Key) -->
-        <div id="syncConnectedCard" style="display:none; background:var(--surface-elevated); border:1px solid var(--border); border-radius:var(--radius); padding:1rem; margin-bottom:1.15rem;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
-            <span style="font-size:0.75rem; font-weight:600; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.04em;">Sync Status:</span>
-            <span style="font-size:0.82rem; font-weight:600; color:#34d399;">🟢 Cloud Sync Active</span>
+        <!-- Connected Cloud Sync Card -->
+        <div id="syncConnectedCard" class="sync-card" style="display:none;">
+          <div class="sync-card-row">
+            <span class="meta-label">Sync Status:</span>
+            <span class="status-badge-ok">🟢 Cloud Sync Active</span>
           </div>
-          <div style="font-size:0.83rem; color:var(--text-muted); line-height:1.5; margin-bottom:0.75rem;">
-            Your notebook is synced using your private key: <code id="syncKeyDisplay" style="color:var(--gold); font-weight:700;"></code>. Open your private sync link on your phone to keep both devices in sync.
+          <div class="sync-card-desc" style="margin-bottom:0.75rem;">
+            Your notebook is synced using your private key: <code id="syncKeyDisplay" class="sync-key-code"></code>. Open your private sync link on your phone to keep both devices in sync.
           </div>
           <div style="display:flex; flex-direction:column; gap:0.45rem;">
-            <button class="btn btn-primary btn-sm" style="justify-content:center; padding:0.55rem;" onclick="copyMyPrivateSyncLink()">🔗 Copy Sync Link for My Phone</button>
-            <div style="display:flex; gap:0.4rem;">
-              <button class="btn btn-sm" style="flex:1;" onclick="manualSaveCloud(); closeSyncModal();">💾 Save to Cloud</button>
-              <button class="btn btn-sm" style="flex:1;" onclick="manualRefreshCloud(); closeSyncModal();">🔄 Refresh</button>
+            <button type="button" class="btn btn-primary btn-sm" style="justify-content:center; padding:0.55rem;" onclick="copyMyPrivateSyncLink()">🔗 Copy Sync Link for My Phone</button>
+            <div class="sync-row" style="margin-top:0;">
+              <button type="button" class="btn btn-sm" style="flex:1;" onclick="manualSaveCloud(); closeSyncModal();">💾 Save to Cloud</button>
+              <button type="button" class="btn btn-sm" style="flex:1;" onclick="manualRefreshCloud(); closeSyncModal();">🔄 Refresh</button>
             </div>
-            <button class="btn btn-sm" style="color:#f87171; justify-content:center; margin-top:0.25rem;" onclick="disconnectCloudSync()">✕ Disconnect (Back to Private Local Mode)</button>
+            <button type="button" class="btn btn-sm btn-danger-text" style="justify-content:center; margin-top:0.25rem;" onclick="disconnectCloudSync()">✕ Disconnect (Back to Private Local Mode)</button>
           </div>
         </div>
 
         <!-- Manual Key Connect -->
-        <div style="border-top:1px solid var(--border); padding-top:0.85rem; margin-bottom:1rem;">
-          <div style="font-size:0.72rem; font-weight:600; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.4rem; letter-spacing:0.04em;">Connect Existing Sync Key:</div>
-          <div style="display:flex; gap:0.4rem;">
-            <input type="text" id="manualSyncKeyInput" class="text-input" placeholder="Paste your private sync key (e.g. fedbdde)..." style="font-size:0.8rem;">
-            <button class="btn btn-sm" onclick="connectManualSyncKey()">Connect</button>
+        <div class="sync-section">
+          <label for="manualSyncKeyInput" class="meta-label">Connect Existing Sync Key:</label>
+          <div class="sync-row">
+            <input type="text" id="manualSyncKeyInput" class="text-input" placeholder="Paste your private sync key..." style="font-size:0.8rem;">
+            <button type="button" class="btn btn-sm" onclick="connectManualSyncKey()">Connect</button>
           </div>
         </div>
 
         <!-- Offline JSON Backup -->
-        <div style="border-top:1px solid var(--border); padding-top:0.85rem;">
-          <div style="font-size:0.72rem; font-weight:600; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.45rem; letter-spacing:0.04em;">Offline JSON Backup:</div>
-          <div style="display:flex; gap:0.4rem;">
-            <button class="btn btn-sm" style="flex:1;" onclick="exportSyncBackup()">📥 Export Backup</button>
-            <button class="btn btn-sm" style="flex:1;" onclick="document.getElementById('importBackupInput').click()">📤 Import Backup</button>
+        <div class="sync-section">
+          <div class="meta-label">Offline JSON Backup:</div>
+          <div class="sync-row">
+            <button type="button" class="btn btn-sm" style="flex:1;" onclick="exportSyncBackup()">📥 Export Backup</button>
+            <button type="button" class="btn btn-sm" style="flex:1;" onclick="document.getElementById('importBackupInput').click()">📤 Import Backup</button>
             <input type="file" id="importBackupInput" style="display:none;" accept=".json" onchange="importSyncBackup(event)">
           </div>
         </div>
-
       </div>
     </div>
   </div>
 
   <!-- Restore Modal Dialog -->
-  <div id="restoreModal" class="modal-backdrop" onclick="closeRestoreModalBackdrop(event)">
-    <div class="modal-card" style="max-width:520px;">
+  <div id="restoreModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Restore Notes" onclick="closeRestoreModalBackdrop(event)">
+    <div class="modal-card modal-card-md">
       <div class="modal-header">
-        <span style="font-family:var(--font-head); font-weight:600; font-size:1rem;">Restore Notes</span>
-        <button class="btn btn-sm" onclick="closeRestoreModal()">✕</button>
+        <span class="modal-title">Restore Notes</span>
+        <button type="button" class="btn btn-sm" aria-label="Close Restore Dialog" onclick="closeRestoreModal()">✕</button>
       </div>
-      <div class="modal-body" style="padding:1.25rem;">
+      <div class="modal-body modal-body-compact">
         <div style="margin-bottom:1.25rem;">
-          <div style="font-size:0.75rem; font-weight:600; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.5rem; letter-spacing:0.04em;">Starter Template</div>
-          <button class="btn" style="width:100%; justify-content:space-between; padding:0.65rem 0.85rem;" onclick="confirmRestoreTemplate()">
+          <div class="meta-label" style="margin-bottom:0.5rem;">Starter Template</div>
+          <button type="button" class="btn" style="width:100%; justify-content:space-between; padding:0.65rem 0.85rem;" onclick="confirmRestoreTemplate()">
             <span>📄 Reset to Default Template</span>
             <span style="font-size:0.75rem; color:var(--gold);">Restore ➜</span>
           </button>
         </div>
 
         <div>
-          <div style="font-size:0.75rem; font-weight:600; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.5rem; letter-spacing:0.04em;">Recent Autosave Snapshots</div>
+          <div class="meta-label" style="margin-bottom:0.5rem;">Recent Autosave Snapshots</div>
           <div id="modalSnapshotList" style="display:flex; flex-direction:column; gap:0.4rem;">
-            <div style="color:var(--text-muted); font-size:0.8rem; font-style:italic;">No autosaves recorded yet.</div>
+            <div class="meta-hint" style="font-style:italic;">No autosaves recorded yet.</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div id="pageModal" class="modal-backdrop" onclick="closeModalBackdrop(event)">
-    <div class="modal-card" style="max-width:860px; max-height:90vh; display:flex; flex-direction:column;">
+  <div id="pageModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Quiet Time Revelation Document" onclick="closeModalBackdrop(event)">
+    <div class="modal-card modal-card-lg">
       <div class="modal-header">
-        <span style="font-family:var(--font-head); font-weight:600; font-size:1.05rem;">Quiet Time Revelation Document</span>
-        <div style="display:flex; gap:0.4rem;">
-          <button class="btn btn-sm" onclick="window.print()">🖨️ Print Sheet</button>
-          <button class="btn btn-sm" onclick="closeModal()">✕ Close</button>
+        <span class="modal-title" style="font-size:1.05rem;">Quiet Time Revelation Document</span>
+        <div class="studio-actions">
+          <button type="button" class="btn btn-sm" onclick="window.print()">🖨️ Print Sheet</button>
+          <button type="button" class="btn btn-sm" onclick="closeModal()">✕ Close</button>
         </div>
       </div>
-      <div style="padding:0.75rem 1.25rem 0.25rem 1.25rem; border-bottom:1px solid var(--border); background:var(--surface);">
+      <div class="modal-tabs-bar">
         <div class="view-switcher" style="margin-bottom:0.5rem;">
-          <button id="fullSheetTabMicro" class="active" onclick="switchFullSheetTab('micro')">🔬 Microscopic Study</button>
-          <button id="fullSheetTabTopical" onclick="switchFullSheetTab('topical')">🏷️ Topical Study</button>
-          <button id="fullSheetTabTele" onclick="switchFullSheetTab('tele')">📜 Telescopic Study</button>
+          <button type="button" id="fullSheetTabMicro" class="active" onclick="switchFullSheetTab('micro')">🔬 Microscopic Study</button>
+          <button type="button" id="fullSheetTabTopical" onclick="switchFullSheetTab('topical')">🏷️ Topical Study</button>
+          <button type="button" id="fullSheetTabTele" onclick="switchFullSheetTab('tele')">📜 Telescopic Study</button>
         </div>
       </div>
       <div class="modal-body" id="modalContent" style="padding:1.5rem; overflow-y:auto; flex:1;"></div>
     </div>
   </div>
 
-  <div id="toast"></div>
+  <div id="toast" role="status" aria-live="polite"></div>
 
   <script>
     // Centralized runtime configuration (mirrors config/app.config.json)
@@ -1743,43 +2005,206 @@
       }
     };
 
-    const QUESTIONS = [
-      { id: "q1", title: "What does this verse mean?", prompt: "Explain the direct biblical meaning in plain language." },
-      { id: "q2", title: "What does it mean to me in my specific circumstances?", prompt: "Connect this scripture to your current decisions, trials, or environment." },
-      { id: "q3", title: "What is God telling me personally?", prompt: "Listen for the quiet, personal promptings of the Holy Spirit." },
-      { id: "q4", title: "What is the verse saying?", prompt: "List explicit statements and biblical truths asserted here." },
-      { id: "q5", title: "What is the verse not saying?", prompt: "Address false assumptions, human exaggerations, or common misreadings." },
-      { id: "q6", title: "How can I apply it to my life?", prompt: "Define a tangible practical action or behavioral change." },
-      { id: "q7", title: "Is there a command for me to obey?", prompt: "Identify direct instructions given to the believer." },
-      { id: "q8", title: "Is there a warning for me to heed?", prompt: "Identify dangers, spiritual pitfalls, or errors warned against." },
-      { id: "q9", title: "Is there an example to follow or avoid?", prompt: "Character attitudes or conduct modeled in the passage." },
-      { id: "q10", title: "Is there an allegory or parable to interpret?", prompt: "Spiritual metaphors, types, and prophetic pictures." },
-      { id: "q11", title: "Is there a promise to believe?", prompt: "Covenant promises to claim, noting any conditions attached." },
-      { id: "q12", title: "Is there anything for me to pray about?", prompt: "Turn the passage into concrete prayer petitions." },
-      { id: "q13", title: "Who can I share this with?", prompt: "People in your circle who need encouragement from this truth." }
-    ];
+    // Offline-safe fallback mirroring config/study-frameworks.json (hydrated live over HTTP/HTTPS)
+    const STUDY_FRAMEWORKS = {
+      questions: [
+        { id: "q1", title: "What does this verse mean?", prompt: "Explain the direct biblical meaning in plain language." },
+        { id: "q2", title: "What does it mean to me in my specific circumstances?", prompt: "Connect this scripture to your current decisions, trials, or environment." },
+        { id: "q3", title: "What is God telling me personally?", prompt: "Listen for the quiet, personal promptings of the Holy Spirit." },
+        { id: "q4", title: "What is the verse saying?", prompt: "List explicit statements and biblical truths asserted here." },
+        { id: "q5", title: "What is the verse not saying?", prompt: "Address false assumptions, human exaggerations, or common misreadings." },
+        { id: "q6", title: "How can I apply it to my life?", prompt: "Define a tangible practical action or behavioral change." },
+        { id: "q7", title: "Is there a command for me to obey?", prompt: "Identify direct instructions given to the believer." },
+        { id: "q8", title: "Is there a warning for me to heed?", prompt: "Identify dangers, spiritual pitfalls, or errors warned against." },
+        { id: "q9", title: "Is there an example to follow or avoid?", prompt: "Character attitudes or conduct modeled in the passage." },
+        { id: "q10", title: "Is there an allegory or parable to interpret?", prompt: "Spiritual metaphors, types, and prophetic pictures." },
+        { id: "q11", title: "Is there a promise to believe?", prompt: "Covenant promises to claim, noting any conditions attached." },
+        { id: "q12", title: "Is there anything for me to pray about?", prompt: "Turn the passage into concrete prayer petitions." },
+        { id: "q13", title: "Who can I share this with?", prompt: "People in your circle who need encouragement from this truth." }
+      ],
+      topicalDimensions: [
+        { id: "w1", title: "Why & Why Not", desc: "Why pursue this quality, and what happens when absent?" },
+        { id: "w2", title: "How & How Not", desc: "How is it practiced practically, and what counterfeits exist?" },
+        { id: "w3", title: "Where & Where Not", desc: "In what areas of life is it tested and demonstrated?" },
+        { id: "w4", title: "When & When Not", desc: "What is the right timing and season for its expression?" },
+        { id: "w5", title: "What & What Not", desc: "What is the true definition versus what it is not?" },
+        { id: "w6", title: "Who & Who Not", desc: "Toward whom should this virtue be exercised?" }
+      ],
+      sevenSteps: [
+        { step: "Step 1", ref: "Psalm 119:18", title: "Pray to Begin", verse: "Open thou mine eyes, that I may behold wondrous things out of thy law.", desc: "Quiet your thoughts. Give thanks to God for His presence and ask the Holy Spirit to grant you spiritual illumination.", action: "openingPrayer" },
+        { step: "Step 2", ref: "Exodus 34:6-7", title: "Read the Passage", desc: "Read systematically through your chosen portion. Read without rushing to take in the full context of God's message." },
+        { step: "Step 3", ref: "2 Timothy 2:7", title: "Meditate & Reflect", verse: "Consider what I say; and the Lord give thee understanding in all things.", desc: "Reread key verses slowly. Click any word in the Scripture Box to view its original Greek/Hebrew definition and lexicon notes." },
+        { step: "Step 4", ref: "Acts 17:11", title: "Deeper Study", desc: "Examine the verse through the 13 analytical questions (Microscopic) or the 6 W's (Topical) to identify commands, promises, warnings, and applications." },
+        { step: "Step 5", ref: "2 Timothy 2:15", title: "Use Study Tools", desc: "Consult Strong's Concordance, cross-references, and reliable biblical guides to rightly divide the word of truth.", action: "concordance" },
+        { step: "Step 6", ref: "Exodus 34:1", title: "Write Down Revelations", desc: "Revelations written down are remembered and practiced. Record what God spoke to you in the Journal Studio on the right." },
+        { step: "Step 7", ref: "1 Thessalonians 5:17", title: "Conclude in Prayer", desc: "Convert your written revelations into real prayer petitions. Pray over the commands to obey, claim the promises, and spend time listening in silence.", action: "saveArchive" }
+      ],
+      openingPrayerTemplate: "\n\n### 🙏 Opening Prayer\n> \"Lord, open thou mine eyes, that I may behold wondrous things out of thy law (Ps 119:18). Speak to my heart today; grant me spiritual wisdom and revelation in Christ.\"\n"
+    };
 
-    const TOPICAL_DIMS = [
-      { title: "Why & Why Not", desc: "Why pursue this quality, and what happens when absent?" },
-      { title: "How & How Not", desc: "How is it practiced practically, and what counterfeits exist?" },
-      { title: "Where & Where Not", desc: "In what areas of life is it tested and demonstrated?" },
-      { title: "When & When Not", desc: "What is the right timing and season for its expression?" },
-      { title: "What & What Not", desc: "What is the true definition versus what it is not?" },
-      { title: "Who & Who Not", desc: "Toward whom should this virtue be exercised?" }
-    ];
+    let QUESTIONS = STUDY_FRAMEWORKS.questions;
+    let TOPICAL_DIMS = STUDY_FRAMEWORKS.topicalDimensions;
 
-    let currentScripture = {
+    // Verified Schema Validators (referencing config/devotional-catalyst.schema.json & SPEC.md §3.4)
+    function normalizeScripture(raw) {
+      if (!raw || typeof raw !== 'object' || typeof raw.reference !== 'string' || !raw.reference.trim()) {
+        return null;
+      }
+      const verses = Array.isArray(raw.verses)
+        ? raw.verses
+            .filter(v => v && typeof v.text === 'string')
+            .map((v, idx) => ({ verse: Number(v.verse) || (idx + 1), text: String(v.text) }))
+        : [];
+      return {
+        reference: raw.reference.trim(),
+        version: typeof raw.version === 'string' && raw.version.trim() ? raw.version.trim() : 'kjv',
+        text: typeof raw.text === 'string' ? raw.text : '',
+        verses
+      };
+    }
+
+    function normalizeArchiveEntry(raw) {
+      if (!raw || typeof raw !== 'object' || typeof raw.content !== 'string') return null;
+      return {
+        id: Number(raw.id) || Date.now(),
+        date: typeof raw.date === 'string' && raw.date ? raw.date : new Date().toISOString(),
+        ref: typeof raw.ref === 'string' && raw.ref.trim() ? raw.ref.trim() : 'Quiet Time Study',
+        content: raw.content
+      };
+    }
+
+    function validateCatalystResponse(data) {
+      if (!data || typeof data !== 'object') {
+        throw new Error('Invalid catalytic response payload.');
+      }
+      if (typeof data.reference !== 'string' || !data.reference.trim()) {
+        throw new Error('Catalytic response missing required "reference".');
+      }
+      if (!Array.isArray(data.catalysts) || data.catalysts.length === 0) {
+        throw new Error('Catalytic response missing required "catalysts" array.');
+      }
+      if (typeof data.silentMeditationPause !== 'string' || !data.silentMeditationPause.trim()) {
+        throw new Error('Catalytic response missing required "silentMeditationPause".');
+      }
+      const catalysts = data.catalysts
+        .filter(c => c && typeof c.id === 'string' && typeof c.questionTitle === 'string' && typeof c.catalyticPrompt === 'string')
+        .map(c => ({
+          id: c.id.trim(),
+          questionTitle: c.questionTitle.trim(),
+          catalyticPrompt: c.catalyticPrompt.trim()
+        }));
+      if (catalysts.length === 0) {
+        throw new Error('Catalytic response contained no valid catalyst items.');
+      }
+      return {
+        reference: data.reference.trim(),
+        focusWord: typeof data.focusWord === 'string' ? data.focusWord.trim() : '',
+        catalysts,
+        silentMeditationPause: data.silentMeditationPause.trim()
+      };
+    }
+
+    function renderFormatToolbars() {
+      const markup =
+        '<button type="button" class="format-btn" onclick="execNoteFormat(\'undo\')" title="Undo (Ctrl+Z)" aria-label="Undo">↶</button>' +
+        '<button type="button" class="format-btn" onclick="execNoteFormat(\'redo\')" title="Redo (Ctrl+Y)" aria-label="Redo">↷</button>' +
+        '<span class="toolbar-sep" aria-hidden="true"></span>' +
+        '<button type="button" class="format-btn" onclick="execNoteFormat(\'bold\')" title="Bold text (Ctrl+B)" aria-label="Bold"><b>B</b></button>' +
+        '<button type="button" class="format-btn" onclick="execNoteFormat(\'italic\')" title="Italic text (Ctrl+I)" aria-label="Italic"><i>I</i></button>' +
+        '<button type="button" class="format-btn" onclick="execNoteFormat(\'underline\')" title="Underline text (Ctrl+U)" aria-label="Underline"><u>U</u></button>' +
+        '<div class="hl-picker-wrap">' +
+          '<button type="button" class="format-btn btn-hl" onclick="execNoteFormat(\'highlight\')" title="Highlight text / Remove highlight (Ctrl+H)"><span>🖊️ Highlight</span></button>' +
+          '<div class="hl-swatches" role="group" aria-label="Highlight colors">' +
+            '<button type="button" class="hl-swatch-dot dot-gold active" onclick="setHighlightColor(\'gold\')" title="Gold (Revelation)" aria-label="Gold highlight"></button>' +
+            '<button type="button" class="hl-swatch-dot dot-green" onclick="setHighlightColor(\'green\')" title="Green (Growth)" aria-label="Green highlight"></button>' +
+            '<button type="button" class="hl-swatch-dot dot-blue" onclick="setHighlightColor(\'blue\')" title="Blue (Grace)" aria-label="Blue highlight"></button>' +
+            '<button type="button" class="hl-swatch-dot dot-rose" onclick="setHighlightColor(\'rose\')" title="Rose (Love)" aria-label="Rose highlight"></button>' +
+            '<button type="button" class="hl-swatch-dot dot-amber" onclick="setHighlightColor(\'amber\')" title="Amber (Warning)" aria-label="Amber highlight"></button>' +
+          '</div>' +
+        '</div>' +
+        '<div style="flex:1;"></div>' +
+        '<button type="button" class="format-btn" onclick="execNoteFormat(\'h3\')" title="Insert Section Heading">H3</button>' +
+        '<button type="button" class="format-btn" onclick="execNoteFormat(\'list\')" title="Insert Bullet Point">• List</button>';
+      document.querySelectorAll('[data-format-bar]').forEach(bar => {
+        bar.innerHTML = markup;
+      });
+    }
+
+    function renderSevenStepsDrawer() {
+      const container = document.getElementById('sevenStepsList');
+      if (!container) return;
+      container.innerHTML = STUDY_FRAMEWORKS.sevenSteps.map(s => {
+        let actionHtml = '';
+        if (s.action === 'openingPrayer') {
+          actionHtml = '<div class="drawer-step-action"><button type="button" class="btn btn-sm" onclick="appendOpeningPrayer()">+ Add Opening Prayer to Journal</button></div>';
+        } else if (s.action === 'concordance') {
+          actionHtml = '<div class="drawer-step-action"><button type="button" class="btn btn-sm" onclick="openConcordanceForWord()">📖 Look up in Concordance</button></div>';
+        } else if (s.action === 'saveArchive') {
+          actionHtml = '<div class="drawer-step-action"><button type="button" class="btn btn-primary btn-sm" onclick="saveToArchive(); closeSevenStepsDrawer(); showToast(\'🎉 Quiet Time saved to Archive\');">Save to Archive</button></div>';
+        }
+        return '<div class="drawer-step-item">' +
+          '<div class="drawer-step-meta">' + escapeCatalystHtml(s.step) + ' &bull; ' + escapeCatalystHtml(s.ref) + '</div>' +
+          '<div class="drawer-step-title">' + escapeCatalystHtml(s.title) + '</div>' +
+          (s.verse ? '<div class="drawer-step-verse">&ldquo;' + escapeCatalystHtml(s.verse) + '&rdquo;</div>' : '') +
+          '<div class="drawer-step-desc">' + escapeCatalystHtml(s.desc) + '</div>' +
+          actionHtml +
+        '</div>';
+      }).join('');
+    }
+
+    async function hydrateExternalConfigs() {
+      if (typeof window === 'undefined' || !/^https?:$/.test(window.location.protocol) || typeof fetch !== 'function') {
+        return;
+      }
+      try {
+        const [cfgRes, fwRes] = await Promise.all([
+          fetch('/config/app.config.json', { cache: 'no-cache' }),
+          fetch('/config/study-frameworks.json', { cache: 'no-cache' })
+        ]);
+        if (cfgRes && cfgRes.ok) {
+          const cfg = await cfgRes.json();
+          if (cfg && cfg.endpoints) Object.assign(APP_CONFIG.endpoints, cfg.endpoints);
+          if (cfg && cfg.productionUrl) APP_CONFIG.productionUrl = cfg.productionUrl;
+        }
+        if (fwRes && fwRes.ok) {
+          const fw = await fwRes.json();
+          if (fw && Array.isArray(fw.questions) && fw.questions.length) {
+            STUDY_FRAMEWORKS.questions = fw.questions;
+            QUESTIONS = STUDY_FRAMEWORKS.questions;
+            renderQuestions();
+          }
+          if (fw && Array.isArray(fw.topicalDimensions) && fw.topicalDimensions.length) {
+            STUDY_FRAMEWORKS.topicalDimensions = fw.topicalDimensions;
+            TOPICAL_DIMS = STUDY_FRAMEWORKS.topicalDimensions;
+            renderTopical();
+          }
+          if (fw && Array.isArray(fw.sevenSteps) && fw.sevenSteps.length) {
+            STUDY_FRAMEWORKS.sevenSteps = fw.sevenSteps;
+            renderSevenStepsDrawer();
+          }
+          if (fw && typeof fw.openingPrayerTemplate === 'string') {
+            STUDY_FRAMEWORKS.openingPrayerTemplate = fw.openingPrayerTemplate;
+          }
+        }
+      } catch (e) {
+        // Offline / standalone HTML fallback remains active
+      }
+    }
+
+    let currentScripture = normalizeScripture({
       reference: "2 Timothy 2:15",
       version: "kjv",
       text: "Study to shew thyself approved unto God, a workman that needeth not to be ashamed, rightly dividing the word of truth.",
       verses: []
-    };
+    });
     let activeTargetVerse = "2 Timothy 2:15";
     let activeWord = "";
     let lookupDebounce = null;
     let currentActiveTabId = "microTab";
 
     function init() {
+      renderFormatToolbars();
+      renderSevenStepsDrawer();
       initKeyboardFormatShortcuts();
       initVerseInputAutocomplete();
       initSeparateDrafts();
@@ -1788,6 +2213,7 @@
       renderTopical();
       loadSavedJournal();
       renderArchive();
+      hydrateExternalConfigs();
     }
 
     function renderVerseDisplay() {
@@ -3568,16 +3994,20 @@
       }
 
       if (data.archive && Array.isArray(data.archive)) {
+        const sanitizedRemote = data.archive.map(normalizeArchiveEntry).filter(Boolean);
         const nextArchive = mergeArchive
-          ? mergeArchives(JSON.parse(localStorage.getItem(ARCHIVE_KEY) || '[]'), data.archive)
-          : data.archive;
+          ? mergeArchives(JSON.parse(localStorage.getItem(ARCHIVE_KEY) || '[]'), sanitizedRemote)
+          : sanitizedRemote;
         localStorage.setItem(ARCHIVE_KEY, JSON.stringify(nextArchive));
         renderArchive();
       }
 
-      if (data.scripture && data.scripture.reference) {
-        currentScripture = data.scripture;
-        renderVerseDisplay();
+      if (data.scripture) {
+        const normalizedScripture = normalizeScripture(data.scripture);
+        if (normalizedScripture) {
+          currentScripture = normalizedScripture;
+          renderVerseDisplay();
+        }
       }
     }
 
@@ -4332,8 +4762,7 @@ function openRestoreModal() {
         </div>`;
       } else {
         content.innerHTML = `<div style="margin-bottom:1.5rem; padding-bottom:0.85rem; border-bottom:1px solid var(--border);">
-          <div style="font-size:0.75rem; font-weight:600; text-transform:uppercase; color:var(--gold); letter-spacing:0.06em;">Quiet Time · Presentation Sheet</div>
-          <h1 style="font-family:var(--font-head); font-size:1.45rem; margin-top:0.35rem; color:var(--text);">${studyTitle}</h1>
+          <h1 style="font-family:var(--font-head); font-size:1.35rem; color:var(--text);">${escapeCatalystHtml(studyTitle)}</h1>
         </div><div class="presentation-sheet-body">${edContent}</div>`;
       }
     }
@@ -4460,32 +4889,28 @@ function closeModal() {
     }
 
     function renderArchive() {
-      const archive = JSON.parse(localStorage.getItem(ARCHIVE_KEY) || '[]');
+      const rawArchive = JSON.parse(localStorage.getItem(ARCHIVE_KEY) || '[]');
+      const archive = Array.isArray(rawArchive) ? rawArchive.map(normalizeArchiveEntry).filter(Boolean) : [];
       document.getElementById('archiveCount').textContent = archive.length;
       const list = document.getElementById('archiveList');
       list.innerHTML = "";
       if (archive.length === 0) {
-        list.innerHTML = '<div style="color:var(--text-muted); font-size:0.85rem; padding:1rem 0;">No saved entries yet.</div>';
+        list.innerHTML = '<div class="meta-hint" style="padding:1rem 0;">No saved entries yet.</div>';
         return;
       }
       archive.forEach(item => {
         const d = new Date(item.date).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
         const row = document.createElement('div');
-        row.style.background = 'var(--surface-elevated)';
-        row.style.padding = '0.75rem 1rem';
-        row.style.borderRadius = 'var(--radius)';
-        row.style.display = 'flex';
-        row.style.justifyContent = 'space-between';
-        row.style.alignItems = 'center';
+        row.className = 'archive-row';
         row.innerHTML = `
           <div>
-            <div style="font-weight:600; font-size:0.9rem; color:var(--gold);">${item.ref}</div>
-            <div style="font-size:0.75rem; color:var(--text-muted);">${d}</div>
+            <div class="archive-ref">${escapeCatalystHtml(item.ref)}</div>
+            <div class="archive-date">${escapeCatalystHtml(d)}</div>
           </div>
-          <div style="display:flex; gap:0.4rem; align-items:center;">
-            <button class="btn btn-sm" onclick="loadArchiveItem(${item.id})">Open</button>
-            <button class="btn btn-primary btn-sm" onclick="previewArchiveItem(${item.id})" title="View formatted presentation">Rendered View</button>
-            <button class="btn btn-sm" onclick="deleteArchiveItem(${item.id})" style="color:#f87171;">Delete</button>
+          <div class="archive-actions">
+            <button type="button" class="btn btn-sm" onclick="loadArchiveItem(${item.id})">Open</button>
+            <button type="button" class="btn btn-primary btn-sm" onclick="previewArchiveItem(${item.id})" title="View formatted presentation">Rendered View</button>
+            <button type="button" class="btn btn-sm btn-danger-text" onclick="deleteArchiveItem(${item.id})">Delete</button>
           </div>
         `;
         list.appendChild(row);
@@ -4572,13 +4997,14 @@ function closeModal() {
         };
       }
     }
-function togglePassageShelf() {
+    function togglePassageShelf() {
       const shelf = document.getElementById('passageShelf');
       const btn = document.getElementById('toggleShelfBtn');
       if (!shelf) return;
       const isHidden = shelf.style.display === 'none' || !shelf.style.display;
       shelf.style.display = isHidden ? 'block' : 'none';
       if (btn) {
+        btn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
         const icon = document.getElementById('shelfToggleIcon');
         const txt = document.getElementById('shelfToggleText');
         if (icon) icon.textContent = isHidden ? '✕' : '🔍';
@@ -4589,10 +5015,16 @@ function togglePassageShelf() {
     function switchMainTab(tabId, el) {
       currentActiveTabId = tabId;
       document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.nav-tab-btn').forEach(l => l.classList.remove('active'));
+      document.querySelectorAll('.nav-tab-btn').forEach(l => {
+        l.classList.remove('active');
+        l.setAttribute('aria-selected', 'false');
+      });
       const target = document.getElementById(tabId);
       if (target) target.classList.add('active');
-      if (el) el.classList.add('active');
+      if (el) {
+        el.classList.add('active');
+        el.setAttribute('aria-selected', 'true');
+      }
     }
 
     const themes = ['dark', 'sepia', 'light'];
@@ -4615,17 +5047,22 @@ function togglePassageShelf() {
       init();
       initCloudSync();
     });
-  
+
     function toggleShareMenu(e) {
       if (e) e.stopPropagation();
       const menu = document.getElementById('shareMenuDropdown');
+      const btn = document.getElementById('shareMenuBtn');
       if (menu) {
-        menu.style.display = (menu.style.display === 'flex' ? 'none' : 'flex');
+        const opening = menu.style.display !== 'flex';
+        menu.style.display = opening ? 'flex' : 'none';
+        if (btn) btn.setAttribute('aria-expanded', opening ? 'true' : 'false');
       }
     }
     function closeShareMenu() {
       const menu = document.getElementById('shareMenuDropdown');
+      const btn = document.getElementById('shareMenuBtn');
       if (menu) menu.style.display = 'none';
+      if (btn) btn.setAttribute('aria-expanded', 'false');
     }
     document.addEventListener('click', (e) => {
       const wrap = document.querySelector('.dropdown-wrap');
@@ -4638,8 +5075,7 @@ function togglePassageShelf() {
     // SEVEN STEPS PULL-OUT DRAWER & OPENING PRAYER
     // ==========================================
     function appendOpeningPrayer() {
-      const prayerText = "\n\n### 🙏 Opening Prayer\n> \"Lord, open thou mine eyes, that I may behold wondrous things out of thy law (Ps 119:18). Speak to my heart today; grant me spiritual wisdom and revelation in Christ.\"\n";
-      appendJournal(prayerText);
+      appendJournal(STUDY_FRAMEWORKS.openingPrayerTemplate);
       showToast("Opening prayer added to notes");
     }
 
@@ -4657,7 +5093,13 @@ function togglePassageShelf() {
       }
     }
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeSevenStepsDrawer();
+      if (e.key === 'Escape') {
+        closeSevenStepsDrawer();
+        closeSyncModal();
+        closeRestoreModal();
+        closeModal();
+        closeShareMenu();
+      }
     });
 
     // ==========================================
@@ -4891,7 +5333,46 @@ function togglePassageShelf() {
       if (!res.ok) {
         throw new Error(data.error || 'Catalytic assistant is temporarily unavailable.');
       }
-      return data;
+      return validateCatalystResponse(data);
+    }
+
+    function renderCatalystCard(boxId, label, response, items, showItemTitles = false) {
+      const box = document.getElementById(boxId);
+      if (!box) return;
+      const list = Array.isArray(items) ? items.filter(Boolean) : [];
+      if (list.length === 0) {
+        box.style.display = 'none';
+        return;
+      }
+      const metaText = response.focusWord
+        ? response.reference + ' · "' + response.focusWord + '"'
+        : response.reference;
+      const bodyHtml = list.map(item =>
+        '<div class="catalyst-text">' +
+          (showItemTitles ? '<span class="catalyst-item-title">' + escapeCatalystHtml(item.questionTitle) + ':</span> ' : '') +
+          escapeCatalystHtml(item.catalyticPrompt) +
+        '</div>'
+      ).join('');
+      box.innerHTML =
+        '<div class="catalyst-header">' +
+          '<span class="catalyst-label">' + escapeCatalystHtml(label) + '<span class="catalyst-meta">' + escapeCatalystHtml(metaText) + '</span></span>' +
+          '<button type="button" class="btn btn-sm btn-subtle" style="padding:0.1rem 0.35rem;" aria-label="Dismiss catalytic nudge" onclick="dismissCatalystBox(\'' + boxId + '\')">✕</button>' +
+        '</div>' +
+        bodyHtml +
+        '<div class="catalyst-pause">Pause &amp; Listen: ' + escapeCatalystHtml(response.silentMeditationPause) + '</div>';
+      box.style.display = 'block';
+    }
+
+    function renderCatalystError(boxId, message) {
+      const box = document.getElementById(boxId);
+      if (!box) return;
+      box.innerHTML =
+        '<div class="catalyst-header">' +
+          '<span class="catalyst-label">Catalytic Companion</span>' +
+          '<button type="button" class="btn btn-sm btn-subtle" style="padding:0.1rem 0.35rem;" aria-label="Dismiss message" onclick="dismissCatalystBox(\'' + boxId + '\')">✕</button>' +
+        '</div>' +
+        '<div class="meta-hint">' + escapeCatalystHtml(message) + '</div>';
+      box.style.display = 'block';
     }
 
     function renderMicroCatalystForActive() {
@@ -4899,26 +5380,13 @@ function togglePassageShelf() {
       if (!box) return;
       const cacheKey = (currentScripture.reference || '') + '|' + (currentScripture.version || '');
       const cached = catalystCache.micro[cacheKey];
-      if (!cached || !Array.isArray(cached.catalysts)) {
+      if (!cached) {
         box.style.display = 'none';
         return;
       }
       const q = QUESTIONS[currentQuestionIndex];
-      const item = cached.catalysts.find(c => (c.id || '').toLowerCase() === q.id) || cached.catalysts[currentQuestionIndex];
-      if (!item) {
-        box.style.display = 'none';
-        return;
-      }
-      box.innerHTML =
-        '<div class="catalyst-header">' +
-          '<span class="catalyst-label">✨ Catalytic Thought-Starter</span>' +
-          '<button type="button" class="btn btn-sm btn-subtle" style="padding:0.1rem 0.35rem;" onclick="dismissCatalystBox(\'microCatalystBox\')">✕</button>' +
-        '</div>' +
-        '<div class="catalyst-text">' + escapeCatalystHtml(item.catalyticPrompt) + '</div>' +
-        (cached.silentMeditationPause
-          ? '<div class="catalyst-pause">Pause &amp; Listen: ' + escapeCatalystHtml(cached.silentMeditationPause) + '</div>'
-          : '');
-      box.style.display = 'block';
+      const item = cached.catalysts.find(c => c.id.toLowerCase() === q.id) || cached.catalysts[currentQuestionIndex];
+      renderCatalystCard('microCatalystBox', '✨ Catalytic Thought-Starter', cached, item ? [item] : [], false);
     }
 
     async function requestMicroCatalyst() {
@@ -4946,12 +5414,7 @@ function togglePassageShelf() {
         catalystCache.micro[cacheKey] = data;
         renderMicroCatalystForActive();
       } catch (err) {
-        box.innerHTML =
-          '<div class="catalyst-header">' +
-            '<span class="catalyst-label">Catalytic Companion</span>' +
-            '<button type="button" class="btn btn-sm btn-subtle" style="padding:0.1rem 0.35rem;" onclick="dismissCatalystBox(\'microCatalystBox\')">✕</button>' +
-          '</div>' +
-          '<div style="color:var(--text-muted); font-size:0.82rem;">' + escapeCatalystHtml(err.message) + '</div>';
+        renderCatalystError('microCatalystBox', err.message);
       }
     }
 
@@ -4960,26 +5423,14 @@ function togglePassageShelf() {
       if (!box) return;
       const topic = (document.getElementById('topicalTopic')?.value || '').trim().toLowerCase();
       const cached = catalystCache.topical[topic];
-      if (!cached || !Array.isArray(cached.catalysts)) {
+      if (!cached) {
         box.style.display = 'none';
         return;
       }
-      const targetId = 'w' + (currentTopicalIndex + 1);
-      const item = cached.catalysts.find(c => (c.id || '').toLowerCase() === targetId) || cached.catalysts[currentTopicalIndex];
-      if (!item) {
-        box.style.display = 'none';
-        return;
-      }
-      box.innerHTML =
-        '<div class="catalyst-header">' +
-          '<span class="catalyst-label">✨ Catalytic Study Pointer</span>' +
-          '<button type="button" class="btn btn-sm btn-subtle" style="padding:0.1rem 0.35rem;" onclick="dismissCatalystBox(\'topicalCatalystBox\')">✕</button>' +
-        '</div>' +
-        '<div class="catalyst-text">' + escapeCatalystHtml(item.catalyticPrompt) + '</div>' +
-        (cached.silentMeditationPause
-          ? '<div class="catalyst-pause">Pause &amp; Listen: ' + escapeCatalystHtml(cached.silentMeditationPause) + '</div>'
-          : '');
-      box.style.display = 'block';
+      const dim = TOPICAL_DIMS[currentTopicalIndex];
+      const targetId = (dim && dim.id) ? dim.id.toLowerCase() : ('w' + (currentTopicalIndex + 1));
+      const item = cached.catalysts.find(c => c.id.toLowerCase() === targetId) || cached.catalysts[currentTopicalIndex];
+      renderCatalystCard('topicalCatalystBox', '✨ Catalytic Study Pointer', cached, item ? [item] : [], false);
     }
 
     async function requestTopicalCatalyst() {
@@ -5009,12 +5460,7 @@ function togglePassageShelf() {
         catalystCache.topical[cacheKey] = data;
         renderTopicalCatalystForActive();
       } catch (err) {
-        box.innerHTML =
-          '<div class="catalyst-header">' +
-            '<span class="catalyst-label">Catalytic Companion</span>' +
-            '<button type="button" class="btn btn-sm btn-subtle" style="padding:0.1rem 0.35rem;" onclick="dismissCatalystBox(\'topicalCatalystBox\')">✕</button>' +
-          '</div>' +
-          '<div style="color:var(--text-muted); font-size:0.82rem;">' + escapeCatalystHtml(err.message) + '</div>';
+        renderCatalystError('topicalCatalystBox', err.message);
       }
     }
 
@@ -5026,24 +5472,8 @@ function togglePassageShelf() {
         return;
       }
       const cacheKey = (currentScripture.reference || '') + '|' + activeWord.toLowerCase();
-      const renderWordData = (data) => {
-        const itemsHtml = (data.catalysts || []).map(c =>
-          '<div class="catalyst-text"><strong style="color:var(--gold);">' + escapeCatalystHtml(c.questionTitle) + ':</strong> ' + escapeCatalystHtml(c.catalyticPrompt) + '</div>'
-        ).join('');
-        box.innerHTML =
-          '<div class="catalyst-header">' +
-            '<span class="catalyst-label">✨ Word Meditation Spark — "' + escapeCatalystHtml(activeWord) + '"</span>' +
-            '<button type="button" class="btn btn-sm btn-subtle" style="padding:0.1rem 0.35rem;" onclick="dismissCatalystBox(\'wordCatalystBox\')">✕</button>' +
-          '</div>' +
-          itemsHtml +
-          (data.silentMeditationPause
-            ? '<div class="catalyst-pause">Pause &amp; Listen: ' + escapeCatalystHtml(data.silentMeditationPause) + '</div>'
-            : '');
-        box.style.display = 'block';
-      };
-
       if (catalystCache.word[cacheKey]) {
-        renderWordData(catalystCache.word[cacheKey]);
+        renderCatalystCard('wordCatalystBox', '✨ Word Meditation Spark', catalystCache.word[cacheKey], catalystCache.word[cacheKey].catalysts, true);
         return;
       }
 
@@ -5057,14 +5487,9 @@ function togglePassageShelf() {
           focusWord: activeWord
         });
         catalystCache.word[cacheKey] = data;
-        renderWordData(data);
+        renderCatalystCard('wordCatalystBox', '✨ Word Meditation Spark', data, data.catalysts, true);
       } catch (err) {
-        box.innerHTML =
-          '<div class="catalyst-header">' +
-            '<span class="catalyst-label">Catalytic Companion</span>' +
-            '<button type="button" class="btn btn-sm btn-subtle" style="padding:0.1rem 0.35rem;" onclick="dismissCatalystBox(\'wordCatalystBox\')">✕</button>' +
-          '</div>' +
-          '<div style="color:var(--text-muted); font-size:0.82rem;">' + escapeCatalystHtml(err.message) + '</div>';
+        renderCatalystError('wordCatalystBox', err.message);
       }
     }
 
