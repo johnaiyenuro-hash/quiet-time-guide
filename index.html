@@ -1516,6 +1516,7 @@
             <button type="button" class="dropdown-item" role="menuitem" onclick="exportFreshFriendCopy(); closeShareMenu();">🎁 Clean Guide for Friend</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="downloadMarkdown(); closeShareMenu();">📥 Download Markdown</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="window.print(); closeShareMenu();">🖨️ Print / Save PDF</button>
+            <button type="button" class="dropdown-item btn-danger-text" role="menuitem" onclick="hardResetWorkspace(); closeShareMenu();">🧹 Hard Reset (Fresh Start)</button>
           </div>
         </div>
       </div>
@@ -1935,6 +1936,15 @@
             <button type="button" class="btn btn-sm" style="flex:1;" onclick="document.getElementById('importBackupInput').click()">📤 Import Backup</button>
             <input type="file" id="importBackupInput" style="display:none;" accept=".json" onchange="importSyncBackup(event)">
           </div>
+        </div>
+
+        <!-- Hard Reset Browser Workspace -->
+        <div class="sync-section">
+          <div class="meta-label">Start Completely Fresh:</div>
+          <div class="sync-card-desc" style="margin-bottom:0.5rem;">
+            Clears all local drafts, Q&amp;A answers, autosave snapshots, saved archive entries, and local cloud sync connection on this browser (matches a brand-new Incognito window).
+          </div>
+          <button type="button" class="btn btn-sm btn-danger-text" style="width:100%; justify-content:center;" onclick="hardResetWorkspace()">🧹 Hard Reset This Browser (Fresh Start)</button>
         </div>
       </div>
     </div>
@@ -4043,7 +4053,7 @@
             const localDraft = localStorage.getItem(DRAFT_KEY) || '';
             const isLocalDefault = !localDraft.trim() || localDraft.trim() === getDefaultTemplate().trim();
 
-            if (remote.updatedAt > localSyncTime || isLocalDefault) {
+            if (remote.updatedAt > localSyncTime || (localSyncTime === 0 && isLocalDefault)) {
               applyStudyState(remote, { mergeArchive: true });
               localStorage.setItem(SYNC_TIME_STORAGE, String(remote.updatedAt));
               if (!silent) showToast("☁️ Synced with your private cloud notebook");
@@ -4425,17 +4435,81 @@ function resetMicroStudy() {
         if (area) area.value = def;
         if (editor) editor.innerHTML = parseMarkdown(def);
         localStorage.setItem(DRAFT_KEY, def);
+        localStorage.removeItem('qt_journal_draft_clean_v1');
 
-        // Reset all 13 questions
+        // Reset all 13 questions and cached catalytic nudges
         QUESTIONS.forEach(q => {
           localStorage.removeItem('qt_ans_' + q.id);
         });
+        if (typeof catalystCache !== 'undefined') {
+          catalystCache.micro = {};
+          catalystCache.word = {};
+        }
+        const microBox = document.getElementById('microCatalystBox');
+        if (microBox) { microBox.style.display = 'none'; microBox.innerHTML = ''; }
+        const wordBox = document.getElementById('wordCatalystBox');
+        if (wordBox) { wordBox.style.display = 'none'; wordBox.innerHTML = ''; }
+
         displayActiveQuestion(0);
         renderQuestions();
 
-        if (typeof debounceCloudSync === 'function') debounceCloudSync();
+        // Stamp local sync time immediately so focus/reload never resurrects old cloud data
+        localStorage.setItem(SYNC_TIME_STORAGE, String(Date.now()));
+        clearTimeout(debounceCloudTimer);
+        if (cloudSyncId && typeof pushToCloud === 'function') pushToCloud(false);
         showToast("Reset Microscopic notes & all 13 questions to default");
       }
+    }
+
+    async function hardResetWorkspace() {
+      const ok = confirm(
+        "Hard Reset this browser to a brand-new blank state (like Incognito)?\n\n" +
+        "This clears all local drafts, Q&A answers, autosave snapshots, saved archive entries, and disconnects local cloud sync on this browser.\n\n" +
+        "Tip: Export a JSON backup first from Storage & Sync if you want to keep a copy."
+      );
+      if (!ok) return;
+
+      clearTimeout(debounceCloudTimer);
+      clearTimeout(snapshotTimer);
+
+      try {
+        const keysToDelete = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && (k.startsWith('qt_') || k === DRAFT_KEY || k === TOPICAL_DRAFT_KEY || k === TELE_DRAFT_KEY || k === ARCHIVE_KEY || k === SNAPSHOT_KEY || k === SYNC_KEY_STORAGE || k === SYNC_TIME_STORAGE)) {
+            keysToDelete.push(k);
+          }
+        }
+        keysToDelete.forEach(k => localStorage.removeItem(k));
+        if (typeof sessionStorage !== 'undefined') sessionStorage.clear();
+      } catch (e) {
+        console.warn('Hard reset storage warning:', e);
+      }
+
+      // If this copy has an embedded personal sync key, push a fresh blank state so cloud doesn't restore old data on reload
+      if (EMBEDDED_SYNC_ID && typeof pushToCloud === 'function') {
+        const def = getDefaultTemplate();
+        const area = document.getElementById('journalText');
+        const editor = document.getElementById('journalEditor');
+        if (area) area.value = def;
+        if (editor) editor.innerHTML = parseMarkdown(def);
+        const topArea = document.getElementById('topicalJournalText');
+        const topEditor = document.getElementById('topicalJournalEditor');
+        const topDef = "# Topical Study — Patience\n\n- **Definition:** \n\n";
+        if (topArea) topArea.value = topDef;
+        if (topEditor) topEditor.innerHTML = parseMarkdown(topDef);
+        const teleArea = document.getElementById('teleJournalText');
+        const teleEditor = document.getElementById('teleJournalEditor');
+        const teleDef = "# Telescopic Study — Ephesians\n\n- **Author & Setting:** \n- **Central Theme:** \n\n";
+        if (teleArea) teleArea.value = teleDef;
+        if (teleEditor) teleEditor.innerHTML = parseMarkdown(teleDef);
+        localStorage.setItem(SYNC_TIME_STORAGE, String(Date.now()));
+        await pushToCloud(false);
+      } else {
+        cloudSyncId = '';
+      }
+
+      window.location.reload();
     }
 
     function restoreDefaultTemplate() {
@@ -5201,23 +5275,30 @@ function closeModal() {
 
     function resetTopicalStudy() {
       if (confirm("Reset Topical notes and all 6 aspects to default?")) {
-        const top = document.getElementById('topicalTopic')?.value || 'Topic';
-        const def = document.getElementById('topicalDef')?.value || '';
-        const tpl = "# Topical Study — " + top + "\n\n- **Definition:** " + (def || "N/A") + "\n\n";
+        const topInput = document.getElementById('topicalTopic');
+        const defInput = document.getElementById('topicalDef');
+        if (topInput) topInput.value = 'Patience';
+        if (defInput) defInput.value = '';
+        const tpl = "# Topical Study — Patience\n\n- **Definition:** \n\n";
         const area = document.getElementById('topicalJournalText');
         const editor = document.getElementById('topicalJournalEditor');
         if (area) area.value = tpl;
         if (editor) editor.innerHTML = parseMarkdown(tpl);
         localStorage.setItem(TOPICAL_DRAFT_KEY, tpl);
 
-        // Reset all 6 topical aspects
+        // Reset all 6 topical aspects and cached pointers
         TOPICAL_DIMS.forEach((d, idx) => {
           localStorage.removeItem('qt_topical_ans_' + idx);
         });
+        if (typeof catalystCache !== 'undefined') catalystCache.topical = {};
+        const topBox = document.getElementById('topicalCatalystBox');
+        if (topBox) { topBox.style.display = 'none'; topBox.innerHTML = ''; }
         displayActiveTopical(0);
         initTopicalDropdown();
 
-        if (typeof debounceCloudSync === 'function') debounceCloudSync();
+        localStorage.setItem(SYNC_TIME_STORAGE, String(Date.now()));
+        clearTimeout(debounceCloudTimer);
+        if (cloudSyncId && typeof pushToCloud === 'function') pushToCloud(false);
         showToast("Reset Topical notes & all 6 aspects to default");
       }
     }
@@ -5262,18 +5343,21 @@ function closeModal() {
 
     function resetTeleStudy() {
       if (confirm("Reset Telescopic notes and outline fields to default?")) {
-        const bk = document.getElementById('teleBook')?.value || 'Book';
+        const bkInput = document.getElementById('teleBook');
         const ctxInput = document.getElementById('teleContext');
         const thmInput = document.getElementById('teleTheme');
+        if (bkInput) bkInput.value = 'Ephesians';
         if (ctxInput) ctxInput.value = '';
         if (thmInput) thmInput.value = '';
-        const tpl = "# Telescopic Study — " + bk + "\n\n- **Author & Setting:** N/A\n- **Central Theme:** N/A\n\n";
+        const tpl = "# Telescopic Study — Ephesians\n\n- **Author & Setting:** \n- **Central Theme:** \n\n";
         const area = document.getElementById('teleJournalText');
         const editor = document.getElementById('teleJournalEditor');
         if (area) area.value = tpl;
         if (editor) editor.innerHTML = parseMarkdown(tpl);
         localStorage.setItem(TELE_DRAFT_KEY, tpl);
-        if (typeof debounceCloudSync === 'function') debounceCloudSync();
+        localStorage.setItem(SYNC_TIME_STORAGE, String(Date.now()));
+        clearTimeout(debounceCloudTimer);
+        if (cloudSyncId && typeof pushToCloud === 'function') pushToCloud(false);
         showToast("Reset Telescopic notes and outline fields to default");
       }
     }
