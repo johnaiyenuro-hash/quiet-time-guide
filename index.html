@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- impeccable-disable overused-font, wide-tracking, low-contrast, nested-cards -->
+  <!-- impeccable-disable low-contrast -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quiet Time Study & Revelation Journal</title>
@@ -70,45 +70,6 @@
       display: flex;
       flex-direction: column;
       transition: background 0.2s ease, color 0.2s ease;
-    }
-
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0.75rem 1.5rem;
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
-    .header-content {
-      max-width: 1400px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-    }
-    .logo-group {
-      display: flex;
-      flex-direction: column;
-    }
-    .logo {
-      font-family: var(--font-head);
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      font-size: 1.1rem;
-      color: var(--gold);
-    }
-    .logo-sub {
-      font-size: 0.76rem;
-      color: var(--text-muted);
-      letter-spacing: 0.03em;
-    }
-    .header-controls {
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      flex-wrap: wrap;
     }
 
     .btn {
@@ -207,40 +168,6 @@
       color: var(--gold);
     }
 
-    /* Clean Navigation Tabs */
-    nav.nav-bar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-inner {
-      max-width: 1400px;
-      margin: 0 auto;
-      display: flex;
-      gap: 0.25rem;
-      padding: 0 1.5rem;
-      overflow-x: auto;
-    }
-    .tab-link {
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid transparent;
-      color: var(--text-muted);
-      font-family: var(--font-ui);
-      font-weight: 500;
-      font-size: 0.85rem;
-      letter-spacing: normal;
-      padding: 0.75rem 1rem;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.15s ease;
-    }
-    .tab-link:hover { color: var(--text); }
-    .tab-link.active {
-      color: var(--gold);
-      border-bottom-color: var(--gold);
-      font-weight: 600;
-    }
-
     /* Main Container */
     main {
       max-width: 1400px;
@@ -284,45 +211,18 @@
       cursor: pointer;
     }
 
-    .preset-row {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-      margin-bottom: 0.85rem;
-    }
-    .preset-label {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-right: 0.25rem;
-    }
-    .preset-pill {
-      background: var(--surface-elevated);
-      border: 1px solid var(--border);
-      border-radius: 9999px;
-      padding: 0.28rem 0.65rem;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      cursor: pointer;
-      min-height: 28px;
-      display: inline-flex;
-      align-items: center;
-      transition: all 0.15s ease;
-    }
-    .preset-pill:hover {
-      color: var(--gold);
-      border-color: var(--gold);
-    }
-
-    /* Flattened, elegant verse container without nested double borders */
+    /* Sticky Verse Box - Stays in view when scrolling */
     .verse-box {
       background: var(--bg);
       border-left: 1px solid var(--gold);
       border-radius: 0 var(--radius) var(--radius) 0;
-      padding: 1.25rem 1.4rem;
+      padding: 0.95rem 1.25rem;
       margin-top: 0.25rem;
+      position: sticky;
+      top: 52px;
+      z-index: 35;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(10px);
     }
     .verse-text {
       font-family: var(--font-serif);
@@ -331,7 +231,9 @@
       font-style: normal; /* Upright Roman for reading calm */
       color: var(--text);
       letter-spacing: normal;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.5rem;
+      max-height: 170px;
+      overflow-y: auto;
     }
     .verse-num-badge {
       display: inline-block;
@@ -362,18 +264,6 @@
       background: var(--gold);
       color: var(--btn-primary-text);
       font-weight: 600;
-    }
-    .verse-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.8rem;
-      color: var(--gold);
-      font-family: var(--font-head);
-      letter-spacing: 0.05em;
-      border-top: 1px solid var(--border);
-      padding-top: 0.65rem;
-      margin-top: 0.5rem;
     }
 
     .word-tool-bar {
@@ -508,43 +398,6 @@
       letter-spacing: normal;
     }
 
-    /* Editorial Accordion Questions - Borderless & Clean */
-    .accordion-list {
-      overflow: visible;
-      display: flex;
-      flex-direction: column;
-      border-top: 1px solid var(--border);
-      margin-top: 0.5rem;
-    }
-    .accordion-item {
-      border: none;
-      border-bottom: 1px solid var(--border);
-      background: transparent;
-      overflow: hidden;
-      transition: background 0.15s ease;
-    }
-    .accordion-item.open {
-      background: rgba(255, 255, 255, 0.02);
-    }
-    .accordion-header {
-      padding: 0.85rem 0.4rem;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      user-select: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-      letter-spacing: normal;
-    }
-    .accordion-header:hover { color: var(--gold); }
-    .accordion-body {
-      padding: 0.25rem 0.4rem 1rem 0.4rem;
-      display: none;
-      border-top: none;
-      background: transparent;
-    }
-    .accordion-item.open .accordion-body { display: block; }
     .input-textarea {
       width: 100%;
       min-height: 75px;
@@ -727,7 +580,7 @@
     .unified-editor h2 { font-size: 1.25rem; }
     .unified-editor h3 { font-size: 1.12rem; color: var(--gold); }
     .unified-editor blockquote {
-      border-left: 3px solid var(--gold);
+      border-left: 1px solid var(--gold);
       background: rgba(212, 175, 55, 0.05);
       margin: 0.75rem 0;
       padding: 0.5rem 1rem;
@@ -742,86 +595,10 @@
     .unified-editor li {
       margin-bottom: 0.35rem;
     }
-    .unified-editor mark, .unified-editor .note-highlight {
-      background: rgba(212, 175, 55, 0.28) !important;
-      color: inherit !important;
-      padding: 0.12em 0.35em !important;
-      border-radius: 4px !important;
-      border-bottom: 1px solid rgba(212, 175, 55, 0.45) !important;
-    }
     .unified-editor u {
       text-decoration: underline;
       text-underline-offset: 3px;
     }
-
-    .editor-box {
-      width: 100%;
-      min-height: 820px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 0.95rem;
-      color: var(--text);
-      font-family: var(--font-serif);
-      font-size: 1rem;
-      line-height: 1.75;
-      letter-spacing: normal;
-      resize: vertical;
-      outline: none;
-    }
-    .editor-box:focus { border-color: var(--gold); }
-
-    .preview-box {
-      display: none;
-      width: 100%;
-      min-height: 440px;
-      max-height: 650px;
-      overflow-y: auto;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.25rem;
-      font-family: var(--font-serif);
-      line-height: 1.85;
-      letter-spacing: normal;
-    }
-    .preview-box h1 { font-family: var(--font-head); font-size: 1.35rem; color: var(--gold); margin-bottom: 0.65rem; border-bottom: 1px solid var(--border); padding-bottom: 0.35rem; }
-    .preview-box h2 { font-family: var(--font-head); font-size: 1.15rem; color: var(--text); margin-top: 1.15rem; margin-bottom: 0.35rem; }
-    .preview-box h3 { font-family: var(--font-head); font-size: 1rem; color: var(--gold-dim); margin-top: 1rem; margin-bottom: 0.25rem; }
-    .preview-box blockquote { border-left: 1px solid var(--gold); padding: 0.65rem 0.95rem; margin: 0.75rem 0; background: var(--surface); border-radius: 0 4px 4px 0; }
-    .preview-box ul, .preview-box ol { margin-left: 1.4rem; margin-bottom: 0.75rem; }
-
-    .tag-badge {
-      display: inline-block;
-      padding: 0.12rem 0.45rem;
-      font-size: 0.7rem;
-      font-family: var(--font-ui);
-      font-weight: 600;
-      border-radius: 4px;
-      margin-right: 0.3rem;
-      vertical-align: middle;
-    }
-    .tag-promise { background: rgba(212, 175, 55, 0.2); color: var(--gold); }
-    .tag-command { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
-    .tag-warning { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
-    .tag-prayer { background: rgba(192, 132, 252, 0.2); color: #c084fc; }
-
-    .quick-tag-bar {
-      display: flex;
-      gap: 0.35rem;
-      flex-wrap: wrap;
-      margin: 0.75rem 0;
-    }
-    .quick-tag-btn {
-      background: var(--surface-elevated);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      border-radius: 4px;
-      padding: 0.2rem 0.5rem;
-      font-size: 0.74rem;
-      cursor: pointer;
-    }
-    .quick-tag-btn:hover { color: var(--text); border-color: var(--gold); }
 
     /* Modal Sheet */
     .modal-backdrop {
@@ -856,7 +633,7 @@
     b, strong {
       font-weight: 700 !important;
     }
-    .modal-body b, .modal-body strong, .unified-editor b, .unified-editor strong, .preview-box b, .preview-box strong {
+    .modal-body b, .modal-body strong, .unified-editor b, .unified-editor strong {
       font-weight: 700 !important;
     }
     .modal-body {
@@ -892,7 +669,7 @@
       line-height: 1.75;
     }
     .modal-body blockquote {
-      border-left: 3px solid var(--gold);
+      border-left: 1px solid var(--gold);
       background: rgba(212, 175, 55, 0.05);
       margin: 0.85rem 0;
       padding: 0.6rem 1rem;
@@ -932,14 +709,6 @@
     }
 
     @media (max-width: 640px) {
-      header { padding: 0.65rem 1rem; }
-      .header-content { flex-direction: column; align-items: stretch; gap: 0.6rem; }
-      .logo-group { align-items: flex-start; }
-      .header-controls { justify-content: space-between; width: 100%; }
-      .header-controls .btn { padding: 0.35rem 0.55rem; font-size: 0.75rem; }
-
-      .nav-inner { padding: 0 0.75rem; }
-      .tab-link { padding: 0.65rem 0.75rem; font-size: 0.8rem; }
       main { padding: 0.85rem; }
 
       .verse-text { font-size: 1.15rem; line-height: 1.75; }
@@ -959,160 +728,13 @@
     }
 
     @media print {
-      header, nav.nav-bar, .view-switcher, .quick-tag-bar, .header-controls, .btn, .scripture-input-row, .preset-row, .dropdown-wrap {
+      header.unified-header, .view-switcher, .btn, .scripture-input-row, .dropdown-wrap, .note-format-bar {
         display: none !important;
       }
       body { background: #ffffff !important; color: var(--text) !important; }
       .study-grid { display: block !important; }
       .studio-panel { border: none !important; padding: 0 !important; position: static !important; }
-      .editor-box { display: none !important; }
-      .preview-box { display: block !important; border: none !important; color: var(--text) !important; max-height: none !important; }
     }
-  
-    /* Step Tracker Bar & Guided Step Cards */
-    .step-tracker-bar {
-      display: flex;
-      gap: 0.35rem;
-      overflow-x: auto;
-      padding: 0.35rem 0.2rem 0.85rem 0.2rem;
-      margin-bottom: 0.75rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .step-pill {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 0.4rem 0.7rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      cursor: pointer;
-      color: var(--text-muted);
-      font-family: var(--font-ui);
-      font-size: 0.82rem;
-      font-weight: 500;
-      white-space: nowrap;
-      transition: all 0.15s ease;
-      touch-action: manipulation;
-    }
-    .step-pill:hover {
-      border-color: var(--border-accent);
-      color: var(--text);
-    }
-    .step-pill.active {
-      background: var(--surface-elevated);
-      border-color: var(--gold);
-      color: var(--gold);
-      font-weight: 600;
-    }
-    .step-pill.completed {
-      border-color: #34d399;
-      color: #34d399;
-    }
-    .step-pill-num {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--surface-elevated);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--text-muted);
-    }
-    .step-pill.active .step-pill-num {
-      background: var(--gold);
-      color: #0d1117;
-    }
-    .step-pill.completed .step-pill-num {
-      background: #34d399;
-      color: #0d1117;
-    }
-
-    /* Guided Step Cards: strictly show ONLY the active card */
-    .guided-step-card {
-      display: none !important;
-    }
-    .guided-step-card.active {
-      display: block !important;
-      animation: fadeIn 0.15s ease;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(3px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .step-hero-box {
-      background: var(--surface-elevated);
-      border-radius: var(--radius);
-      padding: 1.15rem 1.35rem;
-      margin-bottom: 1.15rem;
-    }
-    .step-scripture-anchor {
-      font-family: var(--font-serif);
-      font-size: 1.15rem;
-      line-height: 1.75;
-      color: var(--text);
-      margin-bottom: 0.5rem;
-      max-width: 56ch;
-    }
-    .step-instruction {
-      font-size: 0.86rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-      max-width: 56ch;
-    }
-
-    /* Suggestion Tabs inside Step 2 */
-    .suggestion-tab-bar {
-      display: flex;
-      gap: 0.25rem;
-      background: var(--bg);
-      padding: 3px;
-      border-radius: var(--radius);
-      margin-bottom: 0.75rem;
-    }
-    .suggestion-tab-btn {
-      flex: 1;
-      padding: 0.4rem 0.6rem;
-      font-size: 0.78rem;
-      font-weight: 500;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      border-radius: 5px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.35rem;
-      transition: all 0.15s ease;
-    }
-    .suggestion-tab-btn.active {
-      background: var(--surface-elevated);
-      color: var(--gold);
-      font-weight: 600;
-    }
-    .suggestion-panel {
-      display: none;
-    }
-    .suggestion-panel.active {
-      display: block;
-    }
-
-  
-    .guided-step-card .step-hero-box,
-    .guided-step-card .step-instruction,
-    .guided-step-card .step-scripture-anchor,
-    .guided-step-card .card-subtitle,
-    .guided-step-card p,
-    .prayer-prompt-text {
-      max-width: 56ch;
-    }
-
-  
-
 
     /* Pull-Out Drawer for 7 Steps Guide */
     .drawer-backdrop {
@@ -1168,73 +790,6 @@
       border: 1px solid var(--border);
     }
 
-    /* Sticky Verse Box - Stays in view when scrolling */
-    .verse-box {
-      background: var(--bg);
-      border-left: 1px solid var(--gold);
-      border-radius: 0 var(--radius) var(--radius) 0;
-      padding: 0.95rem 1.25rem;
-      margin-top: 0.25rem;
-      position: sticky;
-      top: 52px;
-      z-index: 35;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
-      backdrop-filter: blur(10px);
-    }
-    .verse-text {
-      font-family: var(--font-serif);
-      font-size: 1.22rem;
-      line-height: 1.85;
-      font-style: normal;
-      color: var(--text);
-      letter-spacing: normal;
-      margin-bottom: 0.5rem;
-      max-height: 170px;
-      overflow-y: auto;
-    }
-
-    /* Restored Spacing in 13 Questions Accordion List */
-    .accordion-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem !important;
-      margin-top: 0.85rem !important;
-      border-top: none !important;
-    }
-    .accordion-item {
-      border: 1px solid var(--border) !important;
-      border-radius: var(--radius) !important;
-      background: var(--surface-elevated) !important;
-      overflow: hidden;
-      transition: border-color 0.15s ease, background 0.15s ease;
-    }
-    .accordion-item:hover {
-      border-color: var(--border-accent) !important;
-    }
-    .accordion-item.open {
-      border-color: var(--gold) !important;
-    }
-    .accordion-header {
-      padding: 0.85rem 1.1rem !important;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      user-select: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-    .accordion-body {
-      padding: 0.85rem 1.1rem !important;
-      display: none;
-      border-top: 1px solid var(--border) !important;
-      background: var(--bg) !important;
-    }
-    .accordion-item.open .accordion-body {
-      display: block !important;
-    }
-
-  
     /* Unified Sanctuary Header: 52px fixed/sticky */
     header.unified-header {
       background: var(--surface);
@@ -1436,10 +991,6 @@
     .format-btn.btn-hl:hover {
       background: rgba(212, 175, 55, 0.22);
     }
-    .note-format-bar + .editor-box {
-      border-top-left-radius: 0 !important;
-      border-top-right-radius: 0 !important;
-    }
 
     /* Note Highlight Styling */
     .note-highlight, mark {
@@ -1468,51 +1019,6 @@
     .note-highlight.hl-amber, mark.hl-amber {
       background: rgba(251, 191, 36, 0.28) !important;
       border-bottom-color: rgba(251, 191, 36, 0.55) !important;
-    }
-
-    /* Verse Autocomplete Shelf */
-    .verse-autocomplete-shelf {
-      position: absolute;
-      top: calc(100% + 4px);
-      left: 0;
-      right: 0;
-      background: var(--surface-elevated);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.45);
-      z-index: 120;
-      max-height: 270px;
-      overflow-y: auto;
-      padding: 0.35rem 0;
-    }
-    .verse-suggest-item {
-      padding: 0.5rem 0.85rem;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      transition: background 0.15s ease;
-      font-family: var(--font-ui);
-      font-size: 0.85rem;
-    }
-    .verse-suggest-item:hover, .verse-suggest-item.active {
-      background: var(--surface);
-      color: var(--gold);
-    }
-    .verse-suggest-ref {
-      font-family: var(--font-head);
-      font-weight: 600;
-      color: var(--gold);
-    }
-    .verse-suggest-snippet {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      font-family: var(--font-serif);
-      font-style: italic;
-      max-width: 58%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
   </style>
@@ -1751,7 +1257,6 @@
             </div>
             <div id="journalEditor" class="unified-editor" contenteditable="true" spellcheck="true" lang="en" placeholder="Record your revelation, reflections, and prayers here..."></div>
             <textarea id="journalText" style="display:none;"></textarea>
-            <div id="journalPreview" class="preview-box" style="display:none;"></div>
 
             <!-- Bottom Studio Controls -->
             <div style="display:flex; gap:0.5rem; margin-top:0.85rem;">
@@ -1857,7 +1362,6 @@
             </div>
             <div id="topicalJournalEditor" class="unified-editor" contenteditable="true" spellcheck="true" lang="en" placeholder="Record your topical study insights, observations, and scriptural cross-references here..."></div>
             <textarea id="topicalJournalText" style="display:none;"></textarea>
-            <div id="topicalJournalPreview" class="preview-box" style="display:none;"></div>
 
             <div style="display:flex; gap:0.5rem; margin-top:0.85rem;">
               <button class="btn btn-primary studio-save-btn" id="topicalBottomSaveBtn" data-default-label="💾 Save Topical Note" style="flex:2; justify-content:center; font-weight:600; font-size:0.88rem; padding:0.6rem 1rem;" onclick="manualSaveCloud()">💾 Save Topical Note</button>
@@ -1935,7 +1439,6 @@
             </div>
             <div id="teleJournalEditor" class="unified-editor" contenteditable="true" spellcheck="true" lang="en" placeholder="Record your whole-book telescopic study, structural outline, recurring motifs, and overarching themes here..."></div>
             <textarea id="teleJournalText" style="display:none;"></textarea>
-            <div id="teleJournalPreview" class="preview-box" style="display:none;"></div>
 
             <div style="display:flex; gap:0.5rem; margin-top:0.85rem;">
               <button class="btn btn-primary studio-save-btn" id="teleBottomSaveBtn" data-default-label="💾 Save Telescopic Note" style="flex:2; justify-content:center; font-weight:600; font-size:0.88rem; padding:0.6rem 1rem;" onclick="manualSaveCloud()">💾 Save Telescopic Note</button>
@@ -2199,16 +1702,6 @@
       { title: "Who & Who Not", desc: "Toward whom should this virtue be exercised?" }
     ];
 
-    const SEVEN_STEPS = [
-      { step: "Step 1", title: "Pray to Begin", desc: "Give thanks and ask the Lord to illuminate your understanding.", ref: "Psalm 119:18" },
-      { step: "Step 2", title: "Read the Passage", desc: "Read systematically through a book, character study, or reading plan.", ref: "Exodus 34:6-7" },
-      { step: "Step 3", title: "Meditate & Reflect", desc: "Read slowly, focus on key striking words, and ponder their significance.", ref: "2 Timothy 2:7" },
-      { step: "Step 4", title: "Deeper Study", desc: "Identify God's character, commands, promises, warnings, and prayer points.", ref: "Acts 17:11" },
-      { step: "Step 5", title: "Use Study Tools", desc: "Consult reference Bibles, concordances, and reliable study guides.", ref: "2 Timothy 2:15" },
-      { step: "Step 6", title: "Write Down Revelations", desc: "Record the thoughts, insights, and instructions God gives you in a journal.", ref: "Exodus 34:1" },
-      { step: "Step 7", title: "Conclude in Prayer", desc: "Spend unhurried time presenting your requests and listening in silence.", ref: "1 Thess 5:17" }
-    ];
-
     let currentScripture = {
       reference: "2 Timothy 2:15",
       version: "kjv",
@@ -2221,15 +1714,12 @@
     let currentActiveTabId = "microTab";
 
     function init() {
-      initAutocompleteDatalist();
       initKeyboardFormatShortcuts();
       initVerseInputAutocomplete();
       initSeparateDrafts();
-      updateCheckboxesUI();
       renderVerseDisplay();
       renderQuestions();
       renderTopical();
-      renderSevenSteps();
       loadSavedJournal();
       renderArchive();
     }
@@ -2759,97 +2249,6 @@
       "1 John", "2 John", "3 John", "Jude", "Revelation"
     ];
 
-    const POPULAR_VERSES = [
-      { ref: "Genesis 1:1", text: "In the beginning God created the heaven and the earth." },
-      { ref: "Genesis 12:1-3", text: "Now the LORD had said unto Abram, Get thee out of thy country..." },
-      { ref: "Exodus 14:14", text: "The LORD shall fight for you, and ye shall hold your peace." },
-      { ref: "Exodus 34:6-7", text: "The LORD, The LORD God, merciful and gracious, longsuffering..." },
-      { ref: "Joshua 1:8", text: "This book of the law shall not depart out of thy mouth..." },
-      { ref: "Joshua 1:9", text: "Be strong and of a good courage; be not afraid..." },
-      { ref: "Psalm 1:1-3", text: "Blessed is the man that walketh not in the counsel of the ungodly..." },
-      { ref: "Psalm 23:1-6", text: "The LORD is my shepherd; I shall not want..." },
-      { ref: "Psalm 27:1", text: "The LORD is my light and my salvation; whom shall I fear?" },
-      { ref: "Psalm 34:8", text: "O taste and see that the LORD is good..." },
-      { ref: "Psalm 37:4-5", text: "Delight thyself also in the LORD; and he shall give thee the desires of thine heart." },
-      { ref: "Psalm 46:1-10", text: "God is our refuge and strength, a very present help in trouble." },
-      { ref: "Psalm 91:1-16", text: "He that dwelleth in the secret place of the most High..." },
-      { ref: "Psalm 103:1-5", text: "Bless the LORD, O my soul: and all that is within me, bless his holy name." },
-      { ref: "Psalm 119:18", text: "Open thou mine eyes, that I may behold wondrous things out of thy law." },
-      { ref: "Psalm 119:105", text: "Thy word is a lamp unto my feet, and a light unto my path." },
-      { ref: "Psalm 121:1-8", text: "I will lift up mine eyes unto the hills, from whence cometh my help." },
-      { ref: "Psalm 139:13-14", text: "I will praise thee; for I am fearfully and wonderfully made." },
-      { ref: "Proverbs 3:5-6", text: "Trust in the LORD with all thine heart; and lean not unto thine own understanding." },
-      { ref: "Proverbs 4:23", text: "Keep thy heart with all diligence; for out of it are the issues of life." },
-      { ref: "Proverbs 18:10", text: "The name of the LORD is a strong tower: the righteous runneth into it, and is safe." },
-      { ref: "Isaiah 9:6", text: "For unto us a child is born, unto us a son is given..." },
-      { ref: "Isaiah 26:3", text: "Thou wilt keep him in perfect peace, whose mind is stayed on thee." },
-      { ref: "Isaiah 40:28-31", text: "They that wait upon the LORD shall renew their strength..." },
-      { ref: "Isaiah 41:10", text: "Fear thou not; for I am with thee: be not dismayed; for I am thy God." },
-      { ref: "Isaiah 53:5", text: "But he was wounded for our transgressions, he was bruised for our iniquities..." },
-      { ref: "Isaiah 54:17", text: "No weapon that is formed against thee shall prosper..." },
-      { ref: "Isaiah 55:8-9", text: "For my thoughts are not your thoughts, neither are your ways my ways..." },
-      { ref: "Jeremiah 29:11", text: "For I know the thoughts that I think toward you, saith the LORD..." },
-      { ref: "Jeremiah 33:3", text: "Call unto me, and I will answer thee, and shew thee great and mighty things..." },
-      { ref: "Lamentations 3:22-23", text: "It is of the LORD's mercies that we are not consumed..." },
-      { ref: "Daniel 6:10", text: "Now when Daniel knew that the writing was signed, he went into his house..." },
-      { ref: "Habakkuk 2:2-4", text: "Write the vision, and make it plain upon tables..." },
-      { ref: "Zechariah 4:6", text: "Not by might, nor by power, but by my spirit, saith the LORD of hosts." },
-      { ref: "Matthew 5:3-12", text: "Blessed are the poor in spirit: for theirs is the kingdom of heaven." },
-      { ref: "Matthew 6:9-13", text: "Our Father which art in heaven, Hallowed be thy name..." },
-      { ref: "Matthew 6:33", text: "But seek ye first the kingdom of God, and his righteousness..." },
-      { ref: "Matthew 7:7", text: "Ask, and it shall be given you; seek, and ye shall find..." },
-      { ref: "Matthew 11:28-30", text: "Come unto me, all ye that labour and are heavy laden, and I will give you rest." },
-      { ref: "Matthew 28:18-20", text: "Go ye therefore, and teach all nations, baptizing them..." },
-      { ref: "Mark 11:23-24", text: "What things soever ye desire, when ye pray, believe that ye receive them..." },
-      { ref: "Luke 1:37", text: "For with God nothing shall be impossible." },
-      { ref: "Luke 10:19", text: "Behold, I give unto you power to tread on serpents and scorpions..." },
-      { ref: "John 1:1-14", text: "In the beginning was the Word, and the Word was with God, and the Word was God." },
-      { ref: "John 3:16", text: "For God so loved the world, that he gave his only begotten Son..." },
-      { ref: "John 10:10", text: "I am come that they might have life, and that they might have it more abundantly." },
-      { ref: "John 14:1-6", text: "I am the way, the truth, and the life: no man cometh unto the Father, but by me." },
-      { ref: "John 14:27", text: "Peace I leave with you, my peace I give unto you: not as the world giveth..." },
-      { ref: "John 15:1-8", text: "I am the true vine, and my Father is the husbandman." },
-      { ref: "Acts 1:8", text: "But ye shall receive power, after that the Holy Ghost is come upon you..." },
-      { ref: "Acts 17:11", text: "These were more noble than those in Thessalonica, in that they received the word..." },
-      { ref: "Romans 5:8", text: "But God commendeth his love toward us, in that, while we were yet sinners, Christ died for us." },
-      { ref: "Romans 8:1", text: "There is therefore now no condemnation to them which are in Christ Jesus..." },
-      { ref: "Romans 8:28", text: "And we know that all things work together for good to them that love God..." },
-      { ref: "Romans 8:31-39", text: "If God be for us, who can be against us?" },
-      { ref: "Romans 10:9-10", text: "That if thou shalt confess with thy mouth the Lord Jesus, and shalt believe in thine heart..." },
-      { ref: "Romans 12:1-2", text: "I beseech you therefore, brethren, by the mercies of God, that ye present your bodies..." },
-      { ref: "1 Corinthians 13:4-8", text: "Charity suffereth long, and is kind; charity envieth not..." },
-      { ref: "1 Corinthians 15:57-58", text: "Therefore, my beloved brethren, be ye stedfast, unmoveable, always abounding..." },
-      { ref: "2 Corinthians 5:17", text: "Therefore if any man be in Christ, he is a new creature..." },
-      { ref: "2 Corinthians 12:9", text: "My grace is sufficient for thee: for my strength is made perfect in weakness." },
-      { ref: "Galatians 2:20", text: "I am crucified with Christ: nevertheless I live; yet not I, but Christ liveth in me." },
-      { ref: "Galatians 5:22-23", text: "But the fruit of the Spirit is love, joy, peace, longsuffering..." },
-      { ref: "Ephesians 2:8-10", text: "For by grace are ye saved through faith; and that not of yourselves..." },
-      { ref: "Ephesians 3:20-21", text: "Now unto him that is able to do exceeding abundantly above all that we ask or think..." },
-      { ref: "Ephesians 6:10-18", text: "Finally, my brethren, be strong in the Lord, and in the power of his might." },
-      { ref: "Philippians 1:6", text: "Being confident of this very thing, that he which hath begun a good work in you..." },
-      { ref: "Philippians 4:6-7", text: "Be careful for nothing; but in every thing by prayer and supplication with thanksgiving..." },
-      { ref: "Philippians 4:13", text: "I can do all things through Christ which strengtheneth me." },
-      { ref: "Philippians 4:19", text: "But my God shall supply all your need according to his riches in glory by Christ Jesus." },
-      { ref: "Colossians 3:1-4", text: "If ye then be risen with Christ, seek those things which are above..." },
-      { ref: "1 Thessalonians 5:16-18", text: "Rejoice evermore. Pray without ceasing. In every thing give thanks..." },
-      { ref: "2 Timothy 1:7", text: "For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind." },
-      { ref: "2 Timothy 2:15", text: "Study to shew thyself approved unto God, a workman that needeth not to be ashamed..." },
-      { ref: "2 Timothy 3:16-17", text: "All scripture is given by inspiration of God, and is profitable for doctrine..." },
-      { ref: "Hebrews 4:12", text: "For the word of God is quick, and powerful, and sharper than any twoedged sword..." },
-      { ref: "Hebrews 4:16", text: "Let us therefore come boldly unto the throne of grace, that we may obtain mercy..." },
-      { ref: "Hebrews 11:1", text: "Now faith is the substance of things hoped for, the evidence of things not seen." },
-      { ref: "Hebrews 11:6", text: "But without faith it is impossible to please him..." },
-      { ref: "Hebrews 12:1-2", text: "Wherefore seeing we also are compassed about with so great a cloud of witnesses..." },
-      { ref: "James 1:2-5", text: "My brethren, count it all joy when ye fall into divers temptations..." },
-      { ref: "James 1:19-22", text: "Wherefore, my beloved brethren, let every man be swift to hear, slow to speak, slow to wrath..." },
-      { ref: "James 5:16", text: "The effectual fervent prayer of a righteous man availeth much." },
-      { ref: "1 Peter 5:6-7", text: "Casting all your care upon him; for he careeth for you." },
-      { ref: "1 John 1:9", text: "If we confess our sins, he is faithful and just to forgive us our sins..." },
-      { ref: "1 John 4:4", text: "Ye are of God, little children, and have overcome them: because greater is he that is in you..." },
-      { ref: "Revelation 3:20", text: "Behold, I stand at the door, and knock: if any man hear my voice, and open the door..." },
-      { ref: "Revelation 21:4", text: "And God shall wipe away all tears from their eyes; and there shall be no more death..." }
-    ];
-
     const BOOK_TYPO_MAP = {
       'psalms': 'Psalm',
       'revelations': 'Revelation',
@@ -2877,25 +2276,6 @@
       'ephesiens': 'Ephesians'
     };
 
-    function initAutocompleteDatalist() {
-      const dl = document.getElementById('canonicalVerseList');
-      if (!dl) return;
-      dl.innerHTML = "";
-      POPULAR_VERSES.forEach(v => {
-        const opt = document.createElement('option');
-        opt.value = v.ref;
-        opt.label = v.text.substring(0, 50) + '...';
-        dl.appendChild(opt);
-      });
-      BIBLE_BOOKS.forEach(b => {
-        const opt = document.createElement('option');
-        opt.value = b + " 1:1";
-        dl.appendChild(opt);
-      });
-    }
-
-
-    
     // ==========================================
     // UNIFIED NOTE FORMATTING & LIVE EDITING ENGINE
     // ==========================================
@@ -3111,17 +2491,6 @@
       syncEditorToStorage(editor);
     }
 
-    // Backwards-compatible alias for formatNote
-    function formatNote(tagStart, tagEnd) {
-      if (tagStart === '**') execNoteFormat('bold');
-      else if (tagStart === '*') execNoteFormat('italic');
-      else if (tagStart === '<u>') execNoteFormat('underline');
-      else if (tagStart === '==') execNoteFormat('highlight');
-      else if (tagStart === '### ') execNoteFormat('h3');
-      else if (tagStart === '- ') execNoteFormat('list');
-      else execNoteFormat('bold');
-    }
-
     function syncEditorToStorage(editor) {
       if (!editor) return;
       let type = 'micro';
@@ -3199,7 +2568,7 @@
           outline += "\"" + currentScripture.text.trim() + "\"\n\n";
         }
         QUESTIONS.forEach((q, idx) => {
-          const ans = (document.getElementById('ans_' + q.id)?.value || localStorage.getItem('qt_ans_' + q.id) || '').trim();
+          const ans = (localStorage.getItem('qt_ans_' + q.id) || '').trim();
           if (ans) answered++;
           outline += "### 📖 " + q.title + "\n";
           if (ans) {
@@ -3212,7 +2581,7 @@
       } else {
         outline += "\n\n## 💡 Meditation Reflections — " + target + "\n\n";
         QUESTIONS.forEach((q, idx) => {
-          const ans = (document.getElementById('ans_' + q.id)?.value || localStorage.getItem('qt_ans_' + q.id) || '').trim();
+          const ans = (localStorage.getItem('qt_ans_' + q.id) || '').trim();
           if (ans) {
             answered++;
             outline += ans + "\n\n";
@@ -3655,15 +3024,6 @@
       if (ref) onVerseInput(ref);
     }
 
-    function loadPreset(ref, text) {
-      document.getElementById('verseInput').value = ref;
-      currentScripture.reference = ref;
-      currentScripture.text = text;
-      currentScripture.version = "kjv";
-      renderVerseDisplay();
-      showToast("Loaded " + ref);
-    }
-
     async function pasteScripture() {
       let text = '';
       try {
@@ -3719,10 +3079,6 @@
       document.body.removeChild(a);
 
       showToast("Opening Concordance for \"" + clean + "\"");
-    }
-
-    function lookupStrongs() {
-      openConcordanceForWord();
     }
 
     let currentQuestionIndex = 0;
@@ -3835,43 +3191,6 @@
         select.options[currentQuestionIndex].textContent = (currentQuestionIndex + 1) + ". " + q.title;
       }
       showToast("Cleared answer for Question " + (currentQuestionIndex + 1));
-    }
-
-    function promptResetAllQuestions() {
-      if (confirm("Reset reflections for all 13 questions?")) {
-        resetAllQuestions();
-        showToast("All 13 question reflections reset");
-      }
-    }
-
-    function resetAllQuestions() {
-      QUESTIONS.forEach(q => {
-        localStorage.removeItem('qt_ans_' + q.id);
-      });
-      displayActiveQuestion(0);
-      renderQuestions();
-    }
-
-function pushQuestionToJournal(title, inputId, includeQuestion = true) {
-      const val = document.getElementById(inputId).value.trim();
-      if (!val) {
-        showToast("Please write your reflection first");
-        return;
-      }
-
-      const qObj = QUESTIONS.find(q => q.title === title);
-      const answerLines = val.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-      const bulletedAnswer = answerLines.map(l => "- " + (l.startsWith('- ') ? l.substring(2) : l)).join("\n");
-
-      let entry = "";
-      if (includeQuestion && qObj) {
-        entry = "\n### 📖 " + title + "\n" + bulletedAnswer + "\n";
-      } else {
-        entry = "\n" + bulletedAnswer + "\n";
-      }
-
-      appendJournal(entry);
-      showToast(includeQuestion ? "✓ Inserted Question & Answer into notes" : "✓ Inserted reflection answer into notes");
     }
 
     let currentTopicalIndex = 0;
@@ -4000,70 +3319,10 @@ function pushQuestionToJournal(title, inputId, includeQuestion = true) {
       showToast("Cleared answer for Aspect " + (currentTopicalIndex + 1));
     }
 
-    function resetAllTopicalQuestions() {
-      if (confirm("Reset reflections for all 6 topical aspects?")) {
-        TOPICAL_DIMS.forEach((d, idx) => {
-          localStorage.removeItem('qt_topical_ans_' + idx);
-        });
-        displayActiveTopical(0);
-        initTopicalDropdown();
-        showToast("All 6 topical aspect reflections reset");
-      }
-    }
-
     function renderTopical() {
       initTopicalDropdown();
     }
 
-    function insertTopicalHeading() {
-      const top = document.getElementById('topicalTopic').value.trim();
-      const def = document.getElementById('topicalDef').value.trim();
-      const note = "\n\n## Topical Study: " + top.toUpperCase() + "\n- **Definition:** " + (def || "N/A");
-      appendJournal(note);
-      showToast("Topic inserted");
-    }
-
-    function insertTopicalDim(title, inputId) {
-      const val = document.getElementById(inputId).value.trim();
-      if (!val) {
-        showToast("Please write your reflection first");
-        return;
-      }
-      const note = "\n- " + val;
-      appendJournal(note);
-      showToast("Added reflection to notes");
-    }
-
-    function insertTelescopicNotes() {
-      const book = document.getElementById('teleBook').value.trim();
-      const ctx = document.getElementById('teleContext').value.trim();
-      const theme = document.getElementById('teleTheme').value.trim();
-      const note = "\n\n## Telescopic Study: " + book.toUpperCase() + "\n- **Setting & Context:** " + ctx + "\n- **Central Theme:** " + theme;
-      appendJournal(note);
-      showToast("Telescopic notes inserted");
-    }
-
-    function renderSevenSteps() {
-      const grid = document.getElementById('sevenStepsGrid');
-      if (!grid) return;
-      grid.innerHTML = "";
-      SEVEN_STEPS.forEach(s => {
-        const item = document.createElement('div');
-        item.style.background = 'var(--surface-elevated)';
-        item.style.padding = '1rem';
-        item.style.borderRadius = 'var(--radius)';
-        // borderless to prevent nested cards
-        item.innerHTML = `
-          <div style="font-size:0.72rem; color:var(--gold); font-weight:600; text-transform:uppercase;">${s.step}</div>
-          <div style="font-weight:600; font-size:0.95rem; margin:0.25rem 0;">${s.title}</div>
-          <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.5;">${s.desc}</div>
-          <div style="margin-top:0.5rem; font-size:0.75rem; font-style:italic; color:var(--text-muted);">${s.ref}</div>
-        `;
-        grid.appendChild(item);
-      });
-    }
-
-    
     /* =============================================================
      * LOCAL-FIRST & PRIVATE MULTI-DEVICE SYNC ENGINE
      * 100% Private to each visitor by default: zero crosstalk
@@ -4175,11 +3434,6 @@ function pushQuestionToJournal(title, inputId, includeQuestion = true) {
         if (noteArea) noteArea.value = data.draft;
         if (noteEditor) noteEditor.innerHTML = parseMarkdown(data.draft);
         localStorage.setItem(DRAFT_KEY, data.draft);
-
-        const preview = document.getElementById('journalPreview');
-        if (preview && preview.style.display !== 'none') {
-          preview.innerHTML = parseMarkdown(data.draft);
-        }
       }
 
       if (data.topicalDraft !== undefined) {
@@ -4893,37 +4147,6 @@ function openRestoreModal() {
       insertIntoActiveNote(text);
     }
 
-function insertTag(tag) {
-      const area = document.getElementById('journalText');
-      const start = area.selectionStart;
-      area.value = area.value.substring(0, start) + tag + area.value.substring(start);
-      area.focus();
-      area.selectionEnd = start + tag.length;
-      localStorage.setItem(DRAFT_KEY, area.value);
-    }
-
-    function switchEditorMode(mode) {
-      const txt = document.getElementById('journalText');
-      const prev = document.getElementById('journalPreview');
-      const bEdit = document.getElementById('tabEdit');
-      const bPrev = document.getElementById('tabPreview');
-
-      if (mode === 'preview') {
-        prev.innerHTML = parseMarkdown(txt.value);
-        txt.style.display = 'none';
-        prev.style.display = 'block';
-        bEdit.classList.remove('active');
-        bPrev.classList.add('active');
-      } else {
-        txt.style.display = 'block';
-        prev.style.display = 'none';
-        bEdit.classList.add('active');
-        bPrev.classList.remove('active');
-        txt.focus();
-      }
-    }
-
-    
     function htmlToMarkdown(html) {
       if (!html) return '';
       return html
@@ -5101,7 +4324,6 @@ function closeModal() {
       const docClone = document.documentElement.cloneNode(true);
       const clearIds = [
         'journalEditor', 'topicalJournalEditor', 'teleJournalEditor',
-        'journalPreview', 'topicalJournalPreview', 'teleJournalPreview',
         'archiveList', 'syncKeyDisplay', 'modalContent', 'verseDisplay'
       ];
       clearIds.forEach(id => {
@@ -5257,8 +4479,7 @@ function closeModal() {
           type: 'topical',
           editor: document.getElementById('topicalJournalEditor'),
           area: document.getElementById('topicalJournalText'),
-          preview: document.getElementById('topicalJournalPreview'),
-          key: (typeof TOPICAL_DRAFT_KEY !== 'undefined' ? TOPICAL_DRAFT_KEY : 'qt_topical_draft_v2'),
+          key: TOPICAL_DRAFT_KEY,
           name: 'Topical Notes'
         };
       } else if (currentActiveTabId === 'telescopicTab') {
@@ -5266,8 +4487,7 @@ function closeModal() {
           type: 'tele',
           editor: document.getElementById('teleJournalEditor'),
           area: document.getElementById('teleJournalText'),
-          preview: document.getElementById('teleJournalPreview'),
-          key: (typeof TELE_DRAFT_KEY !== 'undefined' ? TELE_DRAFT_KEY : 'qt_telescopic_draft_v2'),
+          key: TELE_DRAFT_KEY,
           name: 'Telescopic Notes'
         };
       } else {
@@ -5275,7 +4495,6 @@ function closeModal() {
           type: 'micro',
           editor: document.getElementById('journalEditor'),
           area: document.getElementById('journalText'),
-          preview: document.getElementById('journalPreview'),
           key: DRAFT_KEY,
           name: 'Microscopic Notes'
         };
@@ -5298,7 +4517,7 @@ function togglePassageShelf() {
     function switchMainTab(tabId, el) {
       currentActiveTabId = tabId;
       document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.nav-tab-btn, .tab-link').forEach(l => l.classList.remove('active'));
+      document.querySelectorAll('.nav-tab-btn').forEach(l => l.classList.remove('active'));
       const target = document.getElementById(tabId);
       if (target) target.classList.add('active');
       if (el) el.classList.add('active');
@@ -5344,160 +4563,14 @@ function togglePassageShelf() {
     });
 
     // ==========================================
-    // GUIDED 7 STEPS ENGINE
+    // SEVEN STEPS PULL-OUT DRAWER & OPENING PRAYER
     // ==========================================
-    let currentStep = 1;
-    let completedSteps = new Set(JSON.parse(localStorage.getItem('qt_completed_steps') || '[]'));
-
-    function updateStepTrackerUI() {
-      for (let i = 1; i <= 7; i++) {
-        const pill = document.getElementById('stepPill_' + i);
-        const card = document.getElementById('guidedStep_' + i);
-        const badge = document.getElementById('stepBadge_' + i);
-        const num = document.getElementById('stepNum_' + i);
-
-        if (!pill || !card) continue;
-
-        if (i === currentStep) {
-          pill.classList.add('active');
-          card.classList.add('active');
-        } else {
-          pill.classList.remove('active');
-          card.classList.remove('active');
-        }
-
-        if (completedSteps.has(i)) {
-          pill.classList.add('completed');
-          if (badge) badge.textContent = ' ✓';
-          if (num) num.textContent = '✓';
-        } else {
-          pill.classList.remove('completed');
-          if (badge) badge.textContent = '';
-          if (num) num.textContent = String(i);
-        }
-      }
-    }
-
-    function goToStep(stepNum) {
-      if (stepNum < 1 || stepNum > 7) return;
-      currentStep = stepNum;
-      updateStepTrackerUI();
-      const card = document.getElementById('guidedStep_' + stepNum);
-      if (card) {
-        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }
-
-    function completeStep(stepNum) {
-      completedSteps.add(stepNum);
-      localStorage.setItem('qt_completed_steps', JSON.stringify(Array.from(completedSteps)));
-      if (stepNum < 7) {
-        goToStep(stepNum + 1);
-        showToast("✓ Step " + stepNum + " completed!");
-      }
-    }
-
     function appendOpeningPrayer() {
       const prayerText = "\n\n### 🙏 Opening Prayer\n> \"Lord, open thou mine eyes, that I may behold wondrous things out of thy law (Ps 119:18). Speak to my heart today; grant me spiritual wisdom and revelation in Christ.\"\n";
       appendJournal(prayerText);
       showToast("Opening prayer added to notes");
     }
 
-    function switchSuggestionTab(type) {
-      document.querySelectorAll('.suggestion-tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.suggestion-panel').forEach(p => p.classList.remove('active'));
-
-      if (type === 'micro') {
-        document.getElementById('sugTabMicro').classList.add('active');
-        document.getElementById('sugPanelMicro').classList.add('active');
-      } else if (type === 'topical') {
-        document.getElementById('sugTabTopical').classList.add('active');
-        document.getElementById('sugPanelTopical').classList.add('active');
-      } else if (type === 'tele') {
-        document.getElementById('sugTabTele').classList.add('active');
-        document.getElementById('sugPanelTele').classList.add('active');
-      }
-    }
-
-    function loadGuidedPreset(ref, text, method) {
-      loadPreset(ref, text);
-      showToast("Loaded: " + ref);
-    }
-
-    function loadTopicalPreset(topic, ref, text) {
-      loadPreset(ref, text);
-      document.getElementById('topicalTopic').value = topic;
-      showToast("Loaded topic: " + topic + " (" + ref + ")");
-    }
-
-    function loadTelescopicPreset(book, author, recipients, theme) {
-      document.getElementById('teleBook').value = book;
-      document.getElementById('teleContext').value = "Author: " + author + "\nRecipients: " + recipients;
-      document.getElementById('teleTheme').value = theme;
-      document.getElementById('verseInput').value = book + " 1:1-10";
-      onVerseInput(book + " 1:1-10");
-      showToast("Loaded book study: " + book);
-    }
-
-    function finishQuietTimeSession() {
-      completeStep(7);
-      saveToArchive();
-      showToast("🎉 Quiet Time complete! Saved to your Archive.");
-      setTimeout(() => {
-        openFullPageModal();
-      }, 500);
-    }
-
-    function switchDirectToolView(tool) {
-      document.getElementById('directMicroSection').style.display = (tool === 'micro' ? 'block' : 'none');
-      document.getElementById('directTopicalSection').style.display = (tool === 'topical' ? 'block' : 'none');
-      document.getElementById('directTeleSection').style.display = (tool === 'tele' ? 'block' : 'none');
-
-      document.getElementById('toolViewBtnMicro').classList.toggle('active', tool === 'micro');
-      document.getElementById('toolViewBtnTopical').classList.toggle('active', tool === 'topical');
-      document.getElementById('toolViewBtnTele').classList.toggle('active', tool === 'tele');
-    }
-
-
-    function toggleStepCheck(num, checked) {
-      if (checked) {
-        completedSteps.add(num);
-        showToast("✓ Step " + num + " completed");
-      } else {
-        completedSteps.delete(num);
-      }
-      localStorage.setItem('qt_completed_steps', JSON.stringify(Array.from(completedSteps)));
-      updateCheckboxesUI();
-    }
-
-    function updateCheckboxesUI() {
-      for (let i = 1; i <= 7; i++) {
-        const chk = document.getElementById('checkStep_' + i);
-        if (chk) chk.checked = completedSteps.has(i);
-        const card = document.getElementById('stepCard_' + i);
-        if (card) {
-          if (completedSteps.has(i)) {
-            card.style.borderColor = '#34d399';
-          } else {
-            card.style.borderColor = 'var(--border)';
-          }
-        }
-      }
-    }
-
-    function resetStepChecklist() {
-      if (confirm("Reset step checklist for today?")) {
-        completedSteps.clear();
-        localStorage.removeItem('qt_completed_steps');
-        updateCheckboxesUI();
-        showToast("Checklist reset for today");
-      }
-    }
-
-
-    // ==========================================
-    // SEVEN STEPS PULL-OUT DRAWER
-    // ==========================================
     function openSevenStepsDrawer() {
       document.getElementById('sevenStepsDrawerBackdrop').classList.add('open');
       document.getElementById('sevenStepsDrawer').classList.add('open');
@@ -5595,28 +4668,6 @@ function togglePassageShelf() {
 // Topical Actions
     function appendTopicalJournal(text) {
       insertIntoActiveNote(text);
-      return;
-      const area = document.getElementById('topicalJournalText');
-      if (!area) return;
-      const curT = area.value;
-      area.value = (curT ? curT + (curT.endsWith("\n\n") ? "" : curT.endsWith("\n") ? "\n" : "\n\n") : "") + text + "\n";
-      localStorage.setItem(TOPICAL_DRAFT_KEY, area.value);
-      const prev = document.getElementById('topicalJournalPreview');
-      if (prev && prev.style.display !== 'none') {
-        prev.innerHTML = parseMarkdown(area.value);
-      }
-      if (typeof debounceCloudSync === 'function') debounceCloudSync();
-    }
-
-    function insertTopicalDim(title, inputId) {
-      const val = document.getElementById(inputId).value.trim();
-      if (!val) {
-        showToast("Please write your reflection first");
-        return;
-      }
-      const note = "\n### " + title + "\n- " + val;
-      appendTopicalJournal(note);
-      showToast("Added to Topical Notes");
     }
 
     function insertTopicalHeading() {
@@ -5632,36 +4683,6 @@ function togglePassageShelf() {
       const quote = "\n**" + currentScripture.reference + (currentScripture.version ? " (" + currentScripture.version.toUpperCase() + ")" : "") + "** — \"" + currentScripture.text.trim() + "\"\n";
       appendTopicalJournal(quote);
       showToast("Scripture added to Topical Notes");
-    }
-
-    function insertTopicalTag(tag) {
-      const area = document.getElementById('topicalJournalText');
-      if (!area) return;
-      const start = area.selectionStart;
-      area.value = area.value.substring(0, start) + tag + area.value.substring(start);
-      area.focus();
-      area.selectionEnd = start + tag.length;
-      localStorage.setItem(TOPICAL_DRAFT_KEY, area.value);
-    }
-
-    function switchTopicalEditorMode(mode) {
-      const txt = document.getElementById('topicalJournalText');
-      const prev = document.getElementById('topicalJournalPreview');
-      const bEdit = document.getElementById('tabTopicalEdit');
-      const bPrev = document.getElementById('tabTopicalPreview');
-      if (mode === 'preview') {
-        prev.innerHTML = parseMarkdown(txt.value);
-        txt.style.display = 'none';
-        prev.style.display = 'block';
-        bEdit.classList.remove('active');
-        bPrev.classList.add('active');
-      } else {
-        txt.style.display = 'block';
-        prev.style.display = 'none';
-        bEdit.classList.add('active');
-        bPrev.classList.remove('active');
-        txt.focus();
-      }
     }
 
     function resetTopicalStudy() {
@@ -5687,10 +4708,7 @@ function togglePassageShelf() {
       }
     }
 
-    function resetTopicalTemplate() {
-      resetTopicalStudy();
-    }
-function saveTopicalToArchive() {
+    function saveTopicalToArchive() {
       const val = document.getElementById('topicalJournalText').value.trim();
       if (!val) return;
       const topic = document.getElementById('topicalTopic')?.value || 'Topical Study';
@@ -5707,36 +4725,9 @@ function saveTopicalToArchive() {
       if (typeof pushToCloud === 'function') pushToCloud();
     }
 
-    function copyTopicalRevelation() {
-      const val = document.getElementById('topicalJournalText').value;
-      navigator.clipboard.writeText(val);
-      showToast("Topical note copied to clipboard");
-    }
-
-    function downloadTopicalMarkdown() {
-      const val = document.getElementById('topicalJournalText').value;
-      const topic = document.getElementById('topicalTopic')?.value || 'Topic';
-      const blob = new Blob([val], { type: 'text/markdown' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = "Topical_Study_" + topic.replace(/[s:]+/g, '_') + ".md";
-      a.click();
-    }
-
     // Telescopic Actions
     function appendTeleJournal(text) {
       insertIntoActiveNote(text);
-      return;
-      const area = document.getElementById('teleJournalText');
-      if (!area) return;
-      const curTe = area.value;
-      area.value = (curTe ? curTe + (curTe.endsWith("\n\n") ? "" : curTe.endsWith("\n") ? "\n" : "\n\n") : "") + text + "\n";
-      localStorage.setItem(TELE_DRAFT_KEY, area.value);
-      const prev = document.getElementById('teleJournalPreview');
-      if (prev && prev.style.display !== 'none') {
-        prev.innerHTML = parseMarkdown(area.value);
-      }
-      if (typeof debounceCloudSync === 'function') debounceCloudSync();
     }
 
     function insertTelescopicNotes() {
@@ -5753,36 +4744,6 @@ function saveTopicalToArchive() {
       const quote = "\n**" + currentScripture.reference + (currentScripture.version ? " (" + currentScripture.version.toUpperCase() + ")" : "") + "** — \"" + currentScripture.text.trim() + "\"\n";
       appendTeleJournal(quote);
       showToast("Scripture added to Telescopic Notes");
-    }
-
-    function insertTeleTag(tag) {
-      const area = document.getElementById('teleJournalText');
-      if (!area) return;
-      const start = area.selectionStart;
-      area.value = area.value.substring(0, start) + tag + area.value.substring(start);
-      area.focus();
-      area.selectionEnd = start + tag.length;
-      localStorage.setItem(TELE_DRAFT_KEY, area.value);
-    }
-
-    function switchTeleEditorMode(mode) {
-      const txt = document.getElementById('teleJournalText');
-      const prev = document.getElementById('teleJournalPreview');
-      const bEdit = document.getElementById('tabTeleEdit');
-      const bPrev = document.getElementById('tabTelePreview');
-      if (mode === 'preview') {
-        prev.innerHTML = parseMarkdown(txt.value);
-        txt.style.display = 'none';
-        prev.style.display = 'block';
-        bEdit.classList.remove('active');
-        bPrev.classList.add('active');
-      } else {
-        txt.style.display = 'block';
-        prev.style.display = 'none';
-        bEdit.classList.add('active');
-        bPrev.classList.remove('active');
-        txt.focus();
-      }
     }
 
     function resetTeleStudy() {
@@ -5803,10 +4764,7 @@ function saveTopicalToArchive() {
       }
     }
 
-    function resetTeleTemplate() {
-      resetTeleStudy();
-    }
-function saveTeleToArchive() {
+    function saveTeleToArchive() {
       const val = document.getElementById('teleJournalText').value.trim();
       if (!val) return;
       const book = document.getElementById('teleBook')?.value || 'Book Study';
@@ -5821,22 +4779,6 @@ function saveTeleToArchive() {
       renderArchive();
       showToast("Telescopic note saved to archive");
       if (typeof pushToCloud === 'function') pushToCloud();
-    }
-
-    function copyTeleRevelation() {
-      const val = document.getElementById('teleJournalText').value;
-      navigator.clipboard.writeText(val);
-      showToast("Telescopic note copied to clipboard");
-    }
-
-    function downloadTeleMarkdown() {
-      const val = document.getElementById('teleJournalText').value;
-      const book = document.getElementById('teleBook')?.value || 'Book';
-      const blob = new Blob([val], { type: 'text/markdown' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = "Telescopic_Study_" + book.replace(/[s:]+/g, '_') + ".md";
-      a.click();
     }
 
 </script>
