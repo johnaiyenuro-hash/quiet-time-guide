@@ -1179,6 +1179,83 @@
     .unified-editor:focus {
       border-color: var(--gold);
     }
+    .unified-editor::spelling-error {
+      text-decoration: underline wavy var(--danger);
+      background: rgba(248, 113, 113, 0.14);
+    }
+    .unified-editor .spell-err {
+      background: rgba(248, 113, 113, 0.18);
+      text-decoration: underline wavy var(--danger);
+      text-underline-offset: 3px;
+      border-radius: 3px;
+      cursor: pointer;
+      padding: 0 1px;
+    }
+    .format-btn.spell-active {
+      background: rgba(248, 113, 113, 0.16);
+      border-color: rgba(248, 113, 113, 0.5);
+      color: var(--danger);
+    }
+    .spell-popover {
+      position: fixed;
+      z-index: 220;
+      min-width: 195px;
+      max-width: 260px;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+      padding: 0.55rem;
+      display: none;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .spell-popover-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      padding: 0 0.25rem 0.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .spell-popover-word {
+      color: var(--danger);
+      font-weight: 600;
+    }
+    .spell-suggestion-btn {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 5px;
+      color: var(--text);
+      font-family: var(--font-ui);
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 0.35rem 0.55rem;
+      cursor: pointer;
+    }
+    .spell-suggestion-btn:hover,
+    .spell-suggestion-btn:focus-visible {
+      background: var(--surface);
+      border-color: var(--border-accent);
+      color: var(--gold);
+    }
+    .spell-ignore-btn {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: none;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-family: var(--font-ui);
+      font-size: 0.74rem;
+      padding: 0.4rem 0.5rem 0.15rem;
+      margin-top: 0.15rem;
+      cursor: pointer;
+    }
+    .spell-ignore-btn:hover { color: var(--text); }
     .unified-editor h1, .unified-editor h2, .unified-editor h3 {
       font-family: var(--font-head);
       color: var(--text);
@@ -2263,6 +2340,7 @@
     </div>
   </div>
 
+  <div id="spellPopover" class="spell-popover" role="dialog" aria-label="Spelling suggestions"></div>
   <div id="toast" role="status" aria-live="polite"></div>
 
   <script>
@@ -2401,7 +2479,8 @@
         '</div>' +
         '<div style="flex:1;"></div>' +
         '<button type="button" class="format-btn" onclick="execNoteFormat(\'h3\')" title="Turn the current line into a section title">Make Title</button>' +
-        '<button type="button" class="format-btn" onclick="execNoteFormat(\'list\')" title="Insert Bullet Point">• List</button>';
+        '<button type="button" class="format-btn" onclick="execNoteFormat(\'list\')" title="Insert Bullet Point">• List</button>' +
+        '<button type="button" class="format-btn" data-spell-btn onclick="toggleEditorSpellcheck()" title="Highlight misspelled words and show suggestions">✓ Spellcheck</button>';
       document.querySelectorAll('[data-format-bar]').forEach(bar => {
         bar.innerHTML = markup;
       });
@@ -2555,6 +2634,9 @@
       }
 
       updateTargetVerseOptions();
+      if (typeof syncMicroCatalystOnVerseChange === 'function') {
+        syncMicroCatalystOnVerseChange();
+      }
     }
 
     function getVerseRef(vNum) {
@@ -2570,6 +2652,9 @@
       activeTargetVerse = ref;
       updateTargetVerseOptions();
       showToast("Questions targeted to: " + ref);
+      if (typeof syncMicroCatalystOnVerseChange === 'function') {
+        syncMicroCatalystOnVerseChange();
+      }
     }
 
     function updateTargetVerseOptions() {
@@ -4997,6 +5082,7 @@ function openRestoreModal() {
     function htmlToMarkdown(html) {
       if (!html) return '';
       return html
+        .replace(/<span[^>]*class="[^"]*spell-err[^"]*"[^>]*>([\s\S]*?)<\/span>/gi, '$1')
         .replace(/<h3[^>]*>(.*?)<\/h3>/gi, '\n### $1\n')
         .replace(/<h2[^>]*>(.*?)<\/h2>/gi, '\n## $1\n')
         .replace(/<h1[^>]*>(.*?)<\/h1>/gi, '\n# $1\n')
@@ -5584,6 +5670,7 @@ function closeModal() {
         closeRestoreModal();
         closeModal();
         closeShareMenu();
+        closeSpellPopover();
       }
     });
 
@@ -5964,10 +6051,52 @@ function closeModal() {
       box.style.display = 'block';
     }
 
+    let microCatalystReqSeq = 0;
+    let lastMicroCatalystKey = '';
+
+    function getActiveMicroStudyPassage() {
+      const baseRef = (currentScripture && currentScripture.reference) || '';
+      const baseVer = ((currentScripture && currentScripture.version) || 'KJV').toUpperCase();
+      const baseText = (currentScripture && currentScripture.text) || '';
+      if (currentScripture && Array.isArray(currentScripture.verses) && currentScripture.verses.length > 1 && activeTargetVerse && activeTargetVerse !== baseRef) {
+        const matched = currentScripture.verses.find(v => getVerseRef(v.verse) === activeTargetVerse);
+        if (matched && matched.text) {
+          return {
+            reference: activeTargetVerse,
+            version: baseVer,
+            text: matched.text.trim().replace(/\s+/g, ' ')
+          };
+        }
+      }
+      return {
+        reference: baseRef,
+        version: baseVer,
+        text: baseText
+      };
+    }
+
+    function syncMicroCatalystOnVerseChange() {
+      const box = document.getElementById('microCatalystBox');
+      if (!box) return;
+      const passage = getActiveMicroStudyPassage();
+      const nextKey = passage.reference + '|' + passage.version;
+      const isVisible = box.style.display !== 'none' && box.innerHTML.trim() !== '';
+      if (!isVisible) {
+        lastMicroCatalystKey = nextKey;
+        return;
+      }
+      if (nextKey !== lastMicroCatalystKey) {
+        lastMicroCatalystKey = nextKey;
+        requestMicroCatalyst();
+      }
+    }
+
     function renderMicroCatalystForActive() {
       const box = document.getElementById('microCatalystBox');
       if (!box) return;
-      const cacheKey = (currentScripture.reference || '') + '|' + (currentScripture.version || '');
+      const passage = getActiveMicroStudyPassage();
+      const cacheKey = passage.reference + '|' + passage.version;
+      lastMicroCatalystKey = cacheKey;
       const cached = catalystCache.micro[cacheKey];
       if (!cached) {
         box.style.display = 'none';
@@ -5981,30 +6110,480 @@ function closeModal() {
     async function requestMicroCatalyst() {
       const box = document.getElementById('microCatalystBox');
       if (!box) return;
-      if (!currentScripture || !currentScripture.reference || !currentScripture.text) {
+      const passage = getActiveMicroStudyPassage();
+      if (!passage.reference || !passage.text) {
         showToast('Load a scripture passage first');
         return;
       }
-      const cacheKey = currentScripture.reference + '|' + (currentScripture.version || '');
+      const cacheKey = passage.reference + '|' + passage.version;
+      lastMicroCatalystKey = cacheKey;
       if (catalystCache.micro[cacheKey]) {
         renderMicroCatalystForActive();
         return;
       }
 
-      box.innerHTML = '<div class="catalyst-label">✨ Getting a study hint...</div>';
+      const reqId = ++microCatalystReqSeq;
+      box.innerHTML = '<div class="catalyst-label">✨ Getting a study hint for ' + escapeCatalystHtml(passage.reference) + '...</div>';
       box.style.display = 'block';
       try {
         const data = await fetchCatalyst({
           mode: 'microscopic',
-          reference: currentScripture.reference,
-          version: (currentScripture.version || 'KJV').toUpperCase(),
-          text: currentScripture.text
+          reference: passage.reference,
+          version: passage.version,
+          text: passage.text
         });
         catalystCache.micro[cacheKey] = data;
+        if (reqId !== microCatalystReqSeq) return;
         renderMicroCatalystForActive();
       } catch (err) {
+        if (reqId !== microCatalystReqSeq) return;
         renderCatalystError('microCatalystBox', err.message);
       }
+    }
+
+    // ==========================================
+    // PRIVATE LOCAL SPELLCHECK HIGHLIGHTER
+    // ==========================================
+    const CUSTOM_DICT_KEY = 'qt_custom_dict_v1';
+    const COMMON_TYPO_SUGGESTIONS = {
+      mispelt: ['misspelled', 'misspelt'],
+      mispelled: ['misspelled'],
+      beleive: ['believe'],
+      beleif: ['belief'],
+      recieve: ['receive'],
+      recieved: ['received'],
+      teh: ['the'],
+      hte: ['the'],
+      adn: ['and'],
+      becuase: ['because'],
+      definately: ['definitely'],
+      seperate: ['separate'],
+      occured: ['occurred'],
+      untill: ['until'],
+      wich: ['which'],
+      thier: ['their'],
+      freind: ['friend'],
+      peice: ['piece'],
+      wierd: ['weird'],
+      studing: ['studying'],
+      prayre: ['prayer'],
+      scriptue: ['scripture'],
+      revelaton: ['revelation'],
+      rightous: ['righteous'],
+      rightousness: ['righteousness'],
+      obediance: ['obedience'],
+      perseverence: ['perseverance'],
+      temptaton: ['temptation'],
+      salavtion: ['salvation'],
+      gosepl: ['gospel'],
+      disicple: ['disciple'],
+      apostel: ['apostle'],
+      covenent: ['covenant'],
+      promis: ['promise'],
+      strenght: ['strength'],
+      patiance: ['patience'],
+      humilty: ['humility'],
+      grattitude: ['gratitude'],
+      worshp: ['worship'],
+      meditiate: ['meditate'],
+      gracefull: ['graceful'],
+      faithfull: ['faithful'],
+      thankfull: ['thankful'],
+      powerfull: ['powerful'],
+      peacefull: ['peaceful'],
+      forgivness: ['forgiveness'],
+      forgiveing: ['forgiving'],
+      spritual: ['spiritual'],
+      spirtual: ['spiritual'],
+      devotinal: ['devotional'],
+      refelction: ['reflection'],
+      helo: ['hello'],
+      wrld: ['world'],
+      todya: ['today'],
+      tomorow: ['tomorrow'],
+      alwasy: ['always'],
+      truely: ['truly'],
+      realy: ['really'],
+      neccessary: ['necessary'],
+      accomodate: ['accommodate'],
+      goverment: ['government'],
+      enviroment: ['environment'],
+      knowlege: ['knowledge'],
+      wisdon: ['wisdom'],
+      chruch: ['church'],
+      bibel: ['bible'],
+      jeuss: ['jesus'],
+      chirst: ['christ'],
+      lordd: ['lord']
+    };
+
+    let spellDictSet = null;
+    let spellDictPromise = null;
+    let spellcheckActive = false;
+    let activeSpellSpan = null;
+
+    function getCustomDictionarySet() {
+      try {
+        const arr = JSON.parse(localStorage.getItem(CUSTOM_DICT_KEY) || '[]');
+        return new Set(Array.isArray(arr) ? arr.map(w => String(w).toLowerCase()) : []);
+      } catch {
+        return new Set();
+      }
+    }
+
+    function addWordToCustomDictionary(word) {
+      const clean = String(word || '').toLowerCase().trim();
+      if (!clean) return;
+      const set = getCustomDictionarySet();
+      set.add(clean);
+      try {
+        localStorage.setItem(CUSTOM_DICT_KEY, JSON.stringify([...set]));
+      } catch (e) {}
+    }
+
+    async function loadSpellDictionary() {
+      if (spellDictSet) return spellDictSet;
+      if (spellDictPromise) return spellDictPromise;
+      spellDictPromise = (async () => {
+        const set = new Set();
+        try {
+          if (typeof fetch === 'function' && /^https?:$/.test(window.location.protocol)) {
+            const res = await fetch('/config/en-words.txt', { cache: 'force-cache' });
+            if (res.ok) {
+              const txt = await res.text();
+              txt.split(/\r?\n/).forEach(w => {
+                if (w) set.add(w);
+              });
+            }
+          }
+        } catch (e) {
+          console.warn('Spellcheck dictionary load notice:', e);
+        }
+        Object.keys(OFFLINE_BIBLE_DICTIONARY || {}).forEach(w => set.add(w.toLowerCase()));
+        (BIBLE_BOOKS || []).forEach(b => {
+          b.toLowerCase().split(/\s+/).forEach(part => { if (part.length >= 2) set.add(part); });
+        });
+        spellDictSet = set;
+        return set;
+      })();
+      return spellDictPromise;
+    }
+
+    function getActiveScriptureWordSet() {
+      const set = new Set();
+      const raw = (currentScripture && currentScripture.text) || '';
+      raw.toLowerCase().replace(/[’‘]/g, "'").split(/[^a-z']+/).forEach(w => {
+        if (w.length >= 2) set.add(w);
+      });
+      return set;
+    }
+
+    function isWordSpelledCorrectly(word, dictSet, customSet, verseSet) {
+      if (!word) return true;
+      const normalized = word.replace(/[’‘]/g, "'");
+      if (/^[A-Z]{2,}$/.test(normalized)) return true; // Acronyms like KJV, ESV, NIV
+      if (/\d/.test(normalized)) return true;
+      const lower = normalized.toLowerCase().replace(/^'+|'+$/g, '');
+      if (lower.length <= 1) return true;
+      if (COMMON_TYPO_SUGGESTIONS[lower]) return false;
+      if (customSet.has(lower) || verseSet.has(lower)) return true;
+      if (!dictSet || dictSet.size === 0) return true; // Fallback: only flag known typos if offline without dict
+      if (dictSet.has(lower)) return true;
+
+      // Possessives & contractions
+      if (lower.endsWith("'s") && dictSet.has(lower.slice(0, -2))) return true;
+      if (lower.endsWith("s'") && dictSet.has(lower.slice(0, -1))) return true;
+
+      // Common British <-> American variants
+      const variantCandidates = [];
+      if (lower.includes('our')) variantCandidates.push(lower.replace(/our/g, 'or'));
+      if (lower.includes('ise')) variantCandidates.push(lower.replace(/ise/g, 'ize'));
+      if (lower.includes('is')) variantCandidates.push(lower.replace(/is(ed|ing|ation|ations|er|ers)$/g, 'iz$1'));
+      if (lower.endsWith('re')) variantCandidates.push(lower.slice(0, -2) + 'er');
+      if (lower.endsWith('lling')) variantCandidates.push(lower.slice(0, -5) + 'ling');
+      if (lower.endsWith('lled')) variantCandidates.push(lower.slice(0, -4) + 'led');
+      for (const vc of variantCandidates) {
+        if (dictSet.has(vc)) return true;
+      }
+
+      // Standard English & KJV inflectional stemming
+      const stems = [];
+      if (lower.endsWith('ies') && lower.length > 4) stems.push(lower.slice(0, -3) + 'y');
+      if (lower.endsWith('es') && lower.length > 3) stems.push(lower.slice(0, -2), lower.slice(0, -1));
+      if (lower.endsWith('s') && lower.length > 2) stems.push(lower.slice(0, -1));
+      if (lower.endsWith('ied') && lower.length > 4) stems.push(lower.slice(0, -3) + 'y');
+      if (lower.endsWith('ed') && lower.length > 3) {
+        const base = lower.slice(0, -2);
+        stems.push(base, base + 'e');
+        if (base.length >= 3 && base[base.length - 1] === base[base.length - 2]) stems.push(base.slice(0, -1));
+      }
+      if (lower.endsWith('ing') && lower.length > 4) {
+        const base = lower.slice(0, -3);
+        stems.push(base, base + 'e');
+        if (base.length >= 3 && base[base.length - 1] === base[base.length - 2]) stems.push(base.slice(0, -1));
+      }
+      if (lower.endsWith('ily') && lower.length > 4) stems.push(lower.slice(0, -3) + 'y');
+      if (lower.endsWith('ly') && lower.length > 4) stems.push(lower.slice(0, -2), lower.slice(0, -2) + 'e');
+      if (lower.endsWith('ier') && lower.length > 4) stems.push(lower.slice(0, -3) + 'y');
+      if (lower.endsWith('iest') && lower.length > 5) stems.push(lower.slice(0, -4) + 'y');
+      if (lower.endsWith('er') && lower.length > 4) {
+        const base = lower.slice(0, -2);
+        stems.push(base, base + 'e');
+        if (base.length >= 3 && base[base.length - 1] === base[base.length - 2]) stems.push(base.slice(0, -1));
+      }
+      if (lower.endsWith('est') && lower.length > 4) {
+        const base = lower.slice(0, -3);
+        stems.push(base, base + 'e');
+      }
+      if (lower.endsWith('eth') && lower.length > 4) stems.push(lower.slice(0, -3), lower.slice(0, -3) + 'e');
+      if (lower.endsWith('ness') && lower.length > 5) stems.push(lower.slice(0, -4), lower.slice(0, -4).replace(/i$/, 'y'));
+      if (lower.endsWith('ment') && lower.length > 5) stems.push(lower.slice(0, -4));
+      if (lower.endsWith('ful') && lower.length > 4) stems.push(lower.slice(0, -3), lower.slice(0, -3).replace(/i$/, 'y'));
+      if (lower.endsWith('less') && lower.length > 5) stems.push(lower.slice(0, -4));
+      if (lower.endsWith('able') && lower.length > 5) stems.push(lower.slice(0, -4), lower.slice(0, -4) + 'e');
+      if (lower.startsWith('un') && lower.length > 4) stems.push(lower.slice(2));
+      if (lower.startsWith('re') && lower.length > 4) stems.push(lower.slice(2));
+
+      for (const st of stems) {
+        if (st && dictSet.has(st)) return true;
+      }
+      return false;
+    }
+
+    function getSpellSuggestions(word, dictSet) {
+      const lower = word.replace(/[’‘]/g, "'").toLowerCase().replace(/^'+|'+$/g, '');
+      const results = [];
+      const pushUnique = (w) => {
+        if (!w || results.includes(w)) return;
+        results.push(w);
+      };
+
+      if (COMMON_TYPO_SUGGESTIONS[lower]) {
+        COMMON_TYPO_SUGGESTIONS[lower].forEach(pushUnique);
+      }
+
+      if (dictSet && dictSet.size > 0 && results.length < 4) {
+        const letters = 'abcdefghijklmnopqrstuvwxyz';
+        const splits = [];
+        for (let i = 0; i <= lower.length; i++) {
+          splits.push([lower.slice(0, i), lower.slice(i)]);
+        }
+        const edits1 = new Set();
+        for (const [L, R] of splits) {
+          if (R) edits1.add(L + R.slice(1)); // delete
+          if (R.length > 1) edits1.add(L + R[1] + R[0] + R.slice(2)); // transpose
+          if (R) {
+            for (const c of letters) edits1.add(L + c + R.slice(1)); // replace
+          }
+          for (const c of letters) edits1.add(L + c + R); // insert
+        }
+        for (const cand of edits1) {
+          if (dictSet.has(cand) && !COMMON_TYPO_SUGGESTIONS[cand]) {
+            pushUnique(cand);
+            if (results.length >= 4) break;
+          }
+        }
+      }
+
+      // Preserve original capitalization (Title Case or ALL CAPS)
+      const isTitle = /^[A-Z][a-z]/.test(word);
+      const isUpper = word.length > 1 && word === word.toUpperCase();
+      return results.slice(0, 4).map(s => {
+        if (isUpper) return s.toUpperCase();
+        if (isTitle) return s.charAt(0).toUpperCase() + s.slice(1);
+        return s;
+      });
+    }
+
+    function clearSpellHighlights(editor) {
+      if (!editor) return;
+      editor.querySelectorAll('span.spell-err').forEach(span => {
+        const parent = span.parentNode;
+        if (!parent) return;
+        while (span.firstChild) parent.insertBefore(span.firstChild, span);
+        parent.removeChild(span);
+      });
+      editor.normalize();
+    }
+
+    function updateSpellcheckButtonsState(active) {
+      document.querySelectorAll('[data-spell-btn]').forEach(btn => {
+        btn.classList.toggle('spell-active', !!active);
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+    }
+
+    function closeSpellPopover() {
+      const pop = document.getElementById('spellPopover');
+      if (pop) pop.style.display = 'none';
+      activeSpellSpan = null;
+    }
+
+    function openSpellPopoverForSpan(span) {
+      const pop = document.getElementById('spellPopover');
+      if (!pop || !span) return;
+      activeSpellSpan = span;
+      const word = span.textContent || '';
+      const suggestions = (span.dataset.suggestions || '').split('|').filter(Boolean);
+
+      let html =
+        '<div class="spell-popover-head">' +
+          '<span>Misspelled: <span class="spell-popover-word">' + escapeCatalystHtml(word) + '</span></span>' +
+          '<button type="button" class="btn btn-sm btn-subtle" style="padding:0.05rem 0.3rem; min-height:auto;" aria-label="Close" onclick="closeSpellPopover()">✕</button>' +
+        '</div>';
+
+      if (suggestions.length > 0) {
+        suggestions.forEach(s => {
+          html += '<button type="button" class="spell-suggestion-btn" data-replace="' + escapeCatalystHtml(s) + '">' + escapeCatalystHtml(s) + '</button>';
+        });
+      } else {
+        html += '<div class="meta-hint" style="padding:0.25rem 0.45rem;">No quick suggestion — edit word directly or ignore.</div>';
+      }
+
+      html += '<button type="button" class="spell-ignore-btn" data-ignore="' + escapeCatalystHtml(word) + '">+ Ignore &amp; Add to Dictionary</button>';
+
+      pop.innerHTML = html;
+      pop.style.display = 'flex';
+
+      const rect = span.getBoundingClientRect();
+      const top = Math.min(window.innerHeight - 180, rect.bottom + 6);
+      const left = Math.max(12, Math.min(window.innerWidth - 240, rect.left));
+      pop.style.top = Math.max(60, top) + 'px';
+      pop.style.left = left + 'px';
+
+      pop.querySelectorAll('[data-replace]').forEach(btn => {
+        btn.onclick = () => {
+          const replacement = btn.getAttribute('data-replace');
+          if (activeSpellSpan && activeSpellSpan.parentNode) {
+            const ed = activeSpellSpan.closest('.unified-editor');
+            activeSpellSpan.replaceWith(document.createTextNode(replacement));
+            if (ed) {
+              ed.normalize();
+              syncEditorToStorage(ed);
+            }
+          }
+          closeSpellPopover();
+        };
+      });
+
+      const ignBtn = pop.querySelector('[data-ignore]');
+      if (ignBtn) {
+        ignBtn.onclick = () => {
+          const w = ignBtn.getAttribute('data-ignore');
+          addWordToCustomDictionary(w);
+          const ed = activeSpellSpan ? activeSpellSpan.closest('.unified-editor') : null;
+          if (ed) {
+            const targetLower = w.toLowerCase();
+            ed.querySelectorAll('span.spell-err').forEach(sp => {
+              if ((sp.textContent || '').toLowerCase() === targetLower && sp.parentNode) {
+                sp.replaceWith(document.createTextNode(sp.textContent));
+              }
+            });
+            ed.normalize();
+          }
+          closeSpellPopover();
+          showToast('Added "' + w + '" to your personal dictionary');
+        };
+      }
+    }
+
+    async function runSpellcheckOnEditor(editor, silent = false) {
+      if (!editor) return 0;
+      clearSpellHighlights(editor);
+      closeSpellPopover();
+
+      const dictSet = await loadSpellDictionary();
+      const customSet = getCustomDictionarySet();
+      const verseSet = getActiveScriptureWordSet();
+
+      const walker = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT, null);
+      const textNodes = [];
+      let n;
+      while ((n = walker.nextNode())) {
+        if (n.nodeValue && /[A-Za-z]{2,}/.test(n.nodeValue)) {
+          textNodes.push(n);
+        }
+      }
+
+      let errorCount = 0;
+      const wordRegex = /[A-Za-z]+(?:['’][A-Za-z]+)?/g;
+
+      textNodes.forEach(textNode => {
+        const text = textNode.nodeValue;
+        let lastIdx = 0;
+        let match;
+        let frag = null;
+        wordRegex.lastIndex = 0;
+
+        while ((match = wordRegex.exec(text)) !== null) {
+          const word = match[0];
+          if (!isWordSpelledCorrectly(word, dictSet, customSet, verseSet)) {
+            if (!frag) frag = document.createDocumentFragment();
+            if (match.index > lastIdx) {
+              frag.appendChild(document.createTextNode(text.slice(lastIdx, match.index)));
+            }
+            const span = document.createElement('span');
+            span.className = 'spell-err';
+            span.textContent = word;
+            span.title = 'Click for spelling suggestions';
+            const sugg = getSpellSuggestions(word, dictSet);
+            if (sugg.length) span.dataset.suggestions = sugg.join('|');
+            frag.appendChild(span);
+            lastIdx = match.index + word.length;
+            errorCount++;
+          }
+        }
+
+        if (frag) {
+          if (lastIdx < text.length) {
+            frag.appendChild(document.createTextNode(text.slice(lastIdx)));
+          }
+          textNode.parentNode.replaceChild(frag, textNode);
+        }
+      });
+
+      if (!silent) {
+        if (errorCount === 0) {
+          showToast('✓ No spelling issues found');
+        } else {
+          showToast('Highlighted ' + errorCount + ' misspelled ' + (errorCount === 1 ? 'word' : 'words') + ' — click any red underline to fix');
+        }
+      }
+      return errorCount;
+    }
+
+    async function toggleEditorSpellcheck() {
+      const ctx = getActiveNoteContext();
+      const editor = ctx && ctx.editor ? ctx.editor : document.getElementById('journalEditor');
+      if (!editor) return;
+
+      if (spellcheckActive) {
+        spellcheckActive = false;
+        document.querySelectorAll('.unified-editor').forEach(clearSpellHighlights);
+        closeSpellPopover();
+        updateSpellcheckButtonsState(false);
+        showToast('Spellcheck highlights cleared');
+        return;
+      }
+
+      spellcheckActive = true;
+      updateSpellcheckButtonsState(true);
+      await runSpellcheckOnEditor(editor, false);
+    }
+
+    if (typeof document !== 'undefined') {
+      document.addEventListener('click', (e) => {
+        const errSpan = e.target && e.target.closest ? e.target.closest('span.spell-err') : null;
+        if (errSpan) {
+          e.stopPropagation();
+          openSpellPopoverForSpan(errSpan);
+          return;
+        }
+        const pop = document.getElementById('spellPopover');
+        if (pop && pop.style.display !== 'none' && !pop.contains(e.target)) {
+          closeSpellPopover();
+        }
+      });
     }
 
     function renderTopicalCatalystForActive() {
