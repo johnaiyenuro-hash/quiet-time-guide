@@ -398,6 +398,15 @@
       border-color: var(--border-accent);
       color: var(--gold);
     }
+    .verse-chip.from-notes {
+      border-color: var(--border-accent);
+      color: var(--text);
+      background: var(--gold-soft);
+    }
+    .verse-chip.from-notes:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
     .verse-chip.active {
       background: var(--gold);
       border-color: var(--gold);
@@ -1885,7 +1894,7 @@
           </select>
           <button type="button" class="btn btn-sm" onclick="pasteScripture()" title="Paste any passage from clipboard">📋 Paste</button>
         </div>
-        <div class="passage-quick-row">
+        <div id="quickPassagesRow" class="passage-quick-row">
           <span class="meta-label">Quick Passages:</span>
           <button type="button" class="verse-chip" onclick="loadQuickPassage('2 Timothy 2:15')">2 Tim 2:15</button>
           <button type="button" class="verse-chip" onclick="loadQuickPassage('Psalm 23:1-3')">Psalm 23:1-3</button>
@@ -2585,6 +2594,7 @@
       renderQuestions();
       renderTopical();
       loadSavedJournal();
+      renderQuickPassages();
       renderArchive();
       hydrateExternalConfigs();
     }
@@ -2634,6 +2644,9 @@
       }
 
       updateTargetVerseOptions();
+      if (typeof renderQuickPassages === 'function') {
+        renderQuickPassages();
+      }
       if (typeof syncMicroCatalystOnVerseChange === 'function') {
         syncMicroCatalystOnVerseChange();
       }
@@ -3403,11 +3416,13 @@
       localStorage.setItem(key, md);
 
       if (type === 'micro') {
+        if (typeof updateTargetVerseOptions === 'function') updateTargetVerseOptions();
         if (typeof debounceSnapshot === 'function') debounceSnapshot(md);
         if (typeof debounceCloudSync === 'function') debounceCloudSync();
       } else {
         if (typeof debounceCloudSync === 'function') debounceCloudSync();
       }
+      if (typeof renderQuickPassages === 'function') renderQuickPassages();
     }
 
     function initKeyboardFormatShortcuts() {
@@ -3566,6 +3581,203 @@
       if (!el) return;
       el.textContent = msg || '';
       el.className = 'passage-status' + (state ? ' ' + state : '');
+    }
+
+    const DEFAULT_QUICK_PASSAGES = [
+      { ref: '2 Timothy 2:15', label: '2 Tim 2:15' },
+      { ref: 'Psalm 23:1-3', label: 'Psalm 23:1-3' },
+      { ref: 'Romans 8:28', label: 'Romans 8:28' },
+      { ref: 'Proverbs 3:5-6', label: 'Prov 3:5-6' },
+      { ref: 'Philippians 4:6-7', label: 'Phil 4:6-7' }
+    ];
+
+    let _quickPassageBookLookup = null;
+    let _quickPassageInlineRegex = null;
+    let _quickPassageHeaderBookRegex = null;
+
+    function getQuickPassageMatchers() {
+      if (_quickPassageBookLookup && _quickPassageInlineRegex && _quickPassageHeaderBookRegex) {
+        return {
+          lookup: _quickPassageBookLookup,
+          inlineRegex: _quickPassageInlineRegex,
+          headerBookRegex: _quickPassageHeaderBookRegex
+        };
+      }
+
+      const slugToBook = {};
+      (BIBLE_BOOKS || []).forEach(book => {
+        const lower = book.toLowerCase();
+        const slug = BOOK_SLUG_MAP[lower] || lower.replace(/\s+/g, '_');
+        slugToBook[slug] = book;
+      });
+
+      const lookup = {};
+      Object.entries(BOOK_SLUG_MAP || {}).forEach(([alias, slug]) => {
+        if (slugToBook[slug]) lookup[alias.toLowerCase()] = slugToBook[slug];
+      });
+      (BIBLE_BOOKS || []).forEach(book => {
+        lookup[book.toLowerCase()] = book;
+      });
+
+      const extraAliases = {
+        'pslm': 'Psalm', 'psalms': 'Psalm', 'pro': 'Proverbs', 'eccl': 'Ecclesiastes',
+        'sos': 'Song of Solomon', 'sng': 'Song of Solomon', 'mt': 'Matthew',
+        'mrk': 'Mark', 'luk': 'Luke', 'jhn': 'John', '1co': '1 Corinthians',
+        '2co': '2 Corinthians', '1th': '1 Thessalonians', '2th': '2 Thessalonians',
+        '1ti': '1 Timothy', '2ti': '2 Timothy', 'phm': 'Philemon', 'phlm': 'Philemon',
+        '1pe': '1 Peter', '2pe': '2 Peter', 'jm': 'James', 'revelations': 'Revelation'
+      };
+      Object.entries(extraAliases).forEach(([alias, book]) => {
+        lookup[alias] = book;
+      });
+
+      const escapedAliases = Object.keys(lookup)
+        .sort((a, b) => b.length - a.length)
+        .map(a => a.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+'));
+      const bookAlternation = escapedAliases.join('|');
+
+      _quickPassageBookLookup = lookup;
+      _quickPassageInlineRegex = new RegExp(
+        '(?:^|[^A-Za-z0-9])(' + bookAlternation + ')\\.?\\s+(\\d{1,3})\\s*:\\s*(\\d{1,3})(?:\\s*[-–—]\\s*(\\d{1,3}))?(?![0-9])',
+        'gi'
+      );
+      _quickPassageHeaderBookRegex = new RegExp(
+        '^(' + bookAlternation + ')\\.?\\s+(\\d{1,3})(?:\\s*[:.]\\s*(\\d{1,3})(?:\\s*[-–—]\\s*(\\d{1,3}))?)?$',
+        'i'
+      );
+
+      return {
+        lookup: _quickPassageBookLookup,
+        inlineRegex: _quickPassageInlineRegex,
+        headerBookRegex: _quickPassageHeaderBookRegex
+      };
+    }
+
+    function normalizeBibleRefForChip(rawRef) {
+      if (!rawRef || typeof rawRef !== 'string') return '';
+      const { lookup, headerBookRegex } = getQuickPassageMatchers();
+      const cleaned = rawRef
+        .replace(/^([1-3])([A-Za-z])/, '$1 $2')
+        .replace(/\s+/g, ' ')
+        .trim();
+      const m = cleaned.match(headerBookRegex);
+      if (!m) return '';
+      const rawBookKey = m[1].toLowerCase().replace(/\s+/g, ' ').trim();
+      const book = lookup[rawBookKey] || lookup[rawBookKey.replace(/\s+/g, '')];
+      if (!book) return '';
+      const chapter = m[2];
+      const startVerse = m[3];
+      const endVerse = m[4];
+      return book + ' ' + chapter + (startVerse ? ':' + startVerse + (endVerse ? '-' + endVerse : '') : '');
+    }
+
+    function extractVerseRefsFromText(text) {
+      if (!text || typeof text !== 'string') return [];
+      const { lookup, inlineRegex } = getQuickPassageMatchers();
+      const found = [];
+      const seen = new Set();
+
+      const addRef = (canonical) => {
+        if (!canonical) return;
+        const key = canonical.toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          found.push(canonical);
+        }
+      };
+
+      // 1. Explicit inserted scripture headers (also supports chapter-only refs like "Psalm 23")
+      const headerPatterns = [
+        /(?:>\s*)?\*\*([^*\n]+?)\s*\([^()\n]{2,20}\)\*\*/g,
+        /^#{2,3}\s+(?:📖\s*|Passage Study:\s*|Microscopic Study:\s*)([^\n]+)/gim
+      ];
+      headerPatterns.forEach(pat => {
+        let hm;
+        while ((hm = pat.exec(text)) !== null) {
+          const candidate = hm[1].replace(/\s*\([^)]*\)\s*$/, '').trim();
+          const norm = normalizeBibleRefForChip(candidate);
+          if (norm) addRef(norm);
+        }
+      });
+
+      // 2. Inline verse references anywhere in the notes (e.g. "John 3:16", "1 Cor. 13:4-7")
+      inlineRegex.lastIndex = 0;
+      let im;
+      while ((im = inlineRegex.exec(text)) !== null) {
+        const rawBookKey = im[1].toLowerCase().replace(/\s+/g, ' ').trim();
+        const book = lookup[rawBookKey] || lookup[rawBookKey.replace(/\s+/g, '')];
+        if (!book) continue;
+        const chapter = im[2];
+        const startVerse = im[3];
+        const endVerse = im[4];
+        addRef(book + ' ' + chapter + ':' + startVerse + (endVerse ? '-' + endVerse : ''));
+      }
+
+      return found;
+    }
+
+    function getActiveNotesTextForQuickPassages() {
+      const ctx = typeof getActiveNoteContext === 'function' ? getActiveNoteContext() : null;
+      if (ctx && ctx.area) return ctx.area.value || '';
+      return document.getElementById('journalText')?.value || '';
+    }
+
+    function renderQuickPassages() {
+      const row = document.getElementById('quickPassagesRow');
+      if (!row) return;
+
+      const notesText = getActiveNotesTextForQuickPassages();
+      const noteRefs = extractVerseRefsFromText(notesText);
+      const noteRefSet = new Set(noteRefs.map(r => r.toLowerCase()));
+
+      const items = [];
+      const seen = new Set();
+
+      DEFAULT_QUICK_PASSAGES.forEach(item => {
+        const key = item.ref.toLowerCase();
+        seen.add(key);
+        items.push({
+          ref: item.ref,
+          label: item.label,
+          fromNotes: noteRefSet.has(key)
+        });
+      });
+
+      noteRefs.forEach(ref => {
+        const key = ref.toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          items.push({
+            ref,
+            label: ref,
+            fromNotes: true
+          });
+        }
+      });
+
+      const activeNorm = normalizeBibleRefForChip(currentScripture?.reference || '').toLowerCase();
+      const sig = activeNorm + '||' + items.map(i => i.ref + (i.fromNotes ? ':n' : '')).join('|');
+      if (row.dataset.lastSignature === sig) return;
+      row.dataset.lastSignature = sig;
+
+      row.innerHTML = '';
+      const labelEl = document.createElement('span');
+      labelEl.className = 'meta-label';
+      labelEl.textContent = 'Quick Passages:';
+      row.appendChild(labelEl);
+
+      items.forEach(item => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        const isActive = activeNorm && item.ref.toLowerCase() === activeNorm;
+        btn.className = 'verse-chip' + (item.fromNotes ? ' from-notes' : '') + (isActive ? ' active' : '');
+        btn.textContent = item.label;
+        btn.title = item.fromNotes
+          ? 'From your notes — click to load ' + item.ref
+          : 'Click to load ' + item.ref;
+        btn.onclick = () => loadQuickPassage(item.ref);
+        row.appendChild(btn);
+      });
     }
 
     function loadQuickPassage(ref) {
@@ -4405,6 +4617,8 @@
           renderVerseDisplay();
         }
       }
+
+      if (typeof renderQuickPassages === 'function') renderQuickPassages();
     }
 
     // Migrate old v1 storage into v2 storage for the current device
@@ -4806,6 +5020,8 @@ function getDefaultTemplate() {
         if (area) area.value = snaps[idx].text;
         if (editor) editor.innerHTML = parseMarkdown(snaps[idx].text);
         localStorage.setItem(DRAFT_KEY, snaps[idx].text);
+        if (typeof updateTargetVerseOptions === 'function') updateTargetVerseOptions();
+        if (typeof renderQuickPassages === 'function') renderQuickPassages();
 
         if (typeof debounceCloudSync === 'function') debounceCloudSync();
         showToast("Restored autosave from " + snaps[idx].time);
@@ -4839,6 +5055,8 @@ function resetMicroStudy() {
 
         displayActiveQuestion(0);
         renderQuestions();
+        if (typeof updateTargetVerseOptions === 'function') updateTargetVerseOptions();
+        if (typeof renderQuickPassages === 'function') renderQuickPassages();
 
         // Stamp local sync time immediately so focus/reload never resurrects old cloud data
         localStorage.setItem(SYNC_TIME_STORAGE, String(Date.now()));
@@ -5228,6 +5446,8 @@ function closeModal() {
 
       const BOLD_OPEN = '\uE000';
       const BOLD_CLOSE = '\uE001';
+      const HL_OPEN = '\uE002';
+      const HL_CLOSE = '\uE003';
 
       const wrapWhatsApp = (marker, raw) => {
         const cleaned = raw.trim();
@@ -5235,6 +5455,17 @@ function closeModal() {
         const lead = raw.match(/^\s*/)[0];
         const trail = raw.match(/\s*$/)[0];
         return lead + marker + cleaned + marker + trail;
+      };
+
+      const wrapHighlightPill = (raw) => {
+        const innerClean = raw
+          .replace(/<\/?(?:u|ins|mark|b|strong|i|em)[^>]*>/gi, '')
+          .replace(/\*\*|\*|`/g, '');
+        const trimmed = innerClean.trim();
+        if (!trimmed) return '';
+        const lead = raw.match(/^\s*/)[0];
+        const trail = raw.match(/\s*$/)[0];
+        return lead + HL_OPEN + trimmed + HL_CLOSE + trail;
       };
 
       const lines = md
@@ -5255,22 +5486,23 @@ function closeModal() {
           return '──────────';
         }
 
-        // Strip QTAPP underline and highlight markers cleanly
+        // Convert QTAPP highlights into WhatsApp shaded pills (`text`) via placeholders
         line = line
           .replace(/<\/?(?:u|ins)>/gi, '')
-          .replace(/==\[(?:gold|green|blue|rose|amber)\](.*?)==/gi, '$1')
-          .replace(/==(.*?)==/g, '$1')
+          .replace(/==\[(?:gold|green|blue|rose|amber)\](.*?)==/gi, (_, inner) => wrapHighlightPill(inner))
+          .replace(/==(.*?)==/g, (_, inner) => wrapHighlightPill(inner))
+          .replace(/<mark[^>]*>([\s\S]*?)<\/mark>/gi, (_, inner) => wrapHighlightPill(inner))
           .replace(/<\/?mark[^>]*>/gi, '');
 
-        // Headings (#, ##, ###) -> WhatsApp bold headings (strip inner ** / * to avoid broken nesting)
+        // Headings (#, ##, ###) -> WhatsApp bold headings (strip inner ** / * / pills to avoid broken nesting)
         const h1 = line.match(/^\s*#\s+(.+)$/);
         if (h1) {
-          const cleanTitle = h1[1].replace(/\*\*|\*/g, '').trim();
+          const cleanTitle = h1[1].replace(/\*\*|\*|\uE002|\uE003/g, '').trim();
           return cleanTitle ? '*' + cleanTitle.toUpperCase() + '*' : '';
         }
         const hSub = line.match(/^\s*#{2,6}\s+(.+)$/);
         if (hSub) {
-          const cleanSub = hSub[1].replace(/\*\*|\*/g, '').trim();
+          const cleanSub = hSub[1].replace(/\*\*|\*|\uE002|\uE003/g, '').trim();
           return cleanSub ? '*' + cleanSub + '*' : '';
         }
 
@@ -5283,6 +5515,10 @@ function closeModal() {
           if (!trimmed) return '';
           const lead = inner.match(/^\s*/)[0];
           const trail = inner.match(/\s*$/)[0];
+          // If bold wraps purely a single highlight pill, keep the clean shaded pill
+          if (/^\uE002[^\uE002\uE003]+\uE003$/.test(trimmed)) {
+            return lead + trimmed + trail;
+          }
           return lead + BOLD_OPEN + trimmed + BOLD_CLOSE + trail;
         });
 
@@ -5291,8 +5527,12 @@ function closeModal() {
           return prefix + wrapWhatsApp('_', inner);
         });
 
-        // Restore WhatsApp *bold* markers
-        line = line.split(BOLD_OPEN).join('*').split(BOLD_CLOSE).join('*');
+        // Restore WhatsApp *bold* and shaded `highlight` pill markers
+        line = line
+          .split(BOLD_OPEN).join('*')
+          .split(BOLD_CLOSE).join('*')
+          .split(HL_OPEN).join('`')
+          .split(HL_CLOSE).join('`');
 
         return line.replace(/[ \t]+$/g, '');
       });
@@ -5555,6 +5795,9 @@ function closeModal() {
         if (icon) icon.textContent = isHidden ? '✕' : '🔍';
         if (txt) txt.textContent = isHidden ? 'Close' : 'Change Verse';
       }
+      if (isHidden && typeof renderQuickPassages === 'function') {
+        renderQuickPassages();
+      }
     }
 
     function switchMainTab(tabId, el) {
@@ -5569,6 +5812,9 @@ function closeModal() {
       if (el) {
         el.classList.add('active');
         el.setAttribute('aria-selected', 'true');
+      }
+      if (typeof renderQuickPassages === 'function') {
+        renderQuickPassages();
       }
     }
 
@@ -5891,6 +6137,7 @@ function closeModal() {
         if (topBox) { topBox.style.display = 'none'; topBox.innerHTML = ''; }
         displayActiveTopical(0);
         initTopicalDropdown();
+        if (typeof renderQuickPassages === 'function') renderQuickPassages();
 
         localStorage.setItem(SYNC_TIME_STORAGE, String(Date.now()));
         clearTimeout(debounceCloudTimer);
@@ -5952,6 +6199,7 @@ function closeModal() {
         if (area) area.value = tpl;
         if (editor) editor.innerHTML = parseMarkdown(tpl);
         localStorage.setItem(TELE_DRAFT_KEY, tpl);
+        if (typeof renderQuickPassages === 'function') renderQuickPassages();
         localStorage.setItem(SYNC_TIME_STORAGE, String(Date.now()));
         clearTimeout(debounceCloudTimer);
         if (cloudSyncId && typeof pushToCloud === 'function') pushToCloud(false);
