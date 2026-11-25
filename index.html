@@ -2651,6 +2651,10 @@
     function setTargetVerse(ref) {
       activeTargetVerse = ref;
       updateTargetVerseOptions();
+      document.querySelectorAll('#verseDisplay .verse-num-badge').forEach(badge => {
+        const num = (badge.textContent || '').replace(/^v\./i, '').trim();
+        badge.classList.toggle('active', !!num && getVerseRef(num) === activeTargetVerse);
+      });
       showToast("Questions targeted to: " + ref);
       if (typeof syncMicroCatalystOnVerseChange === 'function') {
         syncMicroCatalystOnVerseChange();
@@ -4829,6 +4833,7 @@ function resetMicroStudy() {
         }
         const microBox = document.getElementById('microCatalystBox');
         if (microBox) { microBox.style.display = 'none'; microBox.innerHTML = ''; }
+        if (typeof microCatalystOpen !== 'undefined') microCatalystOpen = false;
         const wordBox = document.getElementById('wordCatalystBox');
         if (wordBox) { wordBox.style.display = 'none'; wordBox.innerHTML = ''; }
 
@@ -5989,6 +5994,10 @@ function closeModal() {
     }
 
     function dismissCatalystBox(boxId) {
+      if (boxId === 'microCatalystBox') {
+        microCatalystOpen = false;
+        microCatalystLoadingKey = '';
+      }
       const box = document.getElementById(boxId);
       if (box) {
         box.style.display = 'none';
@@ -6053,34 +6062,62 @@ function closeModal() {
 
     let microCatalystReqSeq = 0;
     let lastMicroCatalystKey = '';
+    let microCatalystOpen = false;
+    let microCatalystLoadingKey = '';
+
+    function extractVerseTextFromNotes(targetRef) {
+      const notes = document.getElementById('journalText')?.value || '';
+      if (!notes || !targetRef) return '';
+      const escaped = targetRef.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const m = notes.match(new RegExp('\\*\\*' + escaped + '(?:\\s*\\([^)]*\\))?\\*\\*\\s*[—–-]\\s*"([^"]+)"', 'i'));
+      return m && m[1] ? m[1].trim() : '';
+    }
 
     function getActiveMicroStudyPassage() {
       const baseRef = (currentScripture && currentScripture.reference) || '';
       const baseVer = ((currentScripture && currentScripture.version) || 'KJV').toUpperCase();
       const baseText = (currentScripture && currentScripture.text) || '';
-      if (currentScripture && Array.isArray(currentScripture.verses) && currentScripture.verses.length > 1 && activeTargetVerse && activeTargetVerse !== baseRef) {
-        const matched = currentScripture.verses.find(v => getVerseRef(v.verse) === activeTargetVerse);
-        if (matched && matched.text) {
-          return {
-            reference: activeTargetVerse,
-            version: baseVer,
-            text: matched.text.trim().replace(/\s+/g, ' ')
-          };
+      if (activeTargetVerse && activeTargetVerse !== baseRef) {
+        if (currentScripture && Array.isArray(currentScripture.verses) && currentScripture.verses.length > 0) {
+          const matched = currentScripture.verses.find(v => getVerseRef(v.verse) === activeTargetVerse);
+          if (matched && matched.text) {
+            return {
+              reference: activeTargetVerse,
+              version: baseVer,
+              text: matched.text.trim().replace(/\s+/g, ' '),
+              needsFetch: false
+            };
+          }
         }
+        const fromNotes = extractVerseTextFromNotes(activeTargetVerse);
+        return {
+          reference: activeTargetVerse,
+          version: baseVer,
+          text: fromNotes,
+          needsFetch: !fromNotes
+        };
       }
       return {
         reference: baseRef,
         version: baseVer,
-        text: baseText
+        text: baseText,
+        needsFetch: false
       };
+    }
+
+    function getMicroCatalystCacheKey(passage) {
+      const refPart = (passage.reference || '').trim().toLowerCase();
+      const verPart = (passage.version || 'KJV').trim().toUpperCase();
+      const textSig = passage.text ? String(passage.text.length) : '0';
+      return refPart + '|' + verPart + '|' + textSig;
     }
 
     function syncMicroCatalystOnVerseChange() {
       const box = document.getElementById('microCatalystBox');
       if (!box) return;
       const passage = getActiveMicroStudyPassage();
-      const nextKey = passage.reference + '|' + passage.version;
-      const isVisible = box.style.display !== 'none' && box.innerHTML.trim() !== '';
+      const nextKey = getMicroCatalystCacheKey(passage);
+      const isVisible = microCatalystOpen || (box.style.display !== 'none' && box.innerHTML.trim() !== '');
       if (!isVisible) {
         lastMicroCatalystKey = nextKey;
         return;
@@ -6091,52 +6128,105 @@ function closeModal() {
       }
     }
 
+    function sanitizeCatalystFocusWord(word) {
+      if (!word || typeof word !== 'string') return '';
+      const clean = word.replace(/[`\r\n]/g, ' ').replace(/\s+/g, ' ').trim();
+      return clean.length > 48 ? '' : clean;
+    }
+
     function renderMicroCatalystForActive() {
       const box = document.getElementById('microCatalystBox');
       if (!box) return;
       const passage = getActiveMicroStudyPassage();
-      const cacheKey = passage.reference + '|' + passage.version;
+      const cacheKey = getMicroCatalystCacheKey(passage);
       lastMicroCatalystKey = cacheKey;
       const cached = catalystCache.micro[cacheKey];
       if (!cached) {
-        box.style.display = 'none';
+        if (microCatalystOpen) {
+          if (microCatalystLoadingKey === cacheKey) {
+            box.innerHTML = '<div class="catalyst-label">✨ Getting a study hint for ' + escapeCatalystHtml(passage.reference) + '...</div>';
+            box.style.display = 'block';
+          } else {
+            requestMicroCatalyst();
+          }
+        } else {
+          box.style.display = 'none';
+        }
         return;
       }
       const q = QUESTIONS[currentQuestionIndex];
       const item = cached.catalysts.find(c => c.id.toLowerCase() === q.id) || cached.catalysts[currentQuestionIndex];
-      renderCatalystCard('microCatalystBox', '✨ Study Hint', cached, item ? [item] : [], false);
+      const cleanResponse = {
+        reference: passage.reference + ' (' + passage.version + ')',
+        focusWord: sanitizeCatalystFocusWord(cached.focusWord),
+        catalysts: cached.catalysts,
+        silentMeditationPause: cached.silentMeditationPause
+      };
+      renderCatalystCard('microCatalystBox', '✨ Study Hint', cleanResponse, item ? [item] : [], false);
     }
 
     async function requestMicroCatalyst() {
       const box = document.getElementById('microCatalystBox');
       if (!box) return;
       const passage = getActiveMicroStudyPassage();
-      if (!passage.reference || !passage.text) {
+      if (!passage.reference || (!passage.text && !passage.needsFetch)) {
         showToast('Load a scripture passage first');
         return;
       }
-      const cacheKey = passage.reference + '|' + passage.version;
+      microCatalystOpen = true;
+      let resolvedText = passage.text;
+      let cacheKey = getMicroCatalystCacheKey(passage);
       lastMicroCatalystKey = cacheKey;
-      if (catalystCache.micro[cacheKey]) {
+
+      if (resolvedText && catalystCache.micro[cacheKey]) {
         renderMicroCatalystForActive();
         return;
       }
 
       const reqId = ++microCatalystReqSeq;
+      microCatalystLoadingKey = cacheKey;
       box.innerHTML = '<div class="catalyst-label">✨ Getting a study hint for ' + escapeCatalystHtml(passage.reference) + '...</div>';
       box.style.display = 'block';
+
       try {
+        if (!resolvedText && passage.needsFetch) {
+          const verParam = (passage.version || 'kjv').toLowerCase();
+          const vRes = await fetch(APP_CONFIG.endpoints.bibleApiBase + encodeURIComponent(passage.reference) + '?translation=' + encodeURIComponent(verParam));
+          if (vRes.ok) {
+            const vData = await vRes.json();
+            if (vData && vData.text) {
+              resolvedText = vData.text.trim().replace(/\s+/g, ' ');
+            }
+          }
+          if (!resolvedText) {
+            resolvedText = passage.reference;
+          }
+          cacheKey = getMicroCatalystCacheKey({ reference: passage.reference, version: passage.version, text: resolvedText });
+          lastMicroCatalystKey = cacheKey;
+          microCatalystLoadingKey = cacheKey;
+          if (catalystCache.micro[cacheKey]) {
+            microCatalystLoadingKey = '';
+            if (reqId === microCatalystReqSeq) renderMicroCatalystForActive();
+            return;
+          }
+        }
+
         const data = await fetchCatalyst({
           mode: 'microscopic',
           reference: passage.reference,
           version: passage.version,
-          text: passage.text
+          text: resolvedText
         });
         catalystCache.micro[cacheKey] = data;
+        // Also alias under the initial key when fetched from external verse reference
+        const baseKey = getMicroCatalystCacheKey(passage);
+        catalystCache.micro[baseKey] = data;
         if (reqId !== microCatalystReqSeq) return;
+        microCatalystLoadingKey = '';
         renderMicroCatalystForActive();
       } catch (err) {
         if (reqId !== microCatalystReqSeq) return;
+        microCatalystLoadingKey = '';
         renderCatalystError('microCatalystBox', err.message);
       }
     }
