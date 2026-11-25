@@ -1377,6 +1377,50 @@
     .modal-body .sheet-gap {
       height: 0.85rem;
     }
+    .guide-modal-toc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.9rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-modal-section {
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .guide-modal-section:last-child {
+      border-bottom: none;
+    }
+    .guide-modal-section h3 {
+      margin-top: 0;
+      margin-bottom: 0.45rem;
+      font-size: 1.02rem;
+    }
+    .guide-modal-section p,
+    .guide-modal-section li {
+      font-size: 0.92rem;
+      line-height: 1.72;
+    }
+    .guide-modal-tip {
+      margin-top: 0.65rem;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid var(--border-accent);
+      background: var(--gold-soft);
+      border-radius: var(--radius);
+      font-family: var(--font-ui);
+      font-size: 0.82rem;
+      line-height: 1.55;
+      color: var(--text);
+    }
+    .drawer-guide-footer {
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
 
     #toast {
       position: fixed;
@@ -2015,10 +2059,13 @@
         <button type="button" class="btn btn-gold-outline btn-sm" id="headerSaveBtn" onclick="manualSaveCloud()" title="Save current reflection">
           <span id="headerSaveIcon">💾</span> <span id="headerSaveText">Save</span>
         </button>
+        <button type="button" class="btn btn-sm btn-subtle" id="headerGuideBtn" aria-label="How to Use Guide" onclick="openGuideModal()" title="How to Use Quiet Time">?</button>
 
         <div class="dropdown-wrap">
           <button type="button" id="shareMenuBtn" class="btn btn-sm btn-subtle" aria-label="More options and actions" aria-haspopup="menu" aria-expanded="false" aria-controls="shareMenuDropdown" onclick="toggleShareMenu(event)" title="More options and export">⋯</button>
           <div id="shareMenuDropdown" class="dropdown-menu" role="menu">
+            <button type="button" class="dropdown-item" role="menuitem" onclick="openGuideModal(); closeShareMenu();">📘 How to Use Guide</button>
+            <div class="dropdown-sep" role="separator"></div>
             <button type="button" class="dropdown-item" role="menuitem" id="syncStatusBtn" onclick="openSyncModal(); closeShareMenu();">
               <span id="syncIndicatorDot" class="status-dot"></span>
               <span id="syncBtnText">Storage &amp; Sync</span>
@@ -2413,6 +2460,10 @@
           Based on foundational biblical teaching by Bishop Dag Heward-Mills. Follow this spiritual rhythm during your devotional study.
         </div>
         <div id="sevenStepsList" class="drawer-steps-list"></div>
+        <div class="drawer-guide-footer">
+          <button type="button" class="btn btn-sm" onclick="closeSevenStepsDrawer(); openGuideModal();">📘 How to Use App</button>
+          <a href="guide.html" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-subtle">↗ Full Guide Page</a>
+        </div>
       </div>
     </div>
   </div>
@@ -2535,6 +2586,87 @@
         </div>
       </div>
       <div class="modal-body" id="modalContent" style="padding:1.5rem; overflow-y:auto; flex:1;"></div>
+    </div>
+  </div>
+
+  <!-- How to Use Instruction Guide Pop-Out Modal -->
+  <div id="guideModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="How to Use Quiet Time" onclick="closeGuideModalBackdrop(event)">
+    <div class="modal-card modal-card-lg">
+      <div class="modal-header">
+        <span class="modal-title" style="font-size:1.05rem;">How to Use Quiet Time</span>
+        <div class="studio-actions">
+          <button type="button" class="btn btn-sm" onclick="copyGuideLink()" title="Copy shareable link to the instruction guide">🔗 Copy Guide Link</button>
+          <a href="guide.html" target="_blank" rel="noopener noreferrer" class="btn btn-sm" title="Open the full instruction guide in a new tab">↗ Open Full Page</a>
+          <button type="button" class="btn btn-sm" aria-label="Close How to Use Guide" onclick="closeGuideModal()">✕ Close</button>
+        </div>
+      </div>
+      <div class="modal-body" id="guideModalBody" style="padding:1.5rem; overflow-y:auto; flex:1;">
+        <div class="guide-modal-toc" aria-label="Guide topics">
+          <button type="button" class="verse-chip" onclick="scrollGuideSection('gmStart')">1. Quick Start</button>
+          <button type="button" class="verse-chip" onclick="scrollGuideSection('gmScripture')">2. Scripture &amp; Words</button>
+          <button type="button" class="verse-chip" onclick="scrollGuideSection('gmModes')">3. 3 Study Modes</button>
+          <button type="button" class="verse-chip" onclick="scrollGuideSection('gmNotes')">4. Notes &amp; Spellcheck</button>
+          <button type="button" class="verse-chip" onclick="scrollGuideSection('gmShare')">5. WhatsApp &amp; A4 Print</button>
+          <button type="button" class="verse-chip" onclick="scrollGuideSection('gmSync')">6. Archive &amp; Sync</button>
+        </div>
+
+        <div id="gmStart" class="guide-modal-section">
+          <h3>1. Quick Start (60-Second Daily Flow)</h3>
+          <p>Quiet Time is a private devotional workspace for unhurried Bible meditation. Everything you write stays safely in your browser.</p>
+          <ul>
+            <li><strong>Follow the Rhythm:</strong> Open <strong>🌿 7 Steps Guide</strong> in the top bar for the daily quiet-time sequence.</li>
+            <li><strong>Load a Passage:</strong> Click <strong>🔍 Change Verse</strong>, enter any passage (e.g., <em>Psalm 23:1-3</em>), choose a translation, and press <strong>Enter</strong>.</li>
+            <li><strong>Reflect &amp; Record:</strong> Tap any word in the verse to study its meaning, answer questions on the left, and record revelations in Notes on the right.</li>
+          </ul>
+        </div>
+
+        <div id="gmScripture" class="guide-modal-section">
+          <h3>2. Scripture Desk, Quick Passages &amp; Word Study</h3>
+          <ul>
+            <li><strong>11+ Translations &amp; Paste:</strong> Switch between KJV, BSB, WEB, ASV, YLT, and more—or click <strong>📋 Paste</strong> to study any custom translation.</li>
+            <li><strong>Smart Quick Passages:</strong> Inside <strong>🔍 Change Verse</strong>, Quick Passages automatically reads and adds verses you mention or insert in your Notes—and resets cleanly when you reset your notes.</li>
+            <li><strong>Interactive Word Study:</strong> Click any word in the scripture to view live definitions, open <strong>📖 Concordance</strong>, get a <strong>✨ Word Meaning</strong> hint, or insert the definition into your notes.</li>
+            <li><strong>Multi-Verse Badges:</strong> Click numbered verse badges (e.g., <code>v.2</code>) to focus questions and Study Hints on a specific verse.</li>
+          </ul>
+        </div>
+
+        <div id="gmModes" class="guide-modal-section">
+          <h3>3. The Three Bible Study Modes</h3>
+          <ul>
+            <li><strong>🔬 Microscopic (13 Questions):</strong> Deep word-by-word reflection with <strong>✨ Study Hint</strong> (auto-reloads whenever your selected verse changes) and one-click insertion into notes.</li>
+            <li><strong>🏷️ Topical (Six W's):</strong> Study biblical themes like Faith, Patience, Love, or Zeal. Typing a topic auto-loads its definition into your study.</li>
+            <li><strong>📜 Telescopic (Whole-Book):</strong> Map a whole book's author, context, and central theme across all 66 books, with <strong>📖 Load Passage</strong> to jump straight into chapter 1.</li>
+          </ul>
+        </div>
+
+        <div id="gmNotes" class="guide-modal-section">
+          <h3>4. Formatting, Highlights &amp; Private Spellcheck</h3>
+          <ul>
+            <li><strong>Live Rich Editor:</strong> Bold (<code>Ctrl+B</code>), Italic (<code>Ctrl+I</code>), Underline (<code>Ctrl+U</code>), 5 highlight colors (<code>Ctrl+H</code>), headings, bullets, and Undo/Redo.</li>
+            <li><strong>✓ Spellcheck:</strong> Toggle private offline spellcheck (55,000+ English &amp; Biblical words) in the toolbar. Click any red-underlined word for suggestions or to add it to your personal dictionary.</li>
+          </ul>
+        </div>
+
+        <div id="gmShare" class="guide-modal-section">
+          <h3>5. WhatsApp Sharing &amp; A4 Print Sheets</h3>
+          <ul>
+            <li><strong>💬 Copy for WhatsApp:</strong> Formats headings, <strong>*bold*</strong>, <em>_italic_</em>, bullets, and highlights (as WhatsApp <code>`shaded pills`</code>) cleanly—with zero raw Markdown clutter.</li>
+            <li><strong>🖨️ Print Sheet / Save PDF:</strong> Prints your notes cleanly onto standard <strong>A4 paper</strong> with natural multi-page flow and full-page theme background coverage (accessible from <strong>⋯ → 📖 Full Document Sheet</strong>, <strong>⋯ → 🖨️ Print / Save PDF</strong>, or <code>Ctrl+P</code>).</li>
+          </ul>
+          <div class="guide-modal-tip">
+            <strong>Tip for Dark &amp; Sepia PDFs:</strong> In your browser's print window, expand <strong>More settings</strong> and check <strong>Background graphics</strong> so the full A4 paper color prints edge-to-edge.
+          </div>
+        </div>
+
+        <div id="gmSync" class="guide-modal-section">
+          <h3>6. Archive, Snapshots, Privacy &amp; Multi-Device Sync</h3>
+          <ul>
+            <li><strong>📁 Archive &amp; 🕘 Snapshots:</strong> Archive finished studies for safekeeping, or recover earlier drafts from <strong>⋯ → 🕘 Restore Snapshots</strong>.</li>
+            <li><strong>Storage &amp; Sync:</strong> Private to this device by default. Open <strong>⋯ → Storage &amp; Sync</strong> to pair your phone &amp; laptop with a private sync key or export a JSON backup.</li>
+            <li><strong>Reset Controls:</strong> <strong>↺ Reset All</strong> resets only the current study tab; <strong>⋯ → 🧹 Hard Reset</strong> clears all local browser data for a fresh start.</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -5698,6 +5830,34 @@ function closeModal() {
       if (e.target.id === 'pageModal') closeModal();
     }
 
+    function openGuideModal() {
+      const modal = document.getElementById('guideModal');
+      const body = document.getElementById('guideModalBody');
+      if (body) body.scrollTop = 0;
+      if (modal) modal.classList.add('open');
+    }
+
+    function closeGuideModal() {
+      const modal = document.getElementById('guideModal');
+      if (modal) modal.classList.remove('open');
+    }
+
+    function closeGuideModalBackdrop(e) {
+      if (e.target.id === 'guideModal') closeGuideModal();
+    }
+
+    function scrollGuideSection(sectionId) {
+      const el = document.getElementById(sectionId);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    async function copyGuideLink() {
+      const base = (APP_CONFIG && APP_CONFIG.productionUrl) ? APP_CONFIG.productionUrl.replace(/\/+$/, '') : 'https://quiet-time-guide.vercel.app';
+      const url = base + '/guide';
+      const ok = await copyTextWithFallback(url);
+      showToast(ok ? 'Guide link copied: ' + url : 'Guide URL: ' + url);
+    }
+
     function formatMarkdownForWhatsApp(md) {
       if (!md || typeof md !== 'string') return '';
 
@@ -6178,6 +6338,7 @@ function closeModal() {
         closeSyncModal();
         closeRestoreModal();
         closeModal();
+        closeGuideModal();
         closeShareMenu();
         closeSpellPopover();
       }

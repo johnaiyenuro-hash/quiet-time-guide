@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Complete instruction guide for using Quiet Time — Scripture Study &amp; Revelation Journal. Learn Microscopic, Topical, and Telescopic study, word definitions, highlights, WhatsApp export, A4 printing, and sync.">
+  <meta name="theme-color" content="#0d1117">
+  <link rel="icon" type="image/svg+xml" href="/icon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <title>How to Use Quiet Time — Study &amp; Journal Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Outfit:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #151b23;
+      --surface-elevated: #1e2632;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(212, 175, 55, 0.36);
+      --text: #f0f3f6;
+      --text-muted: #94a3b8;
+      --gold: #d4af37;
+      --gold-soft: rgba(212, 175, 55, 0.1);
+      --btn-primary-text: #0d1117;
+      --radius: 8px;
+      --font-ui: 'Outfit', system-ui, -apple-system, sans-serif;
+      --font-serif: 'Lora', Georgia, serif;
+      --font-head: 'Cinzel', serif;
+    }
+
+    body.theme-light {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-elevated: #f1f5f9;
+      --border: rgba(0, 0, 0, 0.08);
+      --border-accent: rgba(180, 83, 9, 0.35);
+      --text: #0f172a;
+      --text-muted: #475569;
+      --gold: #b45309;
+      --gold-soft: rgba(180, 83, 9, 0.08);
+      --btn-primary-text: #ffffff;
+    }
+
+    body.theme-sepia {
+      --bg: #f5f0e6;
+      --surface: #ebe3d3;
+      --surface-elevated: #ded4c0;
+      --border: rgba(70, 50, 20, 0.14);
+      --border-accent: rgba(140, 98, 39, 0.42);
+      --text: #2a2217;
+      --text-muted: #5c4e3e;
+      --gold: #8c6227;
+      --gold-soft: rgba(140, 98, 39, 0.1);
+      --btn-primary-text: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-ui); /* impeccable-disable-line overused-font */
+      line-height: 1.65;
+      min-height: 100vh;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
+
+    header.guide-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      height: 52px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+    }
+
+    .guide-header-inner {
+      width: 100%;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .brand-link {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.55rem;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .brand-title {
+      font-family: var(--font-head);
+      font-size: 0.98rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+    }
+
+    .brand-sub {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface-elevated);
+      color: var(--text);
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+    }
+
+    .btn:hover {
+      border-color: var(--border-accent);
+      color: var(--gold);
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--btn-primary-text);
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.92;
+      color: var(--btn-primary-text);
+    }
+
+    main.guide-main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2.25rem 1.25rem 4rem;
+    }
+
+    .hero {
+      padding-bottom: 1.75rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.74rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.45rem;
+    }
+
+    .hero h1 {
+      font-family: var(--font-head);
+      font-size: clamp(1.65rem, 3.2vw, 2.2rem);
+      font-weight: 600;
+      line-height: 1.25;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+    }
+
+    .hero p {
+      font-family: var(--font-serif);
+      font-size: 1.04rem;
+      line-height: 1.8;
+      color: var(--text-muted);
+      max-width: 66ch;
+    }
+
+    .toc-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 1.25rem;
+    }
+
+    .toc-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.28rem 0.7rem;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .toc-chip:hover {
+      border-color: var(--border-accent);
+      color: var(--gold);
+    }
+
+    section.guide-section {
+      padding: 1.75rem 0;
+      border-bottom: 1px solid var(--border);
+      scroll-margin-top: 68px;
+    }
+
+    section.guide-section:last-of-type {
+      border-bottom: none;
+    }
+
+    .section-kicker {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.25rem;
+    }
+
+    h2 {
+      font-family: var(--font-head);
+      font-size: 1.32rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+    }
+
+    h3 {
+      font-family: var(--font-ui);
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-top: 1.25rem;
+      margin-bottom: 0.35rem;
+    }
+
+    p {
+      font-family: var(--font-serif);
+      font-size: 0.98rem;
+      line-height: 1.85;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      max-width: 72ch;
+    }
+
+    p.muted {
+      color: var(--text-muted);
+    }
+
+    ol.steps-list,
+    ul.feature-list {
+      padding-left: 1.35rem;
+      margin: 0.5rem 0 1rem;
+      max-width: 72ch;
+    }
+
+    ol.steps-list li,
+    ul.feature-list li {
+      font-family: var(--font-serif);
+      font-size: 0.96rem;
+      line-height: 1.8;
+      margin-bottom: 0.55rem;
+      color: var(--text);
+    }
+
+    ol.steps-list li strong,
+    ul.feature-list li strong {
+      font-family: var(--font-ui);
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .tip-note {
+      margin: 1rem 0;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border-accent);
+      background: var(--gold-soft);
+      border-radius: var(--radius);
+      font-family: var(--font-ui);
+      font-size: 0.86rem;
+      line-height: 1.65;
+      color: var(--text);
+      max-width: 72ch;
+    }
+
+    .tip-note strong {
+      color: var(--gold);
+    }
+
+    .shortcut-table {
+      width: 100%;
+      max-width: 640px;
+      border-collapse: collapse;
+      margin-top: 0.75rem;
+      font-family: var(--font-ui);
+      font-size: 0.86rem;
+    }
+
+    .shortcut-table th,
+    .shortcut-table td {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .shortcut-table th {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    kbd {
+      display: inline-block;
+      padding: 0.14rem 0.42rem;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      background: var(--surface-elevated);
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    code {
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      background: var(--surface-elevated);
+      font-size: 0.85em;
+      color: var(--gold);
+    }
+
+    footer.guide-footer {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 640px) {
+      .brand-sub { display: none; }
+      main.guide-main { padding: 1.5rem 1rem 3rem; }
+      .shortcut-table th, .shortcut-table td { padding: 0.5rem 0.45rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="guide-header">
+    <div class="guide-header-inner">
+      <a href="index.html" class="brand-link">
+        <span class="brand-title">QUIET TIME</span>
+        <span class="brand-sub">User Guide</span>
+      </a>
+      <div class="header-controls">
+        <button type="button" id="guideThemeBtn" class="btn" onclick="cycleGuideTheme()" title="Switch Dark / Sepia / Light theme">Theme: Dark</button>
+        <a href="index.html" class="btn btn-primary">← Back to App</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="guide-main">
+    <div class="hero">
+      <div class="hero-eyebrow">Instruction Guide</div>
+      <h1>How to Use Quiet Time</h1>
+      <p>
+        Quiet Time is a calm, private devotional studio inspired by Bishop Dag Heward-Mills' teaching on
+        <em>How You Can Have an Effective Quiet Time with God Every Day</em>. Everything you write stays privately in your browser unless you choose to sync or share it.
+      </p>
+      <nav class="toc-row" aria-label="Guide sections">
+        <a class="toc-chip" href="#quick-start">Quick Start</a>
+        <a class="toc-chip" href="#scripture-desk">Scripture &amp; Words</a>
+        <a class="toc-chip" href="#study-modes">3 Study Modes</a>
+        <a class="toc-chip" href="#notes-studio">Notes &amp; Spellcheck</a>
+        <a class="toc-chip" href="#sharing-printing">WhatsApp &amp; A4 Print</a>
+        <a class="toc-chip" href="#privacy-sync">Archive, Privacy &amp; Sync</a>
+        <a class="toc-chip" href="#shortcuts">Shortcuts</a>
+      </nav>
+    </div>
+
+    <section id="quick-start" class="guide-section">
+      <h2>Your Daily Rhythm in 60 Seconds</h2>
+      <ol class="steps-list">
+        <li><strong>Open the 7 Steps Guide:</strong> Click <strong>🌿 7 Steps Guide</strong> in the top bar for the gentle devotional sequence—from opening prayer to recording revelations and concluding in prayer.</li>
+        <li><strong>Choose a Passage:</strong> Click <strong>🔍 Change Verse</strong> on the Scripture Desk, type any reference (such as <em>Psalm 23:1-3</em> or <em>John 3:16</em>), pick a translation, and press <strong>Enter</strong>.</li>
+        <li><strong>Meditate &amp; Reflect:</strong> Tap any word in the verse to see its definition, or step through the 13 Microscopic questions on the left.</li>
+        <li><strong>Record Revelations:</strong> Write directly in the Notes Studio on the right—or click <strong>+ Insert</strong> on any verse, definition, or reflection answer to drop it neatly into your journal.</li>
+        <li><strong>Save, Share, or Print:</strong> Notes autosave continuously. Archive completed sessions, copy them cleanly for WhatsApp, or print them onto A4 paper.</li>
+      </ol>
+    </section>
+
+    <section id="scripture-desk" class="guide-section">
+      <h2>Loading Verses, Quick Passages &amp; Word Study</h2>
+      <ul class="feature-list">
+        <li><strong>Search Any Passage:</strong> Click <strong>🔍 Change Verse</strong> and enter a verse or range (e.g., <em>Romans 8:28-30</em>). Choose from 11+ open Bible translations (KJV, BSB, WEB, ASV, YLT, and more) or paste your own custom passage with <strong>📋 Paste</strong>.</li>
+        <li><strong>Smart Quick Passages:</strong> Inside the verse shelf, <strong>Quick Passages</strong> starts with 5 foundational scriptures and automatically reads and adds any Bible verses you mention or insert in your Notes. When you reset your notes, those added chips reset cleanly too.</li>
+        <li><strong>BibleHub Parallel:</strong> Click <strong>🌐 BibleHub Parallel</strong> to compare 30+ translations side by side in a new tab.</li>
+        <li><strong>Click Any Word to Study It:</strong> Every word in the displayed scripture is interactive. Click a word to view its live dictionary meaning, open <strong>📖 Concordance</strong> (Strong's lookup), request a short <strong>✨ Word Meaning</strong> hint, or insert the word study directly into your notes.</li>
+        <li><strong>Multi-Verse Focusing:</strong> When you load a range of verses, click any numbered badge (such as <code>v.2</code>) to focus your reflection questions and Study Hints on that exact verse.</li>
+      </ul>
+    </section>
+
+    <section id="study-modes" class="guide-section">
+      <h2>The Three Bible Study Modes</h2>
+
+      <h3>🔬 Microscopic Study (13 Analytical Questions)</h3>
+      <p>
+        Slow down and examine a single verse or short passage word by word through 13 hermeneutical questions—identifying God's character, commands to obey, promises to claim, warnings to heed, and personal applications.
+      </p>
+      <ul class="feature-list">
+        <li><strong>Target Verse Selector:</strong> Switch between the whole passage, individual verses, or other verses referenced in your notes.</li>
+        <li><strong>✨ Study Hint:</strong> Opens a brief verse-specific reflection nudge. Whenever you switch to a different verse, an open Study Hint reloads automatically for the newly selected verse.</li>
+        <li><strong>One-Click Insertion:</strong> Insert a single answer, all written answers (<strong>+ Insert All Answers</strong>), the full Q&amp;A outline (<strong>+ Insert All Q&amp;A</strong>), or break a multi-verse passage into headings (<strong>+ Outline All Verses</strong>).</li>
+      </ul>
+
+      <h3>🏷️ Topical Study (The Six W's)</h3>
+      <p>
+        Explore a biblical theme—such as <em>Patience</em>, <em>Faith</em>, <em>Love</em>, or <em>Zeal</em>—across Scripture. Typing any topic automatically looks up its definition, and the Six W's (Why, How, Where, When, What, Who) guide your synthesis into its own dedicated Topical Notes draft.
+      </p>
+
+      <h3>📜 Telescopic Study (Whole-Book Overview)</h3>
+      <p>
+        Step back to grasp the big picture of an entire Bible book: pick any of the 66 books, record the author, historical setting, recipients, and overarching theme, click <strong>📖 Load Passage</strong> to bring chapter 1 onto the Scripture Desk, and build your Telescopic outline.
+      </p>
+    </section>
+
+    <section id="notes-studio" class="guide-section">
+      <h2>Formatting, Highlights &amp; Private Spellcheck</h2>
+      <ul class="feature-list">
+        <li><strong>Rich Formatting Toolbar:</strong> Format your journal live with Bold, Italic, Underline, Headings, Bullet Lists, Undo/Redo, and 5 soft highlight colors (Gold, Green, Blue, Rose, Amber).</li>
+        <li><strong>Private Local Spellcheck (✓ Spellcheck):</strong> Toggle <strong>✓ Spellcheck</strong> in the formatting bar to underline misspelled words in red using a built-in 55,000+ English &amp; Biblical (KJV) dictionary—100% offline in your browser. Click any underlined word to pick a correction or add it to your personal dictionary.</li>
+        <li><strong>Separate Drafts per Mode:</strong> Microscopic, Topical, and Telescopic each maintain their own independent notes draft so switching tabs never overwrites your work.</li>
+      </ul>
+    </section>
+
+    <section id="sharing-printing" class="guide-section">
+      <h2>WhatsApp Formatting &amp; A4 Print Sheets</h2>
+      <ul class="feature-list">
+        <li><strong>💬 Copy for WhatsApp:</strong> Available in the Notes header, the <strong>⋯</strong> menu, and the Full Document Sheet. Converts your headings, <strong>*bold*</strong>, <em>_italics_</em>, bullet lists, and highlights (rendered as WhatsApp <code>`shaded pills`</code>) into clean, readable WhatsApp messages—no messy raw Markdown symbols.</li>
+        <li><strong>📖 Full Document Sheet &amp; 🖨️ Print Sheet:</strong> Open <strong>⋯ → 📖 Full Document Sheet</strong> to review your notes cleanly, or choose <strong>🖨️ Print Sheet</strong> / <strong>⋯ → 🖨️ Print / Save PDF</strong> (or press <kbd>Ctrl</kbd>+<kbd>P</kbd>) to print directly onto standard <strong>A4 paper</strong> with natural multi-page flow and full-page theme background coverage.</li>
+      </ul>
+      <div class="tip-note">
+        <strong>Printing Tip for Dark &amp; Sepia Themes:</strong> In your browser's Print dialog, open <strong>More settings</strong> and check <strong>Background graphics</strong> so the full-bleed Dark or Sepia paper color and highlights print edge-to-edge on every A4 sheet.
+      </div>
+    </section>
+
+    <section id="privacy-sync" class="guide-section">
+      <h2>Privacy, Multi-Device Sync &amp; Safety Nets</h2>
+      <ul class="feature-list">
+        <li><strong>100% Private by Default:</strong> Your notes, answers, highlights, and archives live locally in your browser's storage.</li>
+        <li><strong>📁 Archive &amp; 🕘 Restore Snapshots:</strong> Save finished Quiet Times to your Archive tab to revisit later. Automatic rolling snapshots let you recover earlier versions of your Microscopic notes anytime from <strong>⋯ → 🕘 Restore Snapshots</strong>.</li>
+        <li><strong>Phone &amp; Laptop Sync (Optional):</strong> Open <strong>⋯ → Storage &amp; Sync</strong> to generate a private sync key and link your phone and laptop, or export/import an offline JSON backup file.</li>
+        <li><strong>↺ Reset All vs. 🧹 Hard Reset:</strong> Clicking <strong>↺ Reset All</strong> inside a study tab resets only that tab's notes, answers, and notes-added Quick Passages (while keeping a snapshot backup). <strong>⋯ → 🧹 Hard Reset</strong> wipes all local data on this browser for a completely blank start.</li>
+      </ul>
+    </section>
+
+    <section id="shortcuts" class="guide-section">
+      <h2>Keyboard Shortcuts</h2>
+      <table class="shortcut-table">
+        <thead>
+          <tr>
+            <th>Shortcut</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>S</kbd></td><td>Save current reflection (and sync if cloud sync is enabled)</td></tr>
+          <tr><td><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>B</kbd></td><td>Bold selected text in Notes</td></tr>
+          <tr><td><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>I</kbd></td><td>Italicize selected text in Notes</td></tr>
+          <tr><td><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>U</kbd></td><td>Underline selected text in Notes</td></tr>
+          <tr><td><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>H</kbd></td><td>Toggle highlight on selected text</td></tr>
+          <tr><td><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Z</kbd></td><td>Undo last note edit (add <kbd>Shift</kbd> to redo)</td></tr>
+          <tr><td><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>P</kbd></td><td>Print or Save active study notes as an A4 PDF sheet</td></tr>
+          <tr><td><kbd>Esc</kbd></td><td>Close any open drawer, modal, menu, or spellcheck popover</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer class="guide-footer">
+      <span>Quiet Time — Scripture Study &amp; Revelation Journal</span>
+      <a href="index.html" class="btn">← Return to Quiet Time Studio</a>
+    </footer>
+  </main>
+
+  <script>
+    const GUIDE_THEMES = ['dark', 'sepia', 'light'];
+    const GUIDE_THEME_LABELS = { dark: 'Dark', sepia: 'Sepia', light: 'Light' };
+    let guideThemeIdx = 0;
+
+    function applyGuideTheme(name, persist) {
+      const idx = GUIDE_THEMES.indexOf(name);
+      guideThemeIdx = idx >= 0 ? idx : 0;
+      const active = GUIDE_THEMES[guideThemeIdx];
+      document.body.className = active === 'sepia' ? 'theme-sepia' : active === 'light' ? 'theme-light' : '';
+      const btn = document.getElementById('guideThemeBtn');
+      if (btn) btn.textContent = 'Theme: ' + GUIDE_THEME_LABELS[active];
+      if (persist) {
+        try { localStorage.setItem('qt_theme_v1', active); } catch (e) {}
+      }
+    }
+
+    function cycleGuideTheme() {
+      applyGuideTheme(GUIDE_THEMES[(guideThemeIdx + 1) % GUIDE_THEMES.length], true);
+    }
+
+    (function initGuideTheme() {
+      try {
+        const saved = localStorage.getItem('qt_theme_v1');
+        applyGuideTheme(saved && GUIDE_THEMES.includes(saved) ? saved : 'dark', false);
+      } catch (e) {
+        applyGuideTheme('dark', false);
+      }
+    })();
+  </script>
+</body>
+</html>
