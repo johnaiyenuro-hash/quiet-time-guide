@@ -1791,13 +1791,202 @@
         border-bottom: none;
       }
     }
+    .print-sheet-root {
+      display: none;
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+
     @media print {
-      header.unified-header, .view-switcher, .btn, .scripture-input-row, .dropdown-wrap, .note-format-bar {
+      html, body {
+        width: 210mm !important;
+        min-height: 297mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: var(--print-bg, var(--bg)) !important;
+        color: var(--text) !important;
+        overflow: visible !important;
+        display: block !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      body > *:not(#printSheetRoot) {
         display: none !important;
       }
-      body { background: #ffffff !important; color: var(--text) !important; }
-      .study-grid { display: block !important; }
-      .studio-panel { border: none !important; padding: 0 !important; position: static !important; height: auto !important; max-height: none !important; }
+
+      #printSheetRoot {
+        display: block !important;
+        position: relative !important;
+        width: 210mm !important;
+        min-height: 297mm !important;
+        background: var(--print-bg, var(--bg)) !important;
+        color: var(--text) !important;
+      }
+
+      .print-page-bg {
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: var(--print-bg, var(--bg)) !important;
+        z-index: 0 !important;
+        pointer-events: none !important;
+      }
+
+      .print-a4-table {
+        position: relative !important;
+        z-index: 1 !important;
+        width: 210mm !important;
+        border-collapse: collapse !important;
+        border-spacing: 0 !important;
+        table-layout: fixed !important;
+      }
+
+      .print-a4-table thead { display: table-header-group !important; }
+      .print-a4-table tfoot { display: table-footer-group !important; }
+      .print-a4-table tbody { display: table-row-group !important; }
+
+      .print-a4-table tr,
+      .print-a4-table td {
+        break-inside: auto !important;
+        page-break-inside: auto !important;
+      }
+
+      .print-page-spacer-top {
+        height: 18mm !important;
+        padding: 0 !important;
+        border: none !important;
+      }
+
+      .print-page-spacer-bottom {
+        height: 18mm !important;
+        padding: 0 !important;
+        border: none !important;
+      }
+
+      .print-page-content {
+        padding: 0 20mm !important;
+        vertical-align: top !important;
+        border: none !important;
+        font-family: var(--font-serif) !important;
+        font-size: 11.25pt !important;
+        line-height: 1.78 !important;
+        color: var(--text) !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+      }
+
+      .print-doc-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: baseline !important;
+        gap: 1rem !important;
+        padding-bottom: 4.5mm !important;
+        margin-bottom: 6mm !important;
+        border-bottom: 1px solid var(--border) !important;
+        break-after: avoid !important;
+        page-break-after: avoid !important;
+      }
+
+      .print-doc-brand {
+        font-family: var(--font-head) !important;
+        font-size: 13pt !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.08em !important;
+        color: var(--gold) !important;
+        text-transform: uppercase !important;
+      }
+
+      .print-doc-meta {
+        font-family: var(--font-ui) !important;
+        font-size: 9pt !important;
+        color: var(--text-muted) !important;
+        text-align: right !important;
+      }
+
+      .print-doc-body h1,
+      .print-doc-body h2,
+      .print-doc-body h3 {
+        font-family: var(--font-head) !important;
+        color: var(--text) !important;
+        margin-top: 1.25em !important;
+        margin-bottom: 0.45em !important;
+        font-weight: 600 !important;
+        line-height: 1.35 !important;
+        break-after: avoid !important;
+        page-break-after: avoid !important;
+      }
+
+      .print-doc-body h1:first-child,
+      .print-doc-body h2:first-child,
+      .print-doc-body h3:first-child {
+        margin-top: 0 !important;
+      }
+
+      .print-doc-body h1 { font-size: 15.5pt !important; color: var(--gold) !important; }
+      .print-doc-body h2 { font-size: 13pt !important; }
+      .print-doc-body h3 { font-size: 11.5pt !important; color: var(--gold) !important; }
+
+      .print-doc-body p {
+        margin: 0.55em 0 !important;
+        line-height: 1.78 !important;
+        orphans: 3 !important;
+        widows: 3 !important;
+      }
+
+      .print-doc-body ul,
+      .print-doc-body ol {
+        padding-left: 1.6em !important;
+        margin: 0.45em 0 0.8em 0 !important;
+      }
+
+      .print-doc-body li {
+        margin-bottom: 0.3em !important;
+        line-height: 1.7 !important;
+        orphans: 2 !important;
+        widows: 2 !important;
+      }
+
+      .print-doc-body blockquote {
+        border-left: 2px solid var(--gold) !important;
+        background: rgba(212, 175, 55, 0.08) !important;
+        margin: 0.75em 0 !important;
+        padding: 0.55em 0.9em !important;
+        border-radius: 0 4px 4px 0 !important;
+        color: var(--text-muted) !important;
+        font-style: italic !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      .print-doc-body b,
+      .print-doc-body strong {
+        font-weight: 700 !important;
+      }
+
+      .print-doc-body hr {
+        border: 0 !important;
+        border-top: 1px solid var(--border) !important;
+        margin: 1em 0 !important;
+      }
+
+      .print-doc-body .sheet-gap {
+        height: 0.6em !important;
+      }
+
+      .print-doc-body .spell-err {
+        text-decoration: none !important;
+        background: transparent !important;
+      }
     }
 
   </style>
@@ -1843,7 +2032,7 @@
             <button type="button" class="dropdown-item" role="menuitem" onclick="copyRevelation(); closeShareMenu();">📋 Copy Notes (Markdown)</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="shareLiveGuideLink(); closeShareMenu();">🔗 Share App Link</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="downloadMarkdown(); closeShareMenu();">📥 Download Markdown</button>
-            <button type="button" class="dropdown-item" role="menuitem" onclick="window.print(); closeShareMenu();">🖨️ Print / Save PDF</button>
+            <button type="button" class="dropdown-item" role="menuitem" onclick="closeShareMenu(); printStudySheet();">🖨️ Print / Save PDF</button>
             <div class="dropdown-sep" role="separator"></div>
             <button type="button" class="dropdown-item btn-danger-text" role="menuitem" onclick="hardResetWorkspace(); closeShareMenu();">🧹 Hard Reset (Fresh Start)</button>
           </div>
@@ -2328,13 +2517,13 @@
     </div>
   </div>
 
-  <div id="pageModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Quiet Time Revelation Document" onclick="closeModalBackdrop(event)">
+  <div id="pageModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Quiet Time" onclick="closeModalBackdrop(event)">
     <div class="modal-card modal-card-lg">
       <div class="modal-header">
-        <span class="modal-title" style="font-size:1.05rem;">Quiet Time Revelation Document</span>
+        <span class="modal-title" style="font-size:1.05rem;">Quiet Time</span>
         <div class="studio-actions">
           <button type="button" class="btn btn-sm" onclick="copyNotesForWhatsApp()" title="Copy notes formatted cleanly for WhatsApp">💬 Copy for WhatsApp</button>
-          <button type="button" class="btn btn-sm" onclick="window.print()">🖨️ Print Sheet</button>
+          <button type="button" class="btn btn-sm" onclick="printStudySheet()">🖨️ Print Sheet</button>
           <button type="button" class="btn btn-sm" onclick="closeModal()">✕ Close</button>
         </div>
       </div>
@@ -2347,6 +2536,20 @@
       </div>
       <div class="modal-body" id="modalContent" style="padding:1.5rem; overflow-y:auto; flex:1;"></div>
     </div>
+  </div>
+
+  <!-- Dedicated A4 Print Sheet (populated cleanly before printing) -->
+  <div id="printSheetRoot" class="print-sheet-root" aria-hidden="true">
+    <div class="print-page-bg" aria-hidden="true"></div>
+    <table class="print-a4-table" role="presentation">
+      <thead><tr><td class="print-page-spacer-top"></td></tr></thead>
+      <tbody>
+        <tr>
+          <td class="print-page-content" id="printSheetContent"></td>
+        </tr>
+      </tbody>
+      <tfoot><tr><td class="print-page-spacer-bottom"></td></tr></tfoot>
+    </table>
   </div>
 
   <div id="spellPopover" class="spell-popover" role="dialog" aria-label="Spelling suggestions"></div>
@@ -2597,6 +2800,7 @@
       renderQuickPassages();
       renderArchive();
       hydrateExternalConfigs();
+      window.addEventListener('beforeprint', () => populatePrintSheet());
     }
 
     function renderVerseDisplay() {
@@ -5353,7 +5557,7 @@ function openRestoreModal() {
         .replace(/^### (.*$)/gim, '<h3>$1</h3>')
         .replace(/^## (.*$)/gim, '<h2>$1</h2>')
         .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-        .replace(/^\> (.*$)/gim, '<blockquote>$1</blockquote>')
+        .replace(/^(?:&gt;|>)\s+(.*$)/gim, '<blockquote>$1</blockquote>')
         .replace(/^---$/gim, '<hr style="border:0;border-top:1px solid var(--border);margin:1.25rem 0;">')
         .replace(/^\s*\-\s(.*$)/gim, '<li>$1</li>');
 
@@ -5377,6 +5581,79 @@ function openRestoreModal() {
 
     let currentFullSheetTab = 'micro';
 
+    function getStudySheetData(tab) {
+      let activeTab = tab;
+      if (!activeTab) {
+        const modal = document.getElementById('pageModal');
+        if (modal && modal.classList.contains('open')) {
+          activeTab = currentFullSheetTab || 'micro';
+        } else if (currentActiveTabId === 'topicalTab') {
+          activeTab = 'topical';
+        } else if (currentActiveTabId === 'telescopicTab') {
+          activeTab = 'tele';
+        } else {
+          activeTab = 'micro';
+        }
+      }
+
+      let text = '';
+      let studyTitle = '';
+      let ed = null;
+
+      if (activeTab === 'topical') {
+        ed = document.getElementById('topicalJournalEditor');
+        text = document.getElementById('topicalJournalText')?.value || '';
+        studyTitle = 'Topical Study — ' + (document.getElementById('topicalTopic')?.value || 'Topical Exploration');
+      } else if (activeTab === 'tele') {
+        ed = document.getElementById('teleJournalEditor');
+        text = document.getElementById('teleJournalText')?.value || '';
+        studyTitle = 'Telescopic Study — ' + (document.getElementById('teleBook')?.value || 'Whole-Book Synthesis');
+      } else {
+        ed = document.getElementById('journalEditor');
+        text = document.getElementById('journalText')?.value || '';
+        studyTitle = 'Microscopic Study — ' + (currentScripture.reference || '2 Timothy 2:15');
+      }
+
+      const rawContent = (ed && ed.innerHTML && ed.innerHTML.trim().length > 10 && ed.innerHTML !== '<p><br></p>')
+        ? ed.innerHTML
+        : (text && text.trim() ? parseMarkdown(text) : '');
+
+      const cleanContent = rawContent
+        .replace(/<span[^>]*class="[^"]*spell-err[^"]*"[^>]*>([\s\S]*?)<\/span>/gi, '$1');
+
+      return { tab: activeTab, studyTitle, html: cleanContent };
+    }
+
+    function syncPrintBackgroundVar() {
+      try {
+        const bg = getComputedStyle(document.body).getPropertyValue('--bg').trim();
+        if (bg) document.documentElement.style.setProperty('--print-bg', bg);
+      } catch (e) {}
+    }
+
+    function populatePrintSheet(tabOverride) {
+      const target = document.getElementById('printSheetContent');
+      if (!target) return;
+      syncPrintBackgroundVar();
+
+      const { studyTitle, html } = getStudySheetData(tabOverride);
+      const bodyMarkup = (html && html.trim())
+        ? html
+        : '<p style="color:var(--text-muted); font-style:italic;">No notes recorded for this study yet.</p>';
+
+      target.innerHTML =
+        '<div class="print-doc-header">' +
+          '<span class="print-doc-brand">Quiet Time</span>' +
+          '<span class="print-doc-meta">' + escapeCatalystHtml(studyTitle) + '</span>' +
+        '</div>' +
+        '<div class="print-doc-body">' + bodyMarkup + '</div>';
+    }
+
+    function printStudySheet(tabOverride) {
+      populatePrintSheet(tabOverride);
+      window.print();
+    }
+
     function switchFullSheetTab(tab) {
       currentFullSheetTab = tab;
       ['micro', 'topical', 'tele'].forEach(t => {
@@ -5387,32 +5664,12 @@ function openRestoreModal() {
       const content = document.getElementById('modalContent');
       if (!content) return;
 
-      let text = '';
-      let studyTitle = '';
-      let ed = null;
-
-      if (tab === 'micro') {
-        ed = document.getElementById('journalEditor');
-        text = document.getElementById('journalText')?.value || '';
-        studyTitle = 'Microscopic Passage Study — ' + (currentScripture.reference || '2 Timothy 2:15');
-      } else if (tab === 'topical') {
-        ed = document.getElementById('topicalJournalEditor');
-        text = document.getElementById('topicalJournalText')?.value || '';
-        studyTitle = 'Topical Scripture Study — ' + (document.getElementById('topicalTopic')?.value || 'Topical Exploration');
-      } else if (tab === 'tele') {
-        ed = document.getElementById('teleJournalEditor');
-        text = document.getElementById('teleJournalText')?.value || '';
-        studyTitle = 'Telescopic Whole-Book Study — ' + (document.getElementById('teleBook')?.value || 'Whole-Book Synthesis');
-      }
-
-      const edContent = (ed && ed.innerHTML && ed.innerHTML.trim().length > 10 && ed.innerHTML !== '<p><br></p>')
-        ? ed.innerHTML
-        : (text && text.trim() ? parseMarkdown(text) : '');
+      const { studyTitle, html: edContent } = getStudySheetData(tab);
 
       if (!edContent || !edContent.trim()) {
         content.innerHTML = `<div style="text-align:center; padding:3rem 1rem; color:var(--text-muted);">
           <div style="font-size:1.8rem; margin-bottom:0.5rem;">✍️</div>
-          <div style="font-family:var(--font-head); font-weight:600; font-size:1.1rem; color:var(--text); margin-bottom:0.35rem;">${studyTitle}</div>
+          <div style="font-family:var(--font-head); font-weight:600; font-size:1.1rem; color:var(--text); margin-bottom:0.35rem;">${escapeCatalystHtml(studyTitle)}</div>
           <p style="font-size:0.9rem;">No notes recorded for this study yet. Write your reflections in the studio to view them here.</p>
         </div>`;
       } else {
@@ -5830,6 +6087,7 @@ function closeModal() {
       document.body.className = '';
       if (active === 'sepia') document.body.className = 'theme-sepia';
       if (active === 'light') document.body.className = 'theme-light';
+      if (typeof syncPrintBackgroundVar === 'function') syncPrintBackgroundVar();
       const label = themeLabels[active] || 'Dark';
       const btn = document.getElementById('themeToggleBtn');
       if (btn) btn.textContent = 'Theme: ' + label;
