@@ -1211,6 +1211,177 @@
       border-color: rgba(248, 113, 113, 0.5);
       color: var(--danger);
     }
+    .format-btn.arrange-active {
+      background: var(--gold-soft);
+      border-color: var(--border-accent);
+      color: var(--gold);
+      font-weight: 600;
+    }
+    .note-arrange-surface {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      border-top: 1px solid var(--border);
+      padding: 0.75rem 0.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+    .arrange-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      padding: 0.5rem 0.7rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface-elevated);
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .arrange-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .arrange-block {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      padding: 0.65rem 0.7rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg);
+      transition: border-color 0.15s ease, opacity 0.15s ease, background 0.15s ease;
+    }
+    .arrange-block:hover {
+      border-color: var(--border-accent);
+    }
+    .arrange-block.is-dragging {
+      opacity: 0.42;
+    }
+    .arrange-block.drop-before {
+      border-top: 2px solid var(--gold);
+    }
+    .arrange-block.drop-after {
+      border-bottom: 2px solid var(--gold);
+    }
+    .arrange-handle {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      min-height: 28px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      letter-spacing: -1px;
+      cursor: grab;
+      user-select: none;
+      margin-top: 0.1rem;
+    }
+    .arrange-handle:active {
+      cursor: grabbing;
+      color: var(--gold);
+    }
+    .arrange-body {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .arrange-kind {
+      display: inline-block;
+      font-family: var(--font-ui);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.2rem;
+    }
+    .arrange-preview {
+      font-family: var(--font-serif);
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: var(--text);
+      max-height: 6.5em;
+      overflow: hidden;
+      word-break: break-word;
+    }
+    .arrange-preview h1,
+    .arrange-preview h2,
+    .arrange-preview h3 {
+      font-family: var(--font-head);
+      font-size: 0.95rem;
+      margin: 0 0 0.2rem;
+      color: var(--text);
+    }
+    .arrange-preview h1,
+    .arrange-preview h3 {
+      color: var(--gold);
+    }
+    .arrange-preview p {
+      margin: 0.15rem 0;
+      line-height: 1.5;
+    }
+    .arrange-preview ul {
+      padding-left: 1.15rem;
+      margin: 0.15rem 0;
+    }
+    .arrange-preview li {
+      margin-bottom: 0.1rem;
+      line-height: 1.45;
+    }
+    .arrange-preview blockquote {
+      margin: 0.15rem 0;
+      padding: 0.2rem 0.5rem;
+      border-left: 1px solid var(--gold);
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .arrange-actions {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-top: 0.05rem;
+    }
+    .arrange-move-btn {
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface-elevated);
+      color: var(--text);
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+    }
+    .arrange-move-btn:hover:not(:disabled) {
+      border-color: var(--border-accent);
+      color: var(--gold);
+    }
+    .arrange-move-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    .arrange-move-btn.is-remove:hover:not(:disabled) {
+      border-color: rgba(248, 113, 113, 0.5);
+      color: var(--danger);
+    }
+    .arrange-empty {
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-family: var(--font-ui);
+      font-size: 0.86rem;
+    }
     .spell-popover {
       position: fixed;
       z-index: 220;
@@ -2263,6 +2434,7 @@
 
             <div class="note-format-bar" data-format-bar></div>
             <div id="journalEditor" class="unified-editor" contenteditable="true" spellcheck="true" lang="en" placeholder="Record your revelation, reflections, and prayers here..."></div>
+            <div id="journalArrange" class="note-arrange-surface" style="display:none;" aria-label="Arrange Microscopic Notes blocks"></div>
             <textarea id="journalText" style="display:none;"></textarea>
 
             <div class="studio-footer">
@@ -2363,6 +2535,7 @@
 
             <div class="note-format-bar" data-format-bar></div>
             <div id="topicalJournalEditor" class="unified-editor" contenteditable="true" spellcheck="true" lang="en" placeholder="Record your topical study insights, observations, and scriptural cross-references here..."></div>
+            <div id="topicalJournalArrange" class="note-arrange-surface" style="display:none;" aria-label="Arrange Topical Notes blocks"></div>
             <textarea id="topicalJournalText" style="display:none;"></textarea>
 
             <div class="studio-footer">
@@ -2425,6 +2598,7 @@
 
             <div class="note-format-bar" data-format-bar></div>
             <div id="teleJournalEditor" class="unified-editor" contenteditable="true" spellcheck="true" lang="en" placeholder="Record your whole-book telescopic study, structural outline, recurring motifs, and overarching themes here..."></div>
+            <div id="teleJournalArrange" class="note-arrange-surface" style="display:none;" aria-label="Arrange Telescopic Notes blocks"></div>
             <textarea id="teleJournalText" style="display:none;"></textarea>
 
             <div class="studio-footer">
@@ -2650,9 +2824,10 @@
         </div>
 
         <div id="gmNotes" class="guide-modal-section">
-          <h3>4. Formatting, Highlights &amp; Private Spellcheck</h3>
+          <h3>4. Formatting, Arranging, Highlights &amp; Spellcheck</h3>
           <ul>
             <li><strong>Live Rich Editor:</strong> Bold (<code>Ctrl+B</code>), Italic (<code>Ctrl+I</code>), Underline (<code>Ctrl+U</code>), 5 highlight colors (<code>Ctrl+H</code>), headings, bullets, and Undo/Redo.</li>
+            <li><strong>↕ Arrange Blocks:</strong> Click <strong>↕ Arrange</strong> in the notes toolbar to drag-and-drop or nudge (<strong>↑ ↓</strong>) your inserted scriptures, Q&amp;A sections, word studies, and reflections into your preferred order.</li>
             <li><strong>✓ Spellcheck:</strong> Toggle private offline spellcheck (55,000+ English &amp; Biblical words) in the toolbar. Click any red-underlined word for suggestions or to add it to your personal dictionary.</li>
           </ul>
         </div>
@@ -2834,6 +3009,7 @@
         '<div style="flex:1;"></div>' +
         '<button type="button" class="format-btn" onclick="execNoteFormat(\'h3\')" title="Turn the current line into a section title">Make Title</button>' +
         '<button type="button" class="format-btn" onclick="execNoteFormat(\'list\')" title="Insert Bullet Point">• List</button>' +
+        '<button type="button" class="format-btn" data-arrange-btn onclick="toggleArrangeNotes()" title="Reorder inserted scriptures, answers, and note sections cleanly">↕ Arrange</button>' +
         '<button type="button" class="format-btn" data-spell-btn onclick="toggleEditorSpellcheck()" title="Highlight misspelled words and show suggestions">✓ Spellcheck</button>';
       document.querySelectorAll('[data-format-bar]').forEach(bar => {
         bar.innerHTML = markup;
@@ -5398,6 +5574,7 @@ function getDefaultTemplate() {
         localStorage.setItem(DRAFT_KEY, snaps[idx].text);
         if (typeof updateTargetVerseOptions === 'function') updateTargetVerseOptions();
         if (typeof renderQuickPassages === 'function') renderQuickPassages();
+        if (typeof arrangeModeByType !== 'undefined' && arrangeModeByType.micro) setArrangeMode('micro', false);
 
         if (typeof debounceCloudSync === 'function') debounceCloudSync();
         showToast("Restored autosave from " + snaps[idx].time);
@@ -5433,6 +5610,7 @@ function resetMicroStudy() {
         renderQuestions();
         if (typeof updateTargetVerseOptions === 'function') updateTargetVerseOptions();
         if (typeof renderQuickPassages === 'function') renderQuickPassages();
+        if (typeof arrangeModeByType !== 'undefined' && arrangeModeByType.micro) setArrangeMode('micro', false);
 
         // Stamp local sync time immediately so focus/reload never resurrects old cloud data
         localStorage.setItem(SYNC_TIME_STORAGE, String(Date.now()));
@@ -5676,6 +5854,10 @@ function openRestoreModal() {
       }
 
       syncEditorToStorage(editor);
+
+      if (typeof arrangeModeByType !== 'undefined' && arrangeModeByType[ctx.type]) {
+        renderArrangeSurface(ctx.type);
+      }
 
       if (typeof debounceSnapshot === 'function' && ctx.key === DRAFT_KEY) {
         debounceSnapshot(ctx.area ? ctx.area.value : '');
@@ -6322,6 +6504,9 @@ function closeModal() {
       if (typeof renderQuickPassages === 'function') {
         renderQuickPassages();
       }
+      if (typeof syncArrangeToolbarButtons === 'function') {
+        syncArrangeToolbarButtons();
+      }
     }
 
     const THEME_STORAGE_KEY = 'qt_theme_v1';
@@ -6423,6 +6608,7 @@ function closeModal() {
         return;
       }
       if (e.key === 'Escape') {
+        if (typeof exitAllArrangeModes === 'function') exitAllArrangeModes();
         closeSevenStepsDrawer();
         closeSyncModal();
         closeRestoreModal();
@@ -6893,6 +7079,7 @@ function closeModal() {
         displayActiveTopical(0);
         initTopicalDropdown();
         if (typeof renderQuickPassages === 'function') renderQuickPassages();
+        if (typeof arrangeModeByType !== 'undefined' && arrangeModeByType.topical) setArrangeMode('topical', false);
 
         localStorage.setItem(SYNC_TIME_STORAGE, String(Date.now()));
         clearTimeout(debounceCloudTimer);
@@ -6958,6 +7145,7 @@ function closeModal() {
         if (editor) editor.innerHTML = parseMarkdown(tpl);
         localStorage.setItem(TELE_DRAFT_KEY, tpl);
         if (typeof renderQuickPassages === 'function') renderQuickPassages();
+        if (typeof arrangeModeByType !== 'undefined' && arrangeModeByType.tele) setArrangeMode('tele', false);
         localStorage.setItem(SYNC_TIME_STORAGE, String(Date.now()));
         clearTimeout(debounceCloudTimer);
         if (cloudSyncId && typeof pushToCloud === 'function') pushToCloud(false);
@@ -6980,6 +7168,349 @@ function closeModal() {
       renderArchive();
       showToast("Telescopic note saved to archive");
       if (typeof pushToCloud === 'function') pushToCloud();
+    }
+
+    // ==========================================
+    // NOTE BLOCK ARRANGER (DRAG & REORDER MODE)
+    // ==========================================
+    const arrangeModeByType = { micro: false, topical: false, tele: false };
+    let draggedBlockInfo = null;
+
+    function getNoteElementsByType(type) {
+      if (type === 'topical') {
+        return {
+          type: 'topical',
+          tabId: 'topicalTab',
+          editor: document.getElementById('topicalJournalEditor'),
+          arrange: document.getElementById('topicalJournalArrange'),
+          area: document.getElementById('topicalJournalText'),
+          key: TOPICAL_DRAFT_KEY
+        };
+      }
+      if (type === 'tele') {
+        return {
+          type: 'tele',
+          tabId: 'telescopicTab',
+          editor: document.getElementById('teleJournalEditor'),
+          arrange: document.getElementById('teleJournalArrange'),
+          area: document.getElementById('teleJournalText'),
+          key: TELE_DRAFT_KEY
+        };
+      }
+      return {
+        type: 'micro',
+        tabId: 'microTab',
+        editor: document.getElementById('journalEditor'),
+        arrange: document.getElementById('journalArrange'),
+        area: document.getElementById('journalText'),
+        key: DRAFT_KEY
+      };
+    }
+
+    function classifyNoteBlock(blockMd) {
+      const firstLine = (blockMd || '').split('\n')[0].trim();
+      if (/^#\s+/.test(firstLine)) return 'Title';
+      if (/^#{2,3}\s+.*(?:prayer|🙏)/i.test(firstLine)) return 'Prayer';
+      if (/^#{2,3}\s+.*(?:word study|definition)/i.test(firstLine)) return 'Word Study';
+      if (/^#{2,3}\s+/.test(firstLine)) return 'Section';
+      if (/^(?:>\s*)?\*\*[^*\n]+\([^()\n]{2,20}\)\*\*/.test(firstLine)) return 'Scripture';
+      if (/^---+$/.test(firstLine)) return 'Divider';
+      if (/^>\s*/.test(firstLine)) return 'Quote';
+      if (/^[-*]\s+/.test(firstLine)) return 'List';
+      return 'Note';
+    }
+
+    function parseNotesIntoBlocks(md) {
+      if (!md || typeof md !== 'string') return [];
+      const rawLines = md.replace(/\r\n/g, '\n').split('\n');
+      const atoms = [];
+      let buf = [];
+      const flushBuf = () => {
+        const joined = buf.join('\n').trim();
+        if (joined) atoms.push(joined);
+        buf = [];
+      };
+
+      for (const rawLine of rawLines) {
+        const trimmed = rawLine.trim();
+        if (!trimmed) {
+          flushBuf();
+          continue;
+        }
+        const isHeading = /^#{1,3}\s+/.test(trimmed);
+        const isHr = /^---+$/.test(trimmed);
+        const isScriptureLine = /^(?:>\s*)?\*\*[^*\n]+\([^()\n]{2,20}\)\*\*/.test(trimmed);
+
+        if (isHeading || isHr || isScriptureLine) {
+          flushBuf();
+          atoms.push(trimmed);
+          continue;
+        }
+        buf.push(rawLine);
+      }
+      flushBuf();
+
+      const blocks = [];
+      let i = 0;
+      while (i < atoms.length) {
+        const cur = atoms[i];
+        const isSectionHeading = /^#{2,3}\s+/.test(cur);
+        if (isSectionHeading) {
+          const parts = [cur];
+          i++;
+          let attachedParagraph = false;
+          while (i < atoms.length) {
+            const next = atoms[i];
+            const nextIsHeading = /^#{1,3}\s+/.test(next);
+            const nextIsHr = /^---+$/.test(next);
+            const nextIsScripture = /^(?:>\s*)?\*\*[^*\n]+\([^()\n]{2,20}\)\*\*/.test(next);
+            if (nextIsHeading || nextIsHr || nextIsScripture) break;
+
+            const nextIsListOrQuote = /^(?:[-*]\s+|>)/.test(next);
+            if (!attachedParagraph) {
+              parts.push(next);
+              i++;
+              if (!nextIsListOrQuote) attachedParagraph = true;
+            } else if (nextIsListOrQuote) {
+              parts.push(next);
+              i++;
+            } else {
+              break;
+            }
+          }
+          const combined = parts.join('\n');
+          blocks.push({ md: combined, kind: classifyNoteBlock(combined) });
+        } else {
+          blocks.push({ md: cur, kind: classifyNoteBlock(cur) });
+          i++;
+        }
+      }
+      return blocks;
+    }
+
+    function commitArrangedBlocks(type, blocks) {
+      const els = getNoteElementsByType(type);
+      if (!els.editor) return;
+      const nextMd = blocks.map(b => b.md).filter(Boolean).join('\n\n') + (blocks.length ? '\n' : '');
+      if (els.area) els.area.value = nextMd;
+      els.editor.innerHTML = nextMd.trim() ? parseMarkdown(nextMd) : '<p><br></p>';
+      localStorage.setItem(els.key, nextMd);
+      if (type === 'micro') {
+        if (typeof updateTargetVerseOptions === 'function') updateTargetVerseOptions();
+        if (typeof debounceSnapshot === 'function') debounceSnapshot(nextMd);
+      }
+      if (typeof renderQuickPassages === 'function') renderQuickPassages();
+      if (typeof debounceCloudSync === 'function') debounceCloudSync();
+    }
+
+    function syncArrangeToolbarButtons() {
+      const ctx = getActiveNoteContext();
+      const activeType = ctx ? ctx.type : 'micro';
+      ['micro', 'topical', 'tele'].forEach(t => {
+        const els = getNoteElementsByType(t);
+        const tabEl = document.getElementById(els.tabId);
+        if (!tabEl) return;
+        const btn = tabEl.querySelector('[data-arrange-btn]');
+        if (!btn) return;
+        const on = Boolean(arrangeModeByType[t]);
+        btn.classList.toggle('arrange-active', on);
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        btn.textContent = on ? '✓ Done' : '↕ Arrange';
+      });
+      return activeType;
+    }
+
+    function renderArrangeSurface(type) {
+      const els = getNoteElementsByType(type);
+      if (!els.arrange || !els.editor) return;
+
+      const currentMd = htmlToMarkdown(els.editor.innerHTML) || (els.area ? els.area.value : '');
+      const blocks = parseNotesIntoBlocks(currentMd);
+
+      els.arrange.innerHTML = '';
+
+      const banner = document.createElement('div');
+      banner.className = 'arrange-banner';
+      banner.innerHTML = '<span>Drag blocks or tap ↑ ↓ to arrange your notes (' + blocks.length + ' ' + (blocks.length === 1 ? 'item' : 'items') + ')</span>';
+      const doneBtn = document.createElement('button');
+      doneBtn.type = 'button';
+      doneBtn.className = 'btn btn-primary btn-sm';
+      doneBtn.textContent = '✓ Done Arranging';
+      doneBtn.onclick = () => setArrangeMode(type, false);
+      banner.appendChild(doneBtn);
+      els.arrange.appendChild(banner);
+
+      if (blocks.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'arrange-empty';
+        empty.textContent = 'No note blocks yet. Insert a verse, reflection, or type in your notes first.';
+        els.arrange.appendChild(empty);
+        return;
+      }
+
+      const list = document.createElement('div');
+      list.className = 'arrange-list';
+
+      blocks.forEach((block, idx) => {
+        const row = document.createElement('div');
+        row.className = 'arrange-block';
+        row.draggable = true;
+        row.dataset.blockIndex = String(idx);
+
+        row.addEventListener('dragstart', (e) => {
+          draggedBlockInfo = { type, fromIdx: idx };
+          row.classList.add('is-dragging');
+          if (e.dataTransfer) {
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', String(idx));
+          }
+        });
+        row.addEventListener('dragend', () => {
+          row.classList.remove('is-dragging');
+          list.querySelectorAll('.arrange-block').forEach(r => r.classList.remove('drop-before', 'drop-after'));
+          draggedBlockInfo = null;
+        });
+        row.addEventListener('dragover', (e) => {
+          if (!draggedBlockInfo || draggedBlockInfo.type !== type) return;
+          e.preventDefault();
+          if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+          const rect = row.getBoundingClientRect();
+          const before = (e.clientY - rect.top) < (rect.height / 2);
+          list.querySelectorAll('.arrange-block').forEach(r => r.classList.remove('drop-before', 'drop-after'));
+          row.classList.add(before ? 'drop-before' : 'drop-after');
+        });
+        row.addEventListener('dragleave', () => {
+          row.classList.remove('drop-before', 'drop-after');
+        });
+        row.addEventListener('drop', (e) => {
+          e.preventDefault();
+          if (!draggedBlockInfo || draggedBlockInfo.type !== type) return;
+          const fromIdx = draggedBlockInfo.fromIdx;
+          const rect = row.getBoundingClientRect();
+          const before = (e.clientY - rect.top) < (rect.height / 2);
+          let targetIdx = before ? idx : idx + 1;
+          if (fromIdx < targetIdx) targetIdx--;
+          if (fromIdx !== targetIdx) {
+            moveArrangedBlock(type, fromIdx, targetIdx);
+          } else {
+            list.querySelectorAll('.arrange-block').forEach(r => r.classList.remove('drop-before', 'drop-after'));
+          }
+          draggedBlockInfo = null;
+        });
+
+        const handle = document.createElement('span');
+        handle.className = 'arrange-handle';
+        handle.setAttribute('aria-hidden', 'true');
+        handle.title = 'Drag to reorder';
+        handle.textContent = '⋮⋮';
+        row.appendChild(handle);
+
+        const body = document.createElement('div');
+        body.className = 'arrange-body';
+        const kindTag = document.createElement('span');
+        kindTag.className = 'arrange-kind';
+        kindTag.textContent = block.kind;
+        body.appendChild(kindTag);
+
+        const preview = document.createElement('div');
+        preview.className = 'arrange-preview';
+        preview.innerHTML = parseMarkdown(block.md);
+        body.appendChild(preview);
+        row.appendChild(body);
+
+        const actions = document.createElement('div');
+        actions.className = 'arrange-actions';
+
+        const upBtn = document.createElement('button');
+        upBtn.type = 'button';
+        upBtn.className = 'arrange-move-btn';
+        upBtn.textContent = '↑';
+        upBtn.title = 'Move up';
+        upBtn.setAttribute('aria-label', 'Move block up');
+        upBtn.disabled = idx === 0;
+        upBtn.onclick = () => moveArrangedBlock(type, idx, idx - 1);
+        actions.appendChild(upBtn);
+
+        const downBtn = document.createElement('button');
+        downBtn.type = 'button';
+        downBtn.className = 'arrange-move-btn';
+        downBtn.textContent = '↓';
+        downBtn.title = 'Move down';
+        downBtn.setAttribute('aria-label', 'Move block down');
+        downBtn.disabled = idx === blocks.length - 1;
+        downBtn.onclick = () => moveArrangedBlock(type, idx, idx + 1);
+        actions.appendChild(downBtn);
+
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'arrange-move-btn is-remove';
+        delBtn.textContent = '✕';
+        delBtn.title = 'Remove this block';
+        delBtn.setAttribute('aria-label', 'Remove block');
+        delBtn.onclick = () => removeArrangedBlock(type, idx);
+        actions.appendChild(delBtn);
+
+        row.appendChild(actions);
+        list.appendChild(row);
+      });
+
+      els.arrange.appendChild(list);
+    }
+
+    function moveArrangedBlock(type, fromIdx, toIdx) {
+      const els = getNoteElementsByType(type);
+      if (!els.editor) return;
+      const currentMd = htmlToMarkdown(els.editor.innerHTML) || (els.area ? els.area.value : '');
+      const blocks = parseNotesIntoBlocks(currentMd);
+      if (fromIdx < 0 || fromIdx >= blocks.length || toIdx < 0 || toIdx >= blocks.length || fromIdx === toIdx) return;
+      const [moved] = blocks.splice(fromIdx, 1);
+      blocks.splice(toIdx, 0, moved);
+      commitArrangedBlocks(type, blocks);
+      renderArrangeSurface(type);
+    }
+
+    function removeArrangedBlock(type, idx) {
+      const els = getNoteElementsByType(type);
+      if (!els.editor) return;
+      const currentMd = htmlToMarkdown(els.editor.innerHTML) || (els.area ? els.area.value : '');
+      if (type === 'micro' && currentMd.trim() && typeof saveSnapshot === 'function') {
+        saveSnapshot(currentMd);
+      }
+      const blocks = parseNotesIntoBlocks(currentMd);
+      if (idx < 0 || idx >= blocks.length) return;
+      blocks.splice(idx, 1);
+      commitArrangedBlocks(type, blocks);
+      renderArrangeSurface(type);
+      showToast('Removed block from notes');
+    }
+
+    function setArrangeMode(type, enabled) {
+      const els = getNoteElementsByType(type);
+      if (!els.editor || !els.arrange) return;
+      arrangeModeByType[type] = Boolean(enabled);
+      if (enabled) {
+        if (typeof closeSpellPopover === 'function') closeSpellPopover();
+        renderArrangeSurface(type);
+        els.editor.style.display = 'none';
+        els.arrange.style.display = 'flex';
+      } else {
+        els.arrange.style.display = 'none';
+        els.editor.style.display = '';
+        els.editor.focus();
+      }
+      syncArrangeToolbarButtons();
+    }
+
+    function toggleArrangeNotes() {
+      const ctx = getActiveNoteContext();
+      const type = ctx ? ctx.type : 'micro';
+      setArrangeMode(type, !arrangeModeByType[type]);
+    }
+
+    function exitAllArrangeModes() {
+      ['micro', 'topical', 'tele'].forEach(t => {
+        if (arrangeModeByType[t]) setArrangeMode(t, false);
+      });
     }
 
     // ==========================================
