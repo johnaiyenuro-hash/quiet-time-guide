@@ -2093,14 +2093,14 @@
     <section class="scripture-card" id="scriptureDesk">
       <div class="scripture-header-bar">
         <div class="scripture-hero-ref">
-          <span class="ref-title" id="verseRefTag">2 Timothy 2:15 (KJV)</span>
-          <span class="scripture-hint">Click any word to meditate &amp; look up definition</span>
+          <span class="ref-title" id="verseRefTag">No Passage Selected</span>
+          <span class="scripture-hint" id="scriptureHint">Click Select Verse to load a passage or paste your own</span>
         </div>
         <div class="scripture-actions">
-          <button type="button" class="btn btn-sm btn-subtle" id="toggleShelfBtn" aria-expanded="false" aria-controls="passageShelf" onclick="togglePassageShelf()" title="Change passage reference or select translation">
-            <span id="shelfToggleIcon">🔍</span> <span id="shelfToggleText">Change Verse</span>
+          <button type="button" class="btn btn-sm btn-subtle" id="toggleShelfBtn" aria-expanded="false" aria-controls="passageShelf" onclick="togglePassageShelf()" title="Select a passage reference or Bible translation">
+            <span id="shelfToggleIcon">🔍</span> <span id="shelfToggleText">Select Verse</span>
           </button>
-          <a id="bibleHubLinkBtn" href="https://biblehub.com/2_timothy/2-15.htm" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-link-plain" onclick="handleBibleHubClick(event)" title="Compare 30+ translations on BibleHub Parallel">
+          <a id="bibleHubLinkBtn" href="https://biblehub.com/" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-link-plain" onclick="handleBibleHubClick(event)" title="Compare 30+ translations on BibleHub Parallel">
             🌐 BibleHub Parallel
           </a>
           <button type="button" class="btn btn-sm" onclick="insertCurrentScripture()" title="Insert passage into active note">
@@ -2112,7 +2112,7 @@
       <div id="passageShelf" class="passage-shelf" style="display:none;">
         <div class="scripture-input-row" style="margin-bottom:0; position:relative;">
           <div style="flex:1; position:relative; min-width:200px;">
-            <input type="text" id="verseInput" class="text-input" placeholder="Type a reference (e.g. John 3:16, Romans 8:28, Psalm 23)..." value="2 Timothy 2:15" spellcheck="true" lang="en" style="width:100%;">
+            <input type="text" id="verseInput" class="text-input" placeholder="Type a reference (e.g. John 3:16, Romans 8:28, Psalm 23)..." value="" spellcheck="true" lang="en" style="width:100%;">
           </div>
           <select id="bibleVersion" class="text-input" onchange="onVersionChange()" title="Select Bible Translation">
             <option value="kjv" selected>KJV — King James Version (1769)</option>
@@ -2141,7 +2141,7 @@
         <div id="verseLookupStatus" class="passage-status" aria-live="polite"></div>
       </div>
 
-      <div class="verse-box">
+      <div class="verse-box" id="verseBox" style="display:none;">
         <div id="verseDisplay" class="verse-text"></div>
       </div>
 
@@ -2891,13 +2891,13 @@
       }
     }
 
-    let currentScripture = normalizeScripture({
-      reference: "2 Timothy 2:15",
+    let currentScripture = {
+      reference: "",
       version: "kjv",
-      text: "Study to shew thyself approved unto God, a workman that needeth not to be ashamed, rightly dividing the word of truth.",
+      text: "",
       verses: []
-    });
-    let activeTargetVerse = "2 Timothy 2:15";
+    };
+    let activeTargetVerse = "";
     let activeWord = "";
     let lookupDebounce = null;
     let currentActiveTabId = "microTab";
@@ -2938,7 +2938,30 @@
     function renderVerseDisplay() {
       if (typeof updateBibleHubLinks === "function") updateBibleHubLinks();
       const container = document.getElementById('verseDisplay');
-      document.getElementById('verseRefTag').textContent = currentScripture.reference + " (" + currentScripture.version.toUpperCase() + ")";
+      const verseBox = document.getElementById('verseBox');
+      const refTag = document.getElementById('verseRefTag');
+      const hintEl = document.getElementById('scriptureHint');
+      const shelf = document.getElementById('passageShelf');
+      const shelfTxt = document.getElementById('shelfToggleText');
+
+      const hasPassage = Boolean(currentScripture && currentScripture.reference && currentScripture.text && currentScripture.text.trim());
+      if (refTag) {
+        refTag.textContent = hasPassage
+          ? currentScripture.reference + " (" + (currentScripture.version || "KJV").toUpperCase() + ")"
+          : "No Passage Selected";
+      }
+      if (hintEl) {
+        hintEl.textContent = hasPassage
+          ? "Click any word to meditate & look up definition"
+          : "Click Select Verse to load a passage or paste your own";
+      }
+      if (verseBox) {
+        verseBox.style.display = hasPassage ? "" : "none";
+      }
+      if (shelfTxt && (!shelf || shelf.style.display === 'none' || !shelf.style.display)) {
+        shelfTxt.textContent = hasPassage ? "Change Verse" : "Select Verse";
+      }
+
       container.innerHTML = "";
 
       const appendTokenizedVerse = (parentEl, rawText) => {
@@ -2958,25 +2981,27 @@
         });
       };
 
-      // If we have parsed multi-verse breakdown
-      if (currentScripture.verses && currentScripture.verses.length > 1) {
-        currentScripture.verses.forEach(v => {
-          const p = document.createElement('p');
-          p.style.marginBottom = '0.5rem';
+      if (hasPassage) {
+        // If we have parsed multi-verse breakdown
+        if (currentScripture.verses && currentScripture.verses.length > 1) {
+          currentScripture.verses.forEach(v => {
+            const p = document.createElement('p');
+            p.style.marginBottom = '0.5rem';
 
-          const badge = document.createElement('button');
-          badge.type = 'button';
-          badge.className = 'verse-num-badge' + (activeTargetVerse.includes(':' + v.verse) ? ' active' : '');
-          badge.textContent = 'v.' + v.verse;
-          badge.title = 'Click to focus reflection questions on verse ' + v.verse;
-          badge.onclick = () => setTargetVerse(getVerseRef(v.verse));
-          p.appendChild(badge);
+            const badge = document.createElement('button');
+            badge.type = 'button';
+            badge.className = 'verse-num-badge' + (activeTargetVerse.includes(':' + v.verse) ? ' active' : '');
+            badge.textContent = 'v.' + v.verse;
+            badge.title = 'Click to focus reflection questions on verse ' + v.verse;
+            badge.onclick = () => setTargetVerse(getVerseRef(v.verse));
+            p.appendChild(badge);
 
-          appendTokenizedVerse(p, v.text.trim());
-          container.appendChild(p);
-        });
-      } else {
-        appendTokenizedVerse(container, currentScripture.text);
+            appendTokenizedVerse(p, v.text.trim());
+            container.appendChild(p);
+          });
+        } else {
+          appendTokenizedVerse(container, currentScripture.text);
+        }
       }
 
       updateTargetVerseOptions();
@@ -3020,7 +3045,9 @@
 
       // Gather candidate references
       const options = [];
-      options.push(currentScripture.reference);
+      if (currentScripture && currentScripture.reference && currentScripture.reference.trim()) {
+        options.push(currentScripture.reference.trim());
+      }
 
       if (currentScripture.verses && currentScripture.verses.length > 1) {
         currentScripture.verses.forEach(v => {
@@ -4391,8 +4418,8 @@
     function updateBibleHubLinks() {
       const vInput = document.getElementById('verseInput');
       const inputVal = vInput ? vInput.value.trim() : '';
-      const ref = inputVal || (currentScripture && currentScripture.reference) || '2 Timothy 2:15';
-      const url = getBibleHubUrl(ref);
+      const ref = inputVal || (currentScripture && currentScripture.reference) || '';
+      const url = ref ? getBibleHubUrl(ref) : APP_CONFIG.endpoints.bibleHubBase;
 
       const mainBtn = document.getElementById('bibleHubLinkBtn');
       if (mainBtn) mainBtn.href = url;
@@ -4405,7 +4432,7 @@
       if (e && e.currentTarget) {
         e.currentTarget.href = url;
       }
-      showToast("Opening BibleHub Parallel for " + ref);
+      showToast(ref ? "Opening BibleHub Parallel for " + ref : "Opening BibleHub");
     }
 
 
@@ -4862,7 +4889,7 @@
         microAnswers,
         topicalAnswers,
         archive,
-        scripture: currentScripture || { reference: "2 Timothy 2:15", version: "kjv", text: "Study to shew thyself approved unto God...", verses: [] }
+        scripture: currentScripture || { reference: "", version: "kjv", text: "", verses: [] }
       };
     }
 
@@ -5743,7 +5770,7 @@ function openRestoreModal() {
       } else {
         ed = document.getElementById('journalEditor');
         text = document.getElementById('journalText')?.value || '';
-        studyTitle = 'Microscopic Study — ' + (currentScripture.reference || '2 Timothy 2:15');
+        studyTitle = currentScripture.reference ? ('Microscopic Study — ' + currentScripture.reference) : 'Microscopic Study';
       }
 
       const rawContent = (ed && ed.innerHTML && ed.innerHTML.trim().length > 10 && ed.innerHTML !== '<p><br></p>')
@@ -6060,7 +6087,7 @@ function closeModal() {
       archive.unshift({
         id: Date.now(),
         date: new Date().toISOString(),
-        ref: currentScripture.reference,
+        ref: currentScripture.reference || 'Quiet Time Study',
         content: val
       });
       localStorage.setItem(ARCHIVE_KEY, JSON.stringify(archive));
@@ -6209,11 +6236,14 @@ function closeModal() {
         btn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
         const icon = document.getElementById('shelfToggleIcon');
         const txt = document.getElementById('shelfToggleText');
+        const hasPassage = Boolean(currentScripture && currentScripture.reference && currentScripture.text && currentScripture.text.trim());
         if (icon) icon.textContent = isHidden ? '✕' : '🔍';
-        if (txt) txt.textContent = isHidden ? 'Close' : 'Change Verse';
+        if (txt) txt.textContent = isHidden ? 'Close' : (hasPassage ? 'Change Verse' : 'Select Verse');
       }
-      if (isHidden && typeof renderQuickPassages === 'function') {
-        renderQuickPassages();
+      if (isHidden) {
+        if (typeof renderQuickPassages === 'function') renderQuickPassages();
+        const vInput = document.getElementById('verseInput');
+        if (vInput) setTimeout(() => vInput.focus(), 0);
       }
     }
 
@@ -6527,7 +6557,10 @@ function closeModal() {
     }
 
     function insertCurrentScriptureToTopical() {
-      if (!currentScripture || !currentScripture.reference) return;
+      if (!currentScripture || !currentScripture.reference || !currentScripture.text) {
+        showToast("No scripture loaded to insert");
+        return;
+      }
       const quote = "\n**" + currentScripture.reference + (currentScripture.version ? " (" + currentScripture.version.toUpperCase() + ")" : "") + "** — \"" + currentScripture.text.trim() + "\"\n";
       appendTopicalJournal(quote);
       showToast("Scripture added to Topical Notes");
@@ -6597,7 +6630,10 @@ function closeModal() {
     }
 
     function insertCurrentScriptureToTele() {
-      if (!currentScripture || !currentScripture.reference) return;
+      if (!currentScripture || !currentScripture.reference || !currentScripture.text) {
+        showToast("No scripture loaded to insert");
+        return;
+      }
       const quote = "\n**" + currentScripture.reference + (currentScripture.version ? " (" + currentScripture.version.toUpperCase() + ")" : "") + "** — \"" + currentScripture.text.trim() + "\"\n";
       appendTeleJournal(quote);
       showToast("Scripture added to Telescopic Notes");
