@@ -757,6 +757,12 @@
       font-size: 0.92rem;
       background: var(--bg);
     }
+    .topical-suggested-list {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.4rem;
+    }
     .tele-form {
       display: flex;
       flex-direction: column;
@@ -2282,7 +2288,7 @@
 
             <div class="topical-controls">
               <div class="topical-topic-row">
-                <input type="text" id="topicalTopic" class="text-input" placeholder="Type a topic (e.g. Patience, Zeal, Faith, Love)..." value="Patience" oninput="onTopicalTopicInput(this.value)" style="min-width:180px;">
+                <input type="text" id="topicalTopic" class="text-input" placeholder="Type a topic (e.g. Faith, Love, Patience, Forgiveness)..." value="" oninput="onTopicalTopicInput(this.value)" style="min-width:180px;">
                 <button type="button" class="btn btn-sm" onclick="insertTopicalHeading()">+ Add Topic Heading</button>
               </div>
               <div class="passage-quick-row" style="margin-top:0;">
@@ -2297,6 +2303,10 @@
               <div>
                 <label for="topicalDef" class="field-label">Topic Definition (auto-filled or editable):</label>
                 <textarea id="topicalDef" class="input-textarea topical-def-textarea" rows="2" placeholder="Dictionary definition loads automatically..."></textarea>
+              </div>
+              <div id="topicalSuggestedVersesWrap" class="passage-quick-row" style="margin-top:0; display:none;">
+                <span class="meta-label">Suggested Verses:</span>
+                <div id="topicalSuggestedVersesList" class="topical-suggested-list" aria-live="polite"></div>
               </div>
             </div>
 
@@ -2634,7 +2644,7 @@
           <h3>3. The Three Bible Study Modes</h3>
           <ul>
             <li><strong>🔬 Microscopic (13 Questions):</strong> Deep word-by-word reflection with <strong>✨ Study Hint</strong> (auto-reloads whenever your selected verse changes) and one-click insertion into notes.</li>
-            <li><strong>🏷️ Topical (Six W's):</strong> Study biblical themes like Faith, Patience, Love, or Zeal. Typing a topic auto-loads its definition into your study.</li>
+            <li><strong>🏷️ Topical (Six W's):</strong> Study biblical themes like Faith, Patience, Love, or Zeal. Typing a topic auto-loads its definition and suggests related verses you can load into the verse selector with one click.</li>
             <li><strong>📜 Telescopic (Whole-Book):</strong> Map a whole book's author, context, and central theme across all 66 books, with <strong>📖 Load Passage</strong> to jump straight into chapter 1.</li>
           </ul>
         </div>
@@ -3007,6 +3017,9 @@
       updateTargetVerseOptions();
       if (typeof renderQuickPassages === 'function') {
         renderQuickPassages();
+      }
+      if (typeof syncSuggestedTopicVerseHighlight === 'function') {
+        syncSuggestedTopicVerseHighlight();
       }
       if (typeof syncMicroCatalystOnVerseChange === 'function') {
         syncMicroCatalystOnVerseChange();
@@ -6426,14 +6439,236 @@ function closeModal() {
     const TOPICAL_TOPIC_KEY = 'qt_topical_topic_v1';
     const TELE_FIELDS_KEY = 'qt_tele_fields_v1';
 
+    const TOPIC_VERSES_MAP = {
+      patience: ['James 1:2-4', 'Romans 12:12', 'Galatians 6:9', 'Hebrews 10:36', 'Psalm 37:7', 'Proverbs 16:32'],
+      faith: ['Hebrews 11:1', 'Romans 10:17', '2 Corinthians 5:7', 'Ephesians 2:8-9', 'James 2:17', 'Mark 11:24'],
+      love: ['1 Corinthians 13:4-7', 'John 3:16', '1 John 4:8', 'Romans 8:38-39', 'John 13:34-35', 'Colossians 3:14'],
+      zeal: ['Romans 12:11', 'Titus 2:14', 'John 2:17', 'Galatians 4:18', 'Colossians 3:23', 'Revelation 3:19'],
+      wisdom: ['James 1:5', 'Proverbs 3:5-6', 'Proverbs 9:10', 'Proverbs 4:7', 'Colossians 3:16', 'James 3:17'],
+      grace: ['2 Corinthians 12:9', 'Ephesians 2:8-9', 'Hebrews 4:16', 'Titus 2:11-12', 'Romans 6:14', 'John 1:16'],
+      peace: ['Philippians 4:6-7', 'John 14:27', 'Isaiah 26:3', 'Romans 5:1', 'Colossians 3:15', 'Psalm 29:11'],
+      joy: ['Nehemiah 8:10', 'Psalm 16:11', 'Romans 15:13', 'Philippians 4:4', 'Galatians 5:22-23', 'James 1:2'],
+      hope: ['Romans 15:13', 'Jeremiah 29:11', 'Hebrews 6:19', 'Romans 8:24-25', 'Psalm 42:11', '1 Peter 1:3'],
+      forgiveness: ['Ephesians 4:32', 'Colossians 3:13', '1 John 1:9', 'Matthew 6:14-15', 'Psalm 103:12', 'Matthew 18:21-22'],
+      prayer: ['Philippians 4:6-7', '1 Thessalonians 5:17', 'Matthew 7:7', 'James 5:16', 'Jeremiah 33:3', 'Mark 11:24'],
+      humility: ['Philippians 2:3-4', 'James 4:6', '1 Peter 5:5-6', 'Micah 6:8', 'Proverbs 11:2', 'Matthew 23:12'],
+      obedience: ['John 14:15', '1 Samuel 15:22', 'James 1:22', 'Deuteronomy 28:1-2', 'Joshua 1:8', 'Luke 11:28'],
+      courage: ['Joshua 1:9', '2 Timothy 1:7', 'Deuteronomy 31:6', 'Psalm 27:1', 'Isaiah 41:10', '1 Corinthians 16:13'],
+      trust: ['Proverbs 3:5-6', 'Psalm 56:3', 'Isaiah 26:3-4', 'Psalm 9:10', 'Jeremiah 17:7-8', 'Psalm 37:5'],
+      holiness: ['1 Peter 1:15-16', 'Hebrews 12:14', 'Romans 12:1-2', '2 Corinthians 7:1', 'Psalm 24:3-4', '1 Thessalonians 4:7'],
+      healing: ['Isaiah 53:5', 'Jeremiah 17:14', 'Psalm 103:2-3', 'James 5:14-15', 'Psalm 147:3', 'Exodus 15:26'],
+      worship: ['John 4:23-24', 'Psalm 95:6', 'Romans 12:1', 'Psalm 100:2-4', 'Hebrews 13:15', 'Psalm 29:2'],
+      mercy: ['Lamentations 3:22-23', 'Micah 6:8', 'Matthew 5:7', 'Ephesians 2:4-5', 'Psalm 103:8', 'Luke 6:36'],
+      kindness: ['Ephesians 4:32', 'Proverbs 11:17', 'Colossians 3:12', 'Micah 6:8', 'Proverbs 21:21', 'Galatians 5:22-23'],
+      perseverance: ['James 1:12', 'Romans 5:3-5', 'Hebrews 12:1-2', 'Galatians 6:9', '2 Timothy 4:7', 'Philippians 3:14'],
+      gratitude: ['1 Thessalonians 5:18', 'Psalm 107:1', 'Colossians 3:17', 'Psalm 100:4', 'Ephesians 5:20', 'Psalm 118:24'],
+      righteousness: ['Matthew 6:33', '2 Corinthians 5:21', 'Romans 3:22', 'Proverbs 21:21', 'Psalm 119:142', 'Isaiah 61:10'],
+      repentance: ['Acts 3:19', '2 Chronicles 7:14', '1 John 1:9', '2 Corinthians 7:10', 'Luke 15:7', 'Joel 2:12-13'],
+      salvation: ['Romans 10:9-10', 'Ephesians 2:8-9', 'John 3:16', 'Acts 4:12', 'John 14:6', 'Titus 3:5'],
+      temptation: ['1 Corinthians 10:13', 'James 4:7', 'Matthew 26:41', 'Hebrews 2:18', 'James 1:12-14', 'Psalm 119:11'],
+      anxiety: ['Philippians 4:6-7', '1 Peter 5:7', 'Matthew 6:25-27', 'Matthew 6:34', 'Isaiah 41:10', 'Psalm 94:19'],
+      fear: ['2 Timothy 1:7', 'Isaiah 41:10', 'Psalm 23:4', 'Psalm 34:4', '1 John 4:18', 'Joshua 1:9'],
+      strength: ['Isaiah 40:31', 'Philippians 4:13', 'Psalm 46:1', 'Ephesians 6:10', 'Nehemiah 8:10', '2 Corinthians 12:9'],
+      unity: ['Psalm 133:1', 'Ephesians 4:3', '1 Corinthians 1:10', 'Philippians 2:2', 'John 17:21', 'Colossians 3:14'],
+      service: ['Mark 10:45', 'Galatians 5:13', '1 Peter 4:10', 'Colossians 3:23-24', 'Matthew 23:11', 'Joshua 24:15'],
+      generosity: ['2 Corinthians 9:6-7', 'Proverbs 11:24-25', 'Luke 6:38', 'Acts 20:35', 'Proverbs 19:17', 'Malachi 3:10'],
+      contentment: ['Philippians 4:11-13', '1 Timothy 6:6-8', 'Hebrews 13:5', 'Psalm 23:1', 'Proverbs 15:16', '2 Corinthians 9:8'],
+      discipline: ['Hebrews 12:11', 'Proverbs 12:1', '1 Corinthians 9:27', '2 Timothy 1:7', 'Proverbs 3:11-12', 'Proverbs 25:28'],
+      truth: ['John 8:31-32', 'John 14:6', 'John 17:17', 'Psalm 119:160', 'Ephesians 4:15', '3 John 1:4'],
+      justice: ['Micah 6:8', 'Isaiah 1:17', 'Proverbs 21:15', 'Amos 5:24', 'Psalm 89:14', 'Proverbs 31:8-9'],
+      integrity: ['Proverbs 10:9', 'Proverbs 11:3', 'Proverbs 20:7', 'Titus 2:7-8', 'Psalm 25:21', '2 Corinthians 8:21'],
+      fasting: ['Matthew 6:16-18', 'Isaiah 58:6', 'Joel 2:12', 'Acts 13:2-3', 'Ezra 8:23', 'Psalm 35:13'],
+      evangelism: ['Matthew 28:19-20', 'Mark 16:15', 'Romans 1:16', 'Acts 1:8', '2 Timothy 4:2', '1 Peter 3:15'],
+      faithfulness: ['Lamentations 3:22-23', 'Luke 16:10', '1 Corinthians 4:2', 'Proverbs 3:3-4', 'Matthew 25:21', '2 Thessalonians 3:3'],
+      gentleness: ['Proverbs 15:1', 'Philippians 4:5', 'Galatians 5:22-23', '1 Peter 3:15', '2 Timothy 2:24-25', 'Matthew 11:29'],
+      'self-control': ['2 Timothy 1:7', 'Proverbs 25:28', 'Galatians 5:22-23', '1 Corinthians 9:25', 'Titus 2:11-12', '2 Peter 1:5-6'],
+      stewardship: ['1 Peter 4:10', '1 Corinthians 4:2', 'Luke 16:10-11', 'Colossians 3:23', 'Proverbs 3:9', 'Matthew 25:21'],
+      friendship: ['Proverbs 17:17', 'Proverbs 27:17', 'Proverbs 18:24', 'John 15:13', 'Ecclesiastes 4:9-10', '1 Samuel 18:1'],
+      anger: ['James 1:19-20', 'Ephesians 4:26-27', 'Proverbs 15:1', 'Proverbs 14:29', 'Proverbs 16:32', 'Colossians 3:8'],
+      pride: ['Proverbs 16:18', 'James 4:6', 'Proverbs 11:2', '1 Peter 5:5', 'Proverbs 29:23', 'Galatians 6:3'],
+      comfort: ['2 Corinthians 1:3-4', 'Psalm 23:4', 'Matthew 5:4', 'Psalm 34:18', 'Isaiah 40:1', 'John 14:16-18'],
+      guidance: ['Proverbs 3:5-6', 'Psalm 32:8', 'Psalm 119:105', 'Isaiah 30:21', 'John 16:13', 'Psalm 25:4-5']
+    };
+
+    const TOPIC_VERSE_SYNONYMS = {
+      patient: 'patience', enduring: 'perseverance', endurance: 'perseverance', steadfast: 'perseverance', steadfastness: 'perseverance',
+      faithful: 'faithfulness', believe: 'faith', belief: 'faith', trusting: 'trust',
+      loving: 'love', charity: 'love', zealous: 'zeal', passion: 'zeal',
+      wise: 'wisdom', discernment: 'wisdom', understanding: 'wisdom',
+      gracious: 'grace', peaceful: 'peace', joyful: 'joy', gladness: 'joy', rejoice: 'joy',
+      hopeful: 'hope', forgive: 'forgiveness', forgiving: 'forgiveness', pardon: 'forgiveness',
+      pray: 'prayer', praying: 'prayer', intercession: 'prayer',
+      humble: 'humility', meek: 'gentleness', meekness: 'gentleness', gentle: 'gentleness',
+      obey: 'obedience', obeying: 'obedience', bold: 'courage', boldness: 'courage', bravery: 'courage', fearless: 'courage',
+      holy: 'holiness', sanctification: 'holiness', purity: 'holiness', pure: 'holiness',
+      heal: 'healing', health: 'healing', praise: 'worship', thanksgiving: 'gratitude', thankful: 'gratitude', thankfulness: 'gratitude',
+      merciful: 'mercy', compassion: 'mercy', kind: 'kindness',
+      righteous: 'righteousness', repent: 'repentance', saved: 'salvation', redemption: 'salvation', gospel: 'evangelism',
+      tempted: 'temptation', worry: 'anxiety', anxious: 'anxiety', stress: 'anxiety',
+      afraid: 'fear', strong: 'strength', power: 'strength', unite: 'unity', fellowship: 'unity',
+      serve: 'service', serving: 'service', servant: 'service', giving: 'generosity', generous: 'generosity', tithe: 'generosity',
+      content: 'contentment', selfcontrol: 'self-control', 'self control': 'self-control',
+      honesty: 'integrity', honest: 'integrity', fast: 'fasting', witness: 'evangelism', mission: 'evangelism',
+      friend: 'friendship', friends: 'friendship', angry: 'anger', wrath: 'anger', arrogant: 'pride', arrogance: 'pride',
+      grief: 'comfort', sorrow: 'comfort', mourning: 'comfort', guide: 'guidance', direction: 'guidance'
+    };
+
+    let topicalVerseTimer = null;
+    let topicalVerseReqSeq = 0;
+    const topicalVerseCache = {};
+
+    function getCuratedTopicVerses(topic) {
+      if (!topic || typeof topic !== 'string') return null;
+      const key = topic.trim().toLowerCase().replace(/\s+/g, ' ');
+      if (!key) return null;
+      if (TOPIC_VERSES_MAP[key]) return TOPIC_VERSES_MAP[key];
+      const mapped = TOPIC_VERSE_SYNONYMS[key];
+      if (mapped && TOPIC_VERSES_MAP[mapped]) return TOPIC_VERSES_MAP[mapped];
+      return null;
+    }
+
+    function selectSuggestedTopicVerse(ref) {
+      if (!ref) return;
+      const vInput = document.getElementById('verseInput');
+      if (vInput) vInput.value = ref;
+      loadQuickPassage(ref);
+      syncSuggestedTopicVerseHighlight();
+    }
+
+    function syncSuggestedTopicVerseHighlight() {
+      const list = document.getElementById('topicalSuggestedVersesList');
+      if (!list) return;
+      const activeNorm = typeof normalizeBibleRefForChip === 'function'
+        ? normalizeBibleRefForChip(currentScripture?.reference || '').toLowerCase()
+        : (currentScripture?.reference || '').trim().toLowerCase();
+      list.querySelectorAll('.verse-chip').forEach(btn => {
+        const ref = btn.dataset.ref || btn.textContent || '';
+        const chipNorm = typeof normalizeBibleRefForChip === 'function'
+          ? normalizeBibleRefForChip(ref).toLowerCase()
+          : ref.trim().toLowerCase();
+        btn.classList.toggle('active', Boolean(activeNorm && chipNorm === activeNorm));
+      });
+    }
+
+    function renderSuggestedTopicVerses(refs, statusText = '') {
+      const wrap = document.getElementById('topicalSuggestedVersesWrap');
+      const list = document.getElementById('topicalSuggestedVersesList');
+      if (!wrap || !list) return;
+
+      list.innerHTML = '';
+      if (statusText) {
+        wrap.style.display = 'flex';
+        const span = document.createElement('span');
+        span.className = 'meta-hint';
+        span.style.fontStyle = 'italic';
+        span.textContent = statusText;
+        list.appendChild(span);
+        return;
+      }
+
+      if (!Array.isArray(refs) || refs.length === 0) {
+        wrap.style.display = 'none';
+        return;
+      }
+
+      wrap.style.display = 'flex';
+      refs.forEach(ref => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'verse-chip';
+        btn.dataset.ref = ref;
+        btn.textContent = ref;
+        btn.title = 'Click to insert ' + ref + ' into the verse selector';
+        btn.onclick = () => selectSuggestedTopicVerse(ref);
+        list.appendChild(btn);
+      });
+      syncSuggestedTopicVerseHighlight();
+    }
+
+    function updateTopicalSuggestedVerses(topic) {
+      clearTimeout(topicalVerseTimer);
+      const reqId = ++topicalVerseReqSeq;
+      const clean = (topic || '').trim();
+      if (!clean || clean.length < 2) {
+        renderSuggestedTopicVerses([]);
+        return;
+      }
+
+      const curated = getCuratedTopicVerses(clean);
+      if (curated) {
+        renderSuggestedTopicVerses(curated);
+        return;
+      }
+
+      const cacheKey = clean.toLowerCase();
+      if (topicalVerseCache[cacheKey]) {
+        renderSuggestedTopicVerses(topicalVerseCache[cacheKey]);
+        return;
+      }
+
+      renderSuggestedTopicVerses([], 'Finding verses on "' + clean + '"...');
+      topicalVerseTimer = setTimeout(async () => {
+        try {
+          const searchBase = (APP_CONFIG?.endpoints?.bollsSearchBase || 'https://bolls.life/search/YLT/?search=').replace('/YLT/', '/KJV/');
+          const res = await fetch(searchBase + encodeURIComponent(clean));
+          if (reqId !== topicalVerseReqSeq) return;
+          if (res.ok) {
+            const rows = await res.json();
+            if (reqId !== topicalVerseReqSeq) return;
+            if (Array.isArray(rows) && rows.length > 0) {
+              const picked = [];
+              const seenRefs = new Set();
+              const seenBooks = new Set();
+              // Prefer one verse per book first for breadth across Scripture
+              for (const row of rows) {
+                const bookName = BIBLE_BOOKS[(Number(row.book) || 0) - 1];
+                if (!bookName || !row.chapter || !row.verse) continue;
+                const ref = bookName + ' ' + row.chapter + ':' + row.verse;
+                if (!seenBooks.has(bookName) && !seenRefs.has(ref)) {
+                  seenBooks.add(bookName);
+                  seenRefs.add(ref);
+                  picked.push(ref);
+                  if (picked.length >= 6) break;
+                }
+              }
+              if (picked.length < 6) {
+                for (const row of rows) {
+                  const bookName = BIBLE_BOOKS[(Number(row.book) || 0) - 1];
+                  if (!bookName || !row.chapter || !row.verse) continue;
+                  const ref = bookName + ' ' + row.chapter + ':' + row.verse;
+                  if (!seenRefs.has(ref)) {
+                    seenRefs.add(ref);
+                    picked.push(ref);
+                    if (picked.length >= 6) break;
+                  }
+                }
+              }
+              if (picked.length > 0) {
+                topicalVerseCache[cacheKey] = picked;
+                renderSuggestedTopicVerses(picked);
+                return;
+              }
+            }
+          }
+        } catch (e) {
+          console.warn('Topic verse search failed:', e);
+        }
+        if (reqId === topicalVerseReqSeq) {
+          renderSuggestedTopicVerses([]);
+        }
+      }, 450);
+    }
+
     function syncUntouchedTopicalHeading(topic, def = '') {
       const topArea = document.getElementById('topicalJournalText');
       const topEditor = document.getElementById('topicalJournalEditor');
       if (!topArea) return;
       const cur = (topArea.value || '').trim();
-      const isStarter = /^# Topical Study — [^\n]+\n+- \*\*Definition:\*\*[^\n]*$/.test(cur);
+      const isStarter = /^# Topical Study(?:\s+—\s+[^\n]+)?\n+- \*\*Definition:\*\*[^\n]*$/.test(cur);
       if (isStarter || !cur) {
-        const nextTpl = "# Topical Study — " + (topic || 'Patience') + "\n\n- **Definition:** " + (def || '') + "\n\n";
+        const cleanTopic = (topic || '').trim();
+        const heading = cleanTopic ? ("# Topical Study — " + cleanTopic) : "# Topical Study";
+        const nextTpl = heading + "\n\n- **Definition:** " + (def || '') + "\n\n";
         topArea.value = nextTpl;
         if (topEditor) topEditor.innerHTML = parseMarkdown(nextTpl);
         localStorage.setItem(TOPICAL_DRAFT_KEY, nextTpl);
@@ -6449,11 +6684,21 @@ function closeModal() {
     let topicalDefTimer = null;
     function onTopicalTopicInput(val, silent = false) {
       clearTimeout(topicalDefTimer);
-      const clean = val.trim();
+      const clean = (val || '').trim();
       const defInput = document.getElementById('topicalDef');
-      try { if (clean) localStorage.setItem(TOPICAL_TOPIC_KEY, clean); } catch (e) {}
+      try {
+        if (clean) localStorage.setItem(TOPICAL_TOPIC_KEY, clean);
+        else localStorage.removeItem(TOPICAL_TOPIC_KEY);
+      } catch (e) {}
+
+      updateTopicalSuggestedVerses(clean);
+
       if (!clean) {
-        if (defInput) defInput.value = '';
+        if (defInput) {
+          defInput.value = '';
+          defInput.placeholder = "Dictionary definition loads automatically...";
+        }
+        syncUntouchedTopicalHeading('', '');
         return;
       }
 
@@ -6555,7 +6800,7 @@ function closeModal() {
         }
       } catch (e) {}
 
-      const activeTopic = document.getElementById('topicalTopic')?.value || 'Patience';
+      const activeTopic = (document.getElementById('topicalTopic')?.value || '').trim();
       const activeBook = document.getElementById('teleBook')?.value || 'Ephesians';
 
       // Topical Draft Init
@@ -6565,7 +6810,7 @@ function closeModal() {
         const savedTop = localStorage.getItem(TOPICAL_DRAFT_KEY);
         let topText = savedTop;
         if (topText === null) {
-          topText = "# Topical Study — " + activeTopic + "\n\n- **Definition:** \n\n";
+          topText = (activeTopic ? ("# Topical Study — " + activeTopic) : "# Topical Study") + "\n\n- **Definition:** \n\n";
           localStorage.setItem(TOPICAL_DRAFT_KEY, topText);
         }
         topArea.value = topText;
@@ -6586,8 +6831,12 @@ function closeModal() {
         if (teleEditor) teleEditor.innerHTML = parseMarkdown(teleText);
       }
 
-      // Load initial definition silently for active topic (avoids phantom toast on startup)
-      onTopicalTopicInput(activeTopic, true);
+      // Load initial definition & verse suggestions silently only if a topic was saved
+      if (activeTopic) {
+        onTopicalTopicInput(activeTopic, true);
+      } else {
+        renderSuggestedTopicVerses([]);
+      }
     }
 // Topical Actions
     function appendTopicalJournal(text) {
@@ -6596,6 +6845,10 @@ function closeModal() {
 
     function insertTopicalHeading() {
       const top = document.getElementById('topicalTopic').value.trim();
+      if (!top) {
+        showToast("Type or choose a topic first");
+        return;
+      }
       const def = document.getElementById('topicalDef').value.trim();
       const note = "\n\n## Topical Study: " + top.toUpperCase() + "\n- **Definition:** " + (def || "N/A") + "\n";
       appendTopicalJournal(note);
@@ -6616,10 +6869,14 @@ function closeModal() {
       if (confirm("Reset Topical notes and all 6 aspects to default?")) {
         const topInput = document.getElementById('topicalTopic');
         const defInput = document.getElementById('topicalDef');
-        if (topInput) topInput.value = 'Patience';
-        if (defInput) defInput.value = '';
+        if (topInput) topInput.value = '';
+        if (defInput) {
+          defInput.value = '';
+          defInput.placeholder = 'Dictionary definition loads automatically...';
+        }
         localStorage.removeItem(TOPICAL_TOPIC_KEY);
-        const tpl = "# Topical Study — Patience\n\n- **Definition:** \n\n";
+        renderSuggestedTopicVerses([]);
+        const tpl = "# Topical Study\n\n- **Definition:** \n\n";
         const area = document.getElementById('topicalJournalText');
         const editor = document.getElementById('topicalJournalEditor');
         if (area) area.value = tpl;
