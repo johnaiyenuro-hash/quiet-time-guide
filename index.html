@@ -2075,7 +2075,7 @@
             <button type="button" class="dropdown-item" role="menuitem" onclick="openFullPageModal(); closeShareMenu();">📖 Full Document Sheet</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="openRestoreModal(); closeShareMenu();">🕘 Restore Snapshots</button>
             <div class="dropdown-sep" role="separator"></div>
-            <button type="button" class="dropdown-item" role="menuitem" onclick="copyNotesForWhatsApp(); closeShareMenu();">💬 Copy Notes for WhatsApp</button>
+            <button type="button" class="dropdown-item" role="menuitem" onclick="copyNotesForWhatsApp(); closeShareMenu();">💬 Share QT</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="copyRevelation(); closeShareMenu();">📋 Copy Notes (Markdown)</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="shareLiveGuideLink(); closeShareMenu();">🔗 Share App Link</button>
             <button type="button" class="dropdown-item" role="menuitem" onclick="downloadMarkdown(); closeShareMenu();">📥 Download Markdown</button>
@@ -2250,7 +2250,7 @@
               </div>
               <div class="studio-actions">
                 <button type="button" class="btn btn-sm" onclick="insertCurrentScripture()" title="Insert scripture into notes">+ Scripture</button>
-                <button type="button" class="btn btn-sm" onclick="copyNotesForWhatsApp()" title="Copy notes formatted cleanly for WhatsApp">💬 Copy for WhatsApp</button>
+                <button type="button" class="btn btn-sm" onclick="copyNotesForWhatsApp()" title="Copy formatted Quiet Time notes ready to share on WhatsApp or chat">💬 Share QT</button>
                 <button type="button" class="btn btn-sm" onclick="resetMicroStudy()" title="Reset Microscopic notes and all 13 questions to default">↺ Reset All</button>
               </div>
             </div>
@@ -2346,7 +2346,7 @@
               <div class="studio-title"><span>🏷️ Topical Notes</span></div>
               <div class="studio-actions">
                 <button type="button" class="btn btn-sm" onclick="insertCurrentScriptureToTopical()" title="Insert scripture into topical notes">+ Scripture</button>
-                <button type="button" class="btn btn-sm" onclick="copyNotesForWhatsApp()" title="Copy notes formatted cleanly for WhatsApp">💬 Copy for WhatsApp</button>
+                <button type="button" class="btn btn-sm" onclick="copyNotesForWhatsApp()" title="Copy formatted Quiet Time notes ready to share on WhatsApp or chat">💬 Share QT</button>
                 <button type="button" class="btn btn-sm" onclick="resetTopicalStudy()" title="Reset Topical notes and all 6 aspects to default">↺ Reset All</button>
               </div>
             </div>
@@ -2408,7 +2408,7 @@
               <div class="studio-title"><span>📜 Telescopic Notes</span></div>
               <div class="studio-actions">
                 <button type="button" class="btn btn-sm" onclick="insertCurrentScriptureToTele()" title="Insert scripture into telescopic notes">+ Scripture</button>
-                <button type="button" class="btn btn-sm" onclick="copyNotesForWhatsApp()" title="Copy notes formatted cleanly for WhatsApp">💬 Copy for WhatsApp</button>
+                <button type="button" class="btn btn-sm" onclick="copyNotesForWhatsApp()" title="Copy formatted Quiet Time notes ready to share on WhatsApp or chat">💬 Share QT</button>
                 <button type="button" class="btn btn-sm" onclick="resetTeleStudy()" title="Reset Telescopic notes and outline fields to default">↺ Reset All</button>
               </div>
             </div>
@@ -2573,12 +2573,12 @@
       <div class="modal-header">
         <span class="modal-title" style="font-size:1.05rem;">Quiet Time</span>
         <div class="studio-actions">
-          <button type="button" class="btn btn-sm" onclick="copyNotesForWhatsApp()" title="Copy notes formatted cleanly for WhatsApp">💬 Copy for WhatsApp</button>
+          <button type="button" class="btn btn-sm" onclick="copyNotesForWhatsApp()" title="Copy formatted Quiet Time notes ready to share on WhatsApp or chat">💬 Share QT</button>
           <button type="button" class="btn btn-sm" onclick="printStudySheet()">🖨️ Print Sheet</button>
           <button type="button" class="btn btn-sm" onclick="closeModal()">✕ Close</button>
         </div>
       </div>
-      <div class="modal-tabs-bar">
+      <div class="modal-tabs-bar" id="fullSheetTabsBar">
         <div class="view-switcher" style="margin-bottom:0.5rem;">
           <button type="button" id="fullSheetTabMicro" class="active" onclick="switchFullSheetTab('micro')">🔬 Microscopic Study</button>
           <button type="button" id="fullSheetTabTopical" onclick="switchFullSheetTab('topical')">🏷️ Topical Study</button>
@@ -2606,7 +2606,7 @@
           <button type="button" class="verse-chip" onclick="scrollGuideSection('gmScripture')">2. Scripture &amp; Words</button>
           <button type="button" class="verse-chip" onclick="scrollGuideSection('gmModes')">3. 3 Study Modes</button>
           <button type="button" class="verse-chip" onclick="scrollGuideSection('gmNotes')">4. Notes &amp; Spellcheck</button>
-          <button type="button" class="verse-chip" onclick="scrollGuideSection('gmShare')">5. WhatsApp &amp; A4 Print</button>
+          <button type="button" class="verse-chip" onclick="scrollGuideSection('gmShare')">5. Share QT &amp; A4 Print</button>
           <button type="button" class="verse-chip" onclick="scrollGuideSection('gmSync')">6. Archive &amp; Sync</button>
         </div>
 
@@ -2648,9 +2648,9 @@
         </div>
 
         <div id="gmShare" class="guide-modal-section">
-          <h3>5. WhatsApp Sharing &amp; A4 Print Sheets</h3>
+          <h3>5. Share QT &amp; A4 Print Sheets</h3>
           <ul>
-            <li><strong>💬 Copy for WhatsApp:</strong> Formats headings, <strong>*bold*</strong>, <em>_italic_</em>, bullets, and highlights (as WhatsApp <code>`shaded pills`</code>) cleanly—with zero raw Markdown clutter.</li>
+            <li><strong>💬 Share QT:</strong> Copies your notes cleanly formatted for WhatsApp and messaging—converting headings, <strong>*bold*</strong>, <em>_italic_</em>, bullets, and highlights (as shaded <code>`pills`</code>) with zero raw Markdown clutter.</li>
             <li><strong>🖨️ Print Sheet / Save PDF:</strong> Prints your notes cleanly onto standard <strong>A4 paper</strong> with natural multi-page flow and full-page theme background coverage (accessible from <strong>⋯ → 📖 Full Document Sheet</strong>, <strong>⋯ → 🖨️ Print / Save PDF</strong>, or <code>Ctrl+P</code>).</li>
           </ul>
           <div class="guide-modal-tip">
@@ -5516,11 +5516,23 @@ function openRestoreModal() {
       if (found) {
         const modal = document.getElementById('pageModal');
         const content = document.getElementById('modalContent');
+        const tabsBar = document.getElementById('fullSheetTabsBar');
         const d = new Date(found.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-        
-        let headerHtml = '<div style="margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid var(--border);"><div style="font-family:var(--font-head); font-size:1.2rem; color:var(--gold); font-weight:700;">' + (found.ref || 'Quiet Time Study') + '</div><div style="font-size:0.75rem; color:var(--text-muted);">Recorded ' + d + '</div></div>';
-        
-        content.innerHTML = headerHtml + parseMarkdown(found.content);
+        const safeRef = found.ref || 'Quiet Time Study';
+        const renderedHtml = parseMarkdown(found.content || '');
+
+        activeArchivePreview = {
+          id: found.id,
+          ref: safeRef,
+          recordedLabel: 'Recorded ' + d,
+          content: found.content || '',
+          html: renderedHtml
+        };
+        if (tabsBar) tabsBar.style.display = 'none';
+
+        let headerHtml = '<div style="margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid var(--border);"><div style="font-family:var(--font-head); font-size:1.2rem; color:var(--gold); font-weight:700;">' + escapeCatalystHtml(safeRef) + '</div><div style="font-size:0.75rem; color:var(--text-muted);">Recorded ' + escapeCatalystHtml(d) + '</div></div>';
+
+        content.innerHTML = headerHtml + '<div class="presentation-sheet-body">' + renderedHtml + '</div>';
         modal.classList.add('open');
       }
     }
@@ -5739,12 +5751,26 @@ function openRestoreModal() {
     }
 
     let currentFullSheetTab = 'micro';
+    let activeArchivePreview = null;
 
     function getStudySheetData(tab) {
+      const modal = document.getElementById('pageModal');
+      const isModalOpen = Boolean(modal && modal.classList.contains('open'));
+
+      if (!tab && isModalOpen && activeArchivePreview) {
+        const cleanArchiveHtml = (activeArchivePreview.html || '')
+          .replace(/<span[^>]*class="[^"]*spell-err[^"]*"[^>]*>([\s\S]*?)<\/span>/gi, '$1');
+        return {
+          tab: 'archive',
+          studyTitle: activeArchivePreview.ref + (activeArchivePreview.recordedLabel ? ' · ' + activeArchivePreview.recordedLabel : ''),
+          html: cleanArchiveHtml,
+          markdown: activeArchivePreview.content || ''
+        };
+      }
+
       let activeTab = tab;
       if (!activeTab) {
-        const modal = document.getElementById('pageModal');
-        if (modal && modal.classList.contains('open')) {
+        if (isModalOpen) {
           activeTab = currentFullSheetTab || 'micro';
         } else if (currentActiveTabId === 'topicalTab') {
           activeTab = 'topical';
@@ -5780,7 +5806,11 @@ function openRestoreModal() {
       const cleanContent = rawContent
         .replace(/<span[^>]*class="[^"]*spell-err[^"]*"[^>]*>([\s\S]*?)<\/span>/gi, '$1');
 
-      return { tab: activeTab, studyTitle, html: cleanContent };
+      const rawMarkdown = (ed && ed.innerHTML && ed.innerHTML.trim().length > 10 && ed.innerHTML !== '<p><br></p>')
+        ? htmlToMarkdown(ed.innerHTML)
+        : (text || '');
+
+      return { tab: activeTab, studyTitle, html: cleanContent, markdown: rawMarkdown };
     }
 
     function syncPrintBackgroundVar() {
@@ -5814,6 +5844,9 @@ function openRestoreModal() {
     }
 
     function switchFullSheetTab(tab) {
+      activeArchivePreview = null;
+      const tabsBar = document.getElementById('fullSheetTabsBar');
+      if (tabsBar) tabsBar.style.display = '';
       currentFullSheetTab = tab;
       ['micro', 'topical', 'tele'].forEach(t => {
         const btn = document.getElementById('fullSheetTab' + t.charAt(0).toUpperCase() + t.slice(1));
@@ -5839,6 +5872,9 @@ function openRestoreModal() {
     }
 
     function openFullPageModal(initialTab) {
+      activeArchivePreview = null;
+      const tabsBar = document.getElementById('fullSheetTabsBar');
+      if (tabsBar) tabsBar.style.display = '';
       const modal = document.getElementById('pageModal');
       let tabToOpen = initialTab;
       if (!tabToOpen) {
@@ -5850,6 +5886,9 @@ function openRestoreModal() {
       modal.classList.add('open');
     }
 function closeModal() {
+      activeArchivePreview = null;
+      const tabsBar = document.getElementById('fullSheetTabsBar');
+      if (tabsBar) tabsBar.style.display = '';
       document.getElementById('pageModal').classList.remove('open');
     }
 
@@ -6006,17 +6045,24 @@ function closeModal() {
     }
 
     async function copyNotesForWhatsApp() {
-      const ctx = getActiveNoteContext();
-      const rawMd = (ctx && ctx.editor)
-        ? htmlToMarkdown(ctx.editor.innerHTML)
-        : (ctx && ctx.area ? ctx.area.value : (document.getElementById('journalText')?.value || ''));
+      const modal = document.getElementById('pageModal');
+      let rawMd = '';
+      if (modal && modal.classList.contains('open')) {
+        const sheet = getStudySheetData();
+        rawMd = sheet.markdown || '';
+      } else {
+        const ctx = getActiveNoteContext();
+        rawMd = (ctx && ctx.editor)
+          ? htmlToMarkdown(ctx.editor.innerHTML)
+          : (ctx && ctx.area ? ctx.area.value : (document.getElementById('journalText')?.value || ''));
+      }
       const formatted = formatMarkdownForWhatsApp(rawMd);
       if (!formatted) {
-        showToast("No notes to copy yet");
+        showToast("No notes to share yet");
         return;
       }
       const ok = await copyTextWithFallback(formatted);
-      showToast(ok ? "💬 Notes copied for WhatsApp!" : "Unable to access clipboard");
+      showToast(ok ? "💬 Quiet Time copied — ready to share!" : "Unable to access clipboard");
     }
 
     async function copyRevelation() {
