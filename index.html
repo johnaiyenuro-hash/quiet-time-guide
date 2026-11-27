@@ -5580,8 +5580,26 @@ function getDefaultTemplate() {
         showToast("Restored autosave from " + snaps[idx].time);
       }
     }
+    function resetSelectedPassageToDefault() {
+      clearTimeout(lookupDebounce);
+      currentScripture = {
+        reference: "",
+        version: "kjv",
+        text: "",
+        verses: []
+      };
+      activeTargetVerse = "";
+      const vInput = document.getElementById('verseInput');
+      if (vInput) vInput.value = '';
+      const verSelect = document.getElementById('bibleVersion');
+      if (verSelect) verSelect.value = 'kjv';
+      if (typeof setVerseLookupStatus === 'function') setVerseLookupStatus('');
+      if (typeof deselectWord === 'function') deselectWord();
+      if (typeof renderVerseDisplay === 'function') renderVerseDisplay();
+    }
+
 function resetMicroStudy() {
-      if (confirm("Reset Microscopic notes and all 13 questions to default?")) {
+      if (confirm("Reset Microscopic notes, selected passage, and all 13 questions to default?")) {
         const editor = document.getElementById('journalEditor');
         const area = document.getElementById('journalText');
         if (area && area.value.trim()) saveSnapshot(area.value);
@@ -5606,6 +5624,7 @@ function resetMicroStudy() {
         const wordBox = document.getElementById('wordCatalystBox');
         if (wordBox) { wordBox.style.display = 'none'; wordBox.innerHTML = ''; }
 
+        resetSelectedPassageToDefault();
         displayActiveQuestion(0);
         renderQuestions();
         if (typeof updateTargetVerseOptions === 'function') updateTargetVerseOptions();
@@ -5616,7 +5635,7 @@ function resetMicroStudy() {
         localStorage.setItem(SYNC_TIME_STORAGE, String(Date.now()));
         clearTimeout(debounceCloudTimer);
         if (cloudSyncId && typeof pushToCloud === 'function') pushToCloud(false);
-        showToast("Reset Microscopic notes & all 13 questions to default");
+        showToast("Reset Microscopic notes, passage & all 13 questions to default");
       }
     }
 
@@ -7052,7 +7071,7 @@ function closeModal() {
     }
 
     function resetTopicalStudy() {
-      if (confirm("Reset Topical notes and all 6 aspects to default?")) {
+      if (confirm("Reset Topical notes, selected passage, and all 6 aspects to default?")) {
         const topInput = document.getElementById('topicalTopic');
         const defInput = document.getElementById('topicalDef');
         if (topInput) topInput.value = '';
@@ -7076,6 +7095,7 @@ function closeModal() {
         if (typeof catalystCache !== 'undefined') catalystCache.topical = {};
         const topBox = document.getElementById('topicalCatalystBox');
         if (topBox) { topBox.style.display = 'none'; topBox.innerHTML = ''; }
+        resetSelectedPassageToDefault();
         displayActiveTopical(0);
         initTopicalDropdown();
         if (typeof renderQuickPassages === 'function') renderQuickPassages();
@@ -7084,7 +7104,7 @@ function closeModal() {
         localStorage.setItem(SYNC_TIME_STORAGE, String(Date.now()));
         clearTimeout(debounceCloudTimer);
         if (cloudSyncId && typeof pushToCloud === 'function') pushToCloud(false);
-        showToast("Reset Topical notes & all 6 aspects to default");
+        showToast("Reset Topical notes, passage & all 6 aspects to default");
       }
     }
 
@@ -7130,7 +7150,7 @@ function closeModal() {
     }
 
     function resetTeleStudy() {
-      if (confirm("Reset Telescopic notes and outline fields to default?")) {
+      if (confirm("Reset Telescopic notes, selected passage, and outline fields to default?")) {
         const bkInput = document.getElementById('teleBook');
         const ctxInput = document.getElementById('teleContext');
         const thmInput = document.getElementById('teleTheme');
@@ -7144,12 +7164,13 @@ function closeModal() {
         if (area) area.value = tpl;
         if (editor) editor.innerHTML = parseMarkdown(tpl);
         localStorage.setItem(TELE_DRAFT_KEY, tpl);
+        resetSelectedPassageToDefault();
         if (typeof renderQuickPassages === 'function') renderQuickPassages();
         if (typeof arrangeModeByType !== 'undefined' && arrangeModeByType.tele) setArrangeMode('tele', false);
         localStorage.setItem(SYNC_TIME_STORAGE, String(Date.now()));
         clearTimeout(debounceCloudTimer);
         if (cloudSyncId && typeof pushToCloud === 'function') pushToCloud(false);
-        showToast("Reset Telescopic notes and outline fields to default");
+        showToast("Reset Telescopic notes, passage & outline fields to default");
       }
     }
 
